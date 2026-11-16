@@ -50,6 +50,7 @@ def summarize(rows: list[dict], ref_keys: dict[str, str] | None = None) -> dict:
                                "bib_key": ref_keys.get(ref["doi"] or "")}
         g["paths"].append(r)
     for g in by_bad.values():
+        g["notice_on_record"] = has_retraction_notice(g)
         g["status"] = min((p["status"] for p in g["paths"]), key=ORDER.index)
         best = [p for p in g["paths"] if p["status"] == g["status"]]
         g["best_path"] = min(best, key=lambda p: (p["hops"], -sum(1 for e in p["edges"] if e["context"])))
@@ -66,7 +67,25 @@ def summarize(rows: list[dict], ref_keys: dict[str, str] | None = None) -> dict:
         "zombies": sum(1 for e in edges.values() if e.get("zombie")),
         "date_conflicts": sum(1 for e in edges.values() if e.get("year_conflict")),
         "ignored_impossible": [],
+        "without_retraction_notice": sum(1 for g in groups if not g["notice_on_record"]),
     }
+
+
+def has_retraction_notice(g: dict) -> bool:
+    """False when only OpenAlex marks the paper retracted, or the only notice found is not a retraction."""
+    return g.get("notice_source") != "openalex" and (g.get("nature") or "Retraction") == "Retraction"
+
+
+def notice_label(g: dict) -> str:
+    """A flagged paper's status in words. A paper is only called retracted when a notice says so."""
+    date = g.get("retraction_date")
+    if g.get("notice_source") == "openalex":
+        return "marked retracted by OpenAlex, no notice found"
+    if not has_retraction_notice(g):
+        kind = g["nature"].lower()
+        return (f"marked retracted by OpenAlex, but the only notice found is {'an' if kind[0] in 'aeiou' else 'a'} "
+                f"{kind} ({date or 'date unknown'})")
+    return f"Retraction {date or '(date unknown)'}"
 
 
 def run_check(store_path: str, *, bib_path: str | None = None, refs: list[dict] | None = None,

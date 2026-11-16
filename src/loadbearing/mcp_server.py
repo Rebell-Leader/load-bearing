@@ -88,6 +88,7 @@ def _report(res, limits: dict[str, int] | None = None) -> str:
             "status": st, "retracted_id": g["id"], "title": g["title"], "year": g["year"], "doi": g["doi"],
             "notice": {"nature": g["nature"], "date": g["retraction_date"], "reasons": g["reasons"],
                        "notice_doi": g.get("notice_doi"), "source": g.get("notice_source")},
+            "notice_on_record": g["notice_on_record"],
             "via_your_references": [{k: v for k, v in r.items() if v is not None} for r in g["via"]],
         }
         if st in ("direct", "load_bearing", "defused"):
@@ -97,6 +98,7 @@ def _report(res, limits: dict[str, int] | None = None) -> str:
         "manuscript_id": res.root_id, "title": res.title, "depth": res.depth,
         "summary": {
             "retracted_papers_reached": len(s["retracted"]),
+            "without_retraction_notice": s["without_retraction_notice"],
             "your_references_exposed": s["refs_exposed"],
             "by_status": {k: s["counts"][k] for k in ORDER if s["counts"][k]},
             "citations_on_paths": s["citations_on_paths"],

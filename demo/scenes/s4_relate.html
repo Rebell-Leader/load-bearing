@@ -97,7 +97,7 @@ const iT = outEls.findIndex((d) => d.dataset.raw.startsWith("timings"));
 const maxScroll = term.scrollHeight - term.clientHeight;
 TL.scroll(term, [[0, 0], [tt + 0.7, 0], [tt + 2.0, maxScroll]]);
 TL.hl(outEls[iT + 1], tt + 2.1, Infinity, "76,195,138", 0.18);
-$("tcall").textContent = `${R.rows} paths to ${R.retracted} retracted papers in ${R.elapsed_ms} ms`;
+$("tcall").textContent = `${R.rows} paths to ${R.retracted} papers marked retracted in ${R.elapsed_ms} ms`;
 TL.show($("tcall"), tt + 2.3, Infinity, { d: 0.4, dy: 6 });
 
 $("psize").textContent = R.size;

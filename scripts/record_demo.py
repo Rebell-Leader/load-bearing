@@ -52,7 +52,7 @@ LINKS = {"repo": "github.com/Rebell-Leader/load-bearing", "viewer": "rebell-lead
 BG = "0x0e0f11"
 
 # Scene lengths (s), sized so the voice-over below fits at about 160 words per minute.
-TIMING = {"s1": 17.0, "s2": 18.5, "s3": 23.0, "s4": 22.5, "s5": 16.5, "s6": 16.5}
+TIMING = {"s1": 17.0, "s2": 18.5, "s3": 23.0, "s4": 22.5, "s5": 16.5, "s6": 17.5}
 SCENES = [("s1", "s1_hook.html", "The problem"), ("s2", "s2_cli.html", "Command line"),
           ("s3", "s3_agent.html", "For agents"), ("s4", "s4_relate.html", "Inside Relate"),
           ("s5", "s5_browser.html", "In the browser"), ("s6", "s6_eval.html", "Measured, not assumed")]
@@ -61,8 +61,8 @@ VOICE_OVER = {
           "none of nine AI research tools reliably caught retracted papers. Flagging a direct citation is easy. "
           "The hard part is what your sources relied on.",
     "s2": "Load-Bearing follows citations three hops out into a Relate graph, and reads the sentence where each one "
-          "appears. This 2025 Alzheimer's paper has 72 references. 56 of them lead to retracted work, and 23 "
-          "retracted papers are reached only through method or result citations.",
+          "appears. This 2025 Alzheimer's paper has 72 references. 56 of them lead to papers marked retracted, "
+          "and 23 of those papers are reached only through method or result citations.",
     "s3": "For agents, Load-Bearing is an MCP server, next to Relate's own. Here Claude audits a research "
           "assistant's draft. It finds two retracted papers, reads the evidence before acting, keeps one review "
           "for its general claim, queries the graph in Cypher, and rewrites the paragraph without inventing a "
@@ -74,9 +74,9 @@ VOICE_OVER = {
     "s5": "The same graph runs in the browser, on Relate's WebAssembly build. Pick a retracted paper, see every path "
           "and the sentence behind each citation, and query it in Cypher. Nothing to install, and nothing leaves "
           "the page.",
-    "s6": "We measured it honestly. On SciCite, the intent model reaches 0.856 macro-F1. On held-out sentences, it "
-          "finds 69 percent of real reliance at 33 percent precision. So every finding shows its sentence, and a "
-          "person decides.",
+    "s6": "We measured it honestly. On SciCite, the intent model reaches 0.856 macro-F1. On our held-out "
+          "sentences, the rules alone do as well: 69 percent of real reliance found, at 33 percent precision. "
+          "So every finding shows its sentence, and a person decides.",
 }
 
 
@@ -151,7 +151,7 @@ def relate_data(conn) -> dict:
         "output": out, "elapsed_ms": f"{float(m.group(1)):.1f}", "rows": len(rows),
         "retracted": len({r["retracted"] for r in rows}),
         "size": f"{(ROOT / 'data/demo.rl').stat().st_size / 1e6:.1f} MB",
-        "stats": f"{st['papers']:,} papers · {st['cites']:,} citations · {st['retracted']:,} retracted",
+        "stats": f"{st['papers']:,} papers · {st['cites']:,} citations · {st['retracted']:,} marked retracted",
     }
 
 

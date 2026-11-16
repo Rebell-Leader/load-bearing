@@ -221,6 +221,14 @@ function exposure(root, depth) {
   return run(q, { root, load_bearing: pack.queries.load_bearing_intents });
 }
 
+// A paper is only called retracted when a notice says so (check.notice_label in the CLI).
+const hasNotice = (g) => g.notice_source !== "openalex" && (g.nature || "Retraction") === "Retraction";
+function noticeLabel(g) {
+  if (g.notice_source === "openalex") return "Marked retracted by OpenAlex, no notice found";
+  if (!hasNotice(g)) return `Marked retracted by OpenAlex; only notice found: ${g.nature.toLowerCase()} ${g.date || "(date unknown)"}`;
+  return `Retraction ${g.date || "(date unknown)"}`;
+}
+
 function summarize(rows) {
   const byBad = new Map(), edges = new Map();
   for (const r of rows) {
@@ -251,8 +259,8 @@ function renderStats(sum, ms, root) {
   const counts = Object.fromEntries(ORDER.map((k) => [k, sum.groups.filter((g) => g.status === k).length]));
   const box = document.getElementById("stats");
   box.replaceChildren(
-    h("div", { class: "stat" }, h("div", { class: "v" }, `${sum.refs}/${total}`), h("div", { class: "l" }, "references reach retracted work")),
-    h("div", { class: "stat" }, h("div", { class: "v" }, sum.groups.length), h("div", { class: "l" }, "retracted papers reached")),
+    h("div", { class: "stat" }, h("div", { class: "v" }, `${sum.refs}/${total}`), h("div", { class: "l" }, "references reach a paper marked retracted")),
+    h("div", { class: "stat" }, h("div", { class: "v" }, sum.groups.length), h("div", { class: "l" }, "papers marked retracted reached")),
     h("div", { class: "stat" }, h("div", { class: "v" }, counts.direct + counts.load_bearing),
       h("div", { class: "l" }, `direct (${counts.direct}) + load-bearing (${counts.load_bearing})`)),
     h("div", { class: "stat" }, h("div", { class: "v" }, sum.onPath ? Math.round(100 * sum.read / sum.onPath) + "%" : "–"),
@@ -276,7 +284,7 @@ function renderList(sum) {
   list.replaceChildren(...items.map((g) => h("li", {},
     h("button", { class: "item", "aria-current": String(current === g.id), onclick: () => { current = g.id; renderList(sum); renderDetail(g); } },
       h("span", { class: "t" }, h("span", { class: `dot s-${g.status}` }), short(g.title, 110)),
-      h("span", { class: "m" }, `${g.year ?? ""} · ${g.nature || "Retraction"} ${g.date || "(date unknown)"} · via ${g.via.size} of your references`)))));
+      h("span", { class: "m" }, `${g.year ?? ""} · ${noticeLabel(g)} · via ${g.via.size} of your references`)))));
   if (!items.length) list.replaceChildren(h("li", { class: "muted", style: "padding:12px" }, "Nothing in this group."));
 }
 
@@ -338,8 +346,8 @@ function renderDetail(g) {
     h("h3", {}, clean(g.title)),
     h("p", { class: "meta" }, `${g.year ?? ""}${g.doi ? " · doi:" + g.doi : ""}`),
     h("div", { class: "notice" },
-      h("b", {}, `${g.nature || "Retraction"} ${g.date || "(date unknown)"}`),
-      g.reasons.length ? ` · ${g.reasons.slice(0, 4).join("; ")}` : g.notice_doi ? ` · notice doi:${g.notice_doi} (reasons not recorded)` : " · flagged retracted by OpenAlex; no notice found",
+      h("b", {}, noticeLabel(g)),
+      g.reasons.length ? ` · ${g.reasons.slice(0, 4).join("; ")}` : g.notice_doi ? ` · notice doi:${g.notice_doi} (reasons not recorded)` : "",
       g.notice_source ? h("span", { class: "muted" }, ` · source: ${g.notice_source.replace("_", " ")}`) : null),
     h("p", { class: "meta" }, `Reached via ${g.via.size} of your references: `,
       [...g.via.values()].slice(0, 6).map((v) => short(v.title, 50)).join("; ") + (g.via.size > 6 ? "; …" : "")),

@@ -14,7 +14,7 @@ from collections import defaultdict
 from pathlib import Path
 
 from . import expand, http
-from .check import ORDER, run_check
+from .check import ORDER, notice_label, run_check
 
 HEADINGS = {
     "direct": "DIRECT: you cite a retracted paper",
@@ -59,12 +59,15 @@ def render(summary: dict, ex: expand.Expansion | None, st: dict, store_path: str
     else:
         out.append(f"Load-Bearing check: {title or 'manuscript'}")
         out.append(f"  offline: read from {store_path}, no network")
-    out.append(f"  {summary['refs_exposed']} of your references reach {len(groups)} retracted papers within {depth} citation hops")
+    out.append(f"  {summary['refs_exposed']} of your references reach {len(groups)} papers marked retracted within {depth} citation hop{'s' if depth != 1 else ''}")
+    if summary.get("without_retraction_notice"):
+        out.append(f"  {summary['without_retraction_notice']} of them have no retraction notice on record "
+                   "(an OpenAlex flag only, or only a correction or expression of concern)")
     if summary["citations_on_paths"]:
         pct = 100 * summary["citations_read"] / summary["citations_on_paths"]
         out.append(f"  evidence: read the citing sentence for {summary['citations_read']} of {summary['citations_on_paths']} "
                    f"citations on those paths ({pct:.0f}%); {summary['zombies']} were made after the retraction")
-    out.append(f"  store {store_path}: {st['papers']:,} papers, {st['cites']:,} citations, {st['retracted']:,} retracted")
+    out.append(f"  store {store_path}: {st['papers']:,} papers, {st['cites']:,} citations, {st['retracted']:,} marked retracted")
     for ig in summary.get("ignored_impossible") or []:
         out.append(f"  ignored an impossible citation: {_short(ig['citing'], 45)} ({ig['citing_year']}) → "
                    f"{_short(ig['cited'], 45)} ({ig['cited_year']}), cited paper is newer")
@@ -82,9 +85,8 @@ def render(summary: dict, ex: expand.Expansion | None, st: dict, store_path: str
         out.append(f"{HEADINGS[status]} ({len(items)})")
         limit = 10 if status in DETAILED else 8
         for g in items[:limit]:
-            date = g["retraction_date"] or "date unknown"
             via = f"via {len(g['via'])} of your references"
-            out.append(f"  {MARK[status]} {_short(g['title'])} ({g['year']}): {g['nature'] or 'Retraction'} {date}, {via}")
+            out.append(f"  {MARK[status]} {_short(g['title'])} ({g['year']}): {notice_label(g)}, {via}")
             if status in DETAILED:
                 if g["reasons"]:
                     out.append(f"      notice: {'; '.join(g['reasons'][:3])}")

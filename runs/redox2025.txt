@@ -1,8 +1,9 @@
 Load-Bearing check: Absence of astrocytic ceruloplasmin reverses the senescence process with aging of learning and memory abilities
   offline: read from data/demo.rl, no network
-  56 of your references reach 349 retracted papers within 3 citation hops
+  56 of your references reach 349 papers marked retracted within 3 citation hops
+  32 of them have no retraction notice on record (an OpenAlex flag only, or only a correction or expression of concern)
   evidence: read the citing sentence for 606 of 1288 citations on those paths (47%); 62 were made after the retraction
-  store data/demo.rl: 926 papers, 1,305 citations, 349 retracted
+  store data/demo.rl: 926 papers, 1,305 citations, 349 marked retracted
   ignored an impossible citation: Amyloid-β protein dimers isolated directly f… (2008) → Amyloid Oligomers Exacerbate Tau Pathology i… (2012), cited paper is newer
   1 citation(s) to retracted papers have conflicting dates; those paths are reported as unverified
 
@@ -73,7 +74,7 @@ LOAD-BEARING: reached only through method or result citations (23)
            “Recently, Fafalios et al.” [The HGF–MET Axis May Be Involved in Ins…]
       └─ method     → Complementary roles of IRS-1 and IRS-2 in the hepatic regul… (2005)
            “We also utilized the RNAi-mediated knock down technique to deliver siRNA to the liver in mice14,15 to investigate the short-term effects of Met impairment on hepatic glucose homeostasis.” [Met is involved in hepatic glucose home…]
-  ! Fangchinoline Promotes Autophagy and Inhibits Apoptosis in Osteoporot… (2019): Retraction date unknown, via 1 of your references
+  ! Fangchinoline Promotes Autophagy and Inhibits Apoptosis in Osteoporot… (2019): marked retracted by OpenAlex, no notice found, via 1 of your references
       ├─ background → Autophagy in Bone Remodeling: A Regulator of Oxidative Stre… (2022)
            “GSK3 is negatively regulated by the PI3K/Akt pathway, thereby constituting the PI3K/Akt/GSK3 signaling cascade [[33], [34], [35]].” [MYC phosphorylation was reduced and the…]
       ├─ result     → Vitamin K2 Can Rescue the Dexamethasone-Induced Downregulat… (2020)
@@ -99,7 +100,7 @@ MENTION-ONLY: reached through a background mention (low concern) (171)
   · Effects of microRNA‐10a on synapse remodeling in hippocampal neurons … (2017): Retraction 2021-06-30, via 3 of your references
   · Brain hydrogen sulfide is severely decreased in Alzheimer's disease (2002): Retraction 2005-06-06, via 2 of your references
   · GRIM-19 Mediated Translocation of STAT3 to Mitochondria is Necessary … (2012): Retraction 2016-07-01, via 2 of your references
-  · Hippocampal phosphorylated tau induced cognitive decline, dendritic s… (2017): Retraction date unknown, via 2 of your references
+  · Hippocampal phosphorylated tau induced cognitive decline, dendritic s… (2017): marked retracted by OpenAlex, no notice found, via 2 of your references
   · Brain-derived exosomes from dementia with Lewy bodies propagate α-syn… (2017): Retraction 2026-01-05, via 2 of your references
   · Cerebrospinal fluid ferritin in glioblastoma: Evidence for tumor synt… (1998): Retraction 2019-07-29, via 2 of your references
   … 163 more (use --json)

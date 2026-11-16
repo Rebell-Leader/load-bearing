@@ -143,9 +143,10 @@ def retraction_rows(ex: Expansion) -> list[dict]:
 
 def path_edges(conn, root: str, depth: int) -> list[tuple[str, str]]:
     """Edges that lie on some manuscript -> retracted path: the only ones worth reading."""
-    q = ("MATCH p = (m:Manuscript {id: $root})-[c0:CITES WHERE NOT coalesce(c0.anachronistic, false)]->(:Paper)"
-         "-[c:CITES WHERE NOT coalesce(c.anachronistic, false)]->{0,%d}(bad:Retracted) "
-         "UNWIND relationships(p) AS r RETURN DISTINCT startNode(r).id AS src, endNode(r).id AS dst") % max(depth - 1, 0)
+    q = store.bounded(
+        "MATCH p = (m:Manuscript {id: $root})-[c0:CITES WHERE NOT coalesce(c0.anachronistic, false)]->(:Paper)"
+        "-[c:CITES WHERE NOT coalesce(c.anachronistic, false)]->{0,%(extra)d}(bad:Retracted) "
+        "UNWIND relationships(p) AS r RETURN DISTINCT startNode(r).id AS src, endNode(r).id AS dst", depth)
     return [(row["src"], row["dst"]) for row in conn.execute(q, {"root": root})]
 
 

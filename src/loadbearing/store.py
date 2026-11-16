@@ -16,6 +16,8 @@ Model
 
 from __future__ import annotations
 
+import re
+
 import relate
 
 SCHEMA = [
@@ -176,7 +178,7 @@ def flag_citation_dates(conn) -> dict:
 
 def ignored_citations(conn, root: str, depth: int = 3) -> list[dict]:
     """Impossible citations that would otherwise have put a path on the report (for transparency)."""
-    q = IGNORED_QUERY % {"extra": max(depth - 1, 0)}
+    q = bounded(IGNORED_QUERY, depth)
     return [dict(r) for r in conn.execute(q, {"root": root})]
 
 
@@ -190,8 +192,25 @@ def set_work_types(conn, types: dict[str, str]) -> None:
                  {"ids": [r["id"] for r in rows if r["t"] == "review"]})
 
 
+# The hops after the first, as written in the query templates, when there are none of them.
+_NO_DOWNSTREAM = re.compile(r"\(:Paper\)\s*-\[c?:CITES[^\]]*\]->\{0,0\}")
+
+
+def bounded(template: str, depth: int) -> str:
+    """A path query template limited to `depth` citations.
+
+    Relate rejects a {0,0} quantifier, so at depth 1 the downstream segment is dropped and the
+    manuscript's own reference must be the retracted paper: a direct citation.
+    """
+    q = template % {"extra": max(depth - 1, 0)}
+    if depth <= 1:
+        q, n = _NO_DOWNSTREAM.subn("", q)
+        assert n == 1, "path query template no longer matches the depth-1 rewrite"
+    return q
+
+
 def exposure(conn, root: str, depth: int = 3) -> list[dict]:
-    q = EXPOSURE_QUERY % {"extra": max(depth - 1, 0)}
+    q = bounded(EXPOSURE_QUERY, depth)
     return list(conn.execute(q, {"root": root, "load_bearing": LOAD_BEARING_INTENTS}))
 
 

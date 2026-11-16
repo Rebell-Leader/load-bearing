@@ -8,9 +8,10 @@ each citation appears, and separates papers that *used* a retracted result or me
 *mentioned* it. Researchers use it from the command line or in the browser; AI research agents use it
 through MCP.
 
-On a real 2025 Alzheimer's paper, 56 of its 72 references reach a retracted paper within three citation
-hops. 23 of those paths run only through method or result citations, including Lesné 2006 (Aβ*56,
-retracted in 2024).
+On a real 2025 Alzheimer's paper, 56 of its 72 references reach a paper marked retracted within three
+citation hops. 23 of those papers are reached through method or result citations only (30 paths),
+including Lesné 2006 (Aβ*56, retracted in 2024). 21 of the 23 have a retraction notice on record; the
+report labels the other two.
 
 **Demo video:** _link added at submission_ · **Agent run:** [`runs/agent_demo.md`](runs/agent_demo.md) ·
 **Browser viewer:** [live on GitHub Pages](https://rebell-leader.github.io/load-bearing/viewer/) · **Evaluation:** [`docs/EVAL.md`](docs/EVAL.md)
@@ -30,7 +31,7 @@ That prints the full report for the demo paper from the shipped Relate store
 
 ```bash
 python3 -m http.server 8765        # open http://localhost:8765/viewer/ : the same graph, in the browser
-uv run pytest -q                   # 12 offline tests, including Relate path queries
+uv run pytest -q                   # 13 offline tests, including Relate path queries
 ```
 
 With the [Relate CLI](https://relatedb.ai/docs/get-started/install/) installed, you can query the store
@@ -217,7 +218,7 @@ HF_HUB_OFFLINE=1 uv run --group train python scripts/eval_indomain.py --set held
 
 | Path | What |
 |---|---|
-| `data/demo.rl` | Evidence pack for the demo paper: a single-file Relate store, 926 papers, 1,305 citations, 349 retracted |
+| `data/demo.rl` | Evidence pack for the demo paper: a single-file Relate store, 926 papers, 1,305 citations, 349 marked retracted (317 with a retraction notice) |
 | `data/evidence/` | Working graph: a directory store. CLI and MCP checks add to it; Relate's MCP server follows it |
 | `viewer/evidence.json` | The pack exported for the browser (the demo paper plus the agent demo's grant draft) |
 | `data/eval/` | Labelled samples, guideline, predictions |
@@ -243,7 +244,9 @@ Paths are evidence for a person to review, not verdicts about any paper or autho
   unverified, never as exposure.
 - The graph stores only citations on paths to retracted work, so "no path" means "nothing found", not
   "clean".
-- Some retracted works have no notice in Retraction Watch or Crossref; they show OpenAlex's flag only.
+- OpenAlex marks some papers retracted that have no retraction notice in Retraction Watch or Crossref
+  (32 of 349 in the demo store: 28 with no notice at all, 4 with only a correction or expression of
+  concern). The report labels each one and never calls it a retraction; agents get `notice_on_record: false`.
 - Upstream citation metadata can be wrong. Date-impossible citations are filtered; other errors can remain.
 
 ## Data sources

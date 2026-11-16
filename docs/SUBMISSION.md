@@ -54,8 +54,9 @@ It works in three places:
 - **In the browser:** a static page that runs Relate's WebAssembly build and the same Cypher, with path
   diagrams and a query console.
 
-On a real 2025 Alzheimer's paper, 56 of its 72 references reach a retracted paper within three hops, and
-23 retracted papers are reached through method or result citations only. Two findings stand out:
+On a real 2025 Alzheimer's paper, 56 of its 72 references reach a paper marked retracted within three
+hops, and 23 of those papers are reached through method or result citations only (21 of them with a
+retraction notice on record). Two findings stand out:
 
 - A 2023 meta-analysis pooled a study that was retracted months later for image manipulation.
 - Two papers in the graph were retracted with the reason "Cites Retracted Work".
@@ -124,6 +125,6 @@ europe-pmc · semantic-scholar · pytorch · transformers · biomedbert
 - [x] Public GitHub repo with a README on how to set up and use it: README follows the template
 - [x] GitHub topic `relate` (required) and `relate-neo4j-hackathon` (recommended)
 - [x] Persistent Relate store judges can inspect: `data/demo.rl` (single file) and `data/evidence/` (directory)
-- [x] Working code with Relate running: the offline check, 12 tests, MCP smoke test, viewer
+- [x] Working code with Relate running: the offline check, 13 tests, MCP smoke test, viewer
 - [ ] Demo video, 1–2 minutes: script in [DEMO.md](DEMO.md)
 - [ ] Submit on Devpost by **Dec 11, 6:00 PM PST**

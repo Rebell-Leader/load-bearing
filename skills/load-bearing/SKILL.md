@@ -51,6 +51,9 @@ was BibTeX). Point at those, not at the retracted paper alone.
 ## How to report
 
 - Quote the evidence sentence and the notice reasons, and give the retraction date.
+- When a finding has `notice_on_record: false`, OpenAlex flags the paper but no retraction notice was
+  found (or only a correction or expression of concern). Say "marked retracted, no notice found", not
+  "retracted".
 - Report what retraction notices say. Never call a paper or an author fraudulent; say "retracted (reason
   per notice: …)".
 - A path is evidence for a person to review, not a verdict. Say how much was read

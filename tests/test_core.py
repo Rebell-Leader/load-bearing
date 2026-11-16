@@ -4,7 +4,7 @@ import xml.etree.ElementTree as ET
 
 import relate
 
-from loadbearing import bib, fulltext, intent, store
+from loadbearing import bib, expand, fulltext, intent, store
 
 JATS = """<article><body>
 <sec><title>Introduction</title>
@@ -117,6 +117,31 @@ def test_exposure_statuses():
     lb = list(conn.execute(store.LOAD_BEARING_ONLY, {"root": "M"}))
     assert {tuple(r["chain"]) for r in lb} == {("manuscript", "retracted"), ("manuscript", "a", "retracted")}
     conn.close()
+    # Depth 1 used to build a {0,0} quantifier, which Relate rejects: only the direct citation remains.
+    conn = relate.connect(":memory:")
+    for stmt in store.SCHEMA:
+        conn.execute(stmt)
+    store.upsert_papers(conn, [{"id": i, "title": i, "year": 2020, "doi": None, "pub_date": "2020-01-01"} for i in "MAR"])
+    store.mark_manuscript(conn, "M")
+    store.mark_retracted(conn, [{"id": "R", "nature": "Retraction", "date": "2024-06-24", "reasons": [],
+                                 "notice_id": None, "notice_doi": None}])
+    store.upsert_citations(conn, [{"src": s, "dst": d} for s, d in [("M", "A"), ("A", "R"), ("M", "R")]])
+    assert [(tuple(n["id"] for n in r["chain"]), r["status"]) for r in store.exposure(conn, "M", 1)] == [(("M", "R"), "direct")]
+    assert len(store.exposure(conn, "M", 2)) == 2
+    assert store.ignored_citations(conn, "M", 1) == []
+    assert sorted(expand.path_edges(conn, "M", 1)) == [("M", "R")]
+    conn.close()
+
+
+def test_notice_labels_never_call_a_flag_a_retraction():
+    from loadbearing import check
+    rw = {"notice_source": "retraction_watch", "nature": "Retraction", "retraction_date": "2024-06-24"}
+    eoc = {"notice_source": "retraction_watch", "nature": "Expression of concern", "retraction_date": "2022-03-01"}
+    flag = {"notice_source": "openalex", "nature": "Retraction", "retraction_date": None}
+    assert check.notice_label(rw) == "Retraction 2024-06-24" and check.has_retraction_notice(rw)
+    assert check.notice_label(eoc).endswith("only notice found is an expression of concern (2022-03-01)")
+    assert check.notice_label(flag) == "marked retracted by OpenAlex, no notice found"
+    assert not check.has_retraction_notice(eoc) and not check.has_retraction_notice(flag)
 
 
 def test_intent_v1():
@@ -192,9 +217,13 @@ def test_offline_check_uses_only_the_store(monkeypatch):
         raise AssertionError("offline check touched the network")
 
     monkeypatch.setattr(openalex, "work", no_network)
-    res = check.run_check("data/demo.rl", doi="https://doi.org/10.1016/J.REDOX.2025.103611", depth=3, offline=True)
+    DEMO = "https://doi.org/10.1016/J.REDOX.2025.103611"
+    res = check.run_check("data/demo.rl", doi=DEMO, depth=3, offline=True)
     assert res.root_id == "W4408770418" and res.title.startswith("Absence of astrocytic ceruloplasmin")
     assert res.summary["counts"]["load_bearing"] == 23
+    lb = [g for g in res.summary["retracted"] if g["status"] == "load_bearing"]
+    assert sum(g["notice_on_record"] for g in lb) == 21  # one OpenAlex flag only, one expression of concern
+    assert check.run_check("data/demo.rl", doi=DEMO, depth=1, offline=True).summary["retracted"] == []
     try:
         check.run_check("data/demo.rl", doi="10.1000/not-in-store", offline=True)
     except LookupError as e:

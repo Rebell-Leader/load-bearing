@@ -94,6 +94,6 @@ with the cited title. Abstract-level alignment hasn't been tested.
   example "cites primary research (article)" or "model: method p=0.97"). The MCP guidance tells agents
   to read the sentence before acting.
 - Each edge records which classifier labelled it (`CITES.classifier`: `v1+biomedbert-scicite` or `v1-rules`).
-- On the demo paper, v1 reports 23 load-bearing retracted papers (v0: 10), 155 unverified and 171
+- On the demo paper, v1 reports 23 load-bearing papers marked retracted, 21 of them with a retraction notice (v0: 10), 155 unverified and 171
   mention-only. Given held-out precision, treat the 23 as candidates. Lesné 2006, the hepcidin-motif
   case and the meta-analysis pooling the retracted rodent study all hold up on manual reading.
