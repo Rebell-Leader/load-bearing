@@ -124,6 +124,6 @@ europe-pmc · semantic-scholar · pytorch · transformers · biomedbert
 - [x] Public GitHub repo with a README on how to set up and use it: README follows the template
 - [x] GitHub topic `relate` (required) and `relate-neo4j-hackathon` (recommended)
 - [x] Persistent Relate store judges can inspect: `data/demo.rl` (single file) and `data/evidence/` (directory)
-- [x] Working code with Relate running: the offline check, 11 tests, MCP smoke test, viewer
+- [x] Working code with Relate running: the offline check, 12 tests, MCP smoke test, viewer
 - [ ] Demo video, 1–2 minutes: script in [DEMO.md](DEMO.md)
 - [ ] Submit on Devpost by **Dec 11, 6:00 PM PST**

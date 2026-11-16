@@ -48,13 +48,17 @@ def _path_lines(path: dict) -> list[str]:
     return lines
 
 
-def render(summary: dict, ex: expand.Expansion | None, st: dict, store_path: str, depth: int) -> str:
+def render(summary: dict, ex: expand.Expansion | None, st: dict, store_path: str, depth: int,
+           title: str | None = None) -> str:
     out = []
     groups = summary["retracted"]
     if ex:
         out.append(f"Load-Bearing check: {ex.root_title}")
         out.append(f"  {ex.refs_resolved}/{ex.refs_total or ex.refs_resolved} references resolved"
                    + (f" ({len(ex.unresolved)} without a DOI match)" if ex.unresolved else ""))
+    else:
+        out.append(f"Load-Bearing check: {title or 'manuscript'}")
+        out.append(f"  offline: read from {store_path}, no network")
     out.append(f"  {summary['refs_exposed']} of your references reach {len(groups)} retracted papers within {depth} citation hops")
     if summary["citations_on_paths"]:
         pct = 100 * summary["citations_read"] / summary["citations_on_paths"]
@@ -97,8 +101,12 @@ def render(summary: dict, ex: expand.Expansion | None, st: dict, store_path: str
 
 
 def cmd_check(args) -> int:
-    res = run_check(args.store, bib_path=args.bib, doi=args.doi, depth=args.depth,
-                    offline=args.offline, s2_limit=args.s2_limit)
+    try:
+        res = run_check(args.store, bib_path=args.bib, doi=args.doi, depth=args.depth,
+                        offline=args.offline, s2_limit=args.s2_limit)
+    except LookupError as e:
+        print(f"loadbearing: {e}", file=sys.stderr)
+        return 2
     summary = res.summary
     if args.json:
         print(json.dumps({"root": res.root_id, "depth": res.depth, "store": res.store_stats,
@@ -106,7 +114,7 @@ def cmd_check(args) -> int:
                           "retracted": [{k: v for k, v in g.items() if k != "paths"} for g in summary["retracted"]]},
                          indent=2, default=str))
     else:
-        print(render(summary, res.expansion, res.store_stats, args.store, args.depth))
+        print(render(summary, res.expansion, res.store_stats, args.store, args.depth, res.title), flush=True)
     print(f"(http: {http.stats['network']} network, {http.stats['cached']} cached)", file=sys.stderr)
     return 1 if summary["counts"]["direct"] or summary["counts"]["load_bearing"] else 0
 

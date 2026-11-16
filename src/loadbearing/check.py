@@ -72,20 +72,35 @@ def summarize(rows: list[dict], ref_keys: dict[str, str] | None = None) -> dict:
 def run_check(store_path: str, *, bib_path: str | None = None, refs: list[dict] | None = None,
               label: str | None = None, doi: str | None = None, depth: int = 3,
               offline: bool = False, s2_limit: int = 40) -> CheckResult:
-    """Check a .bib file, a list of reference dicts ({key, doi, title}), or a published paper (doi)."""
+    """Check a .bib file, a list of reference dicts ({key, doi, title}), or a published paper (doi).
+
+    Offline, nothing touches the network: a DOI is looked up in the store, and a manuscript that
+    isn't in the store is an error rather than an empty report.
+    """
+    work = None
     if doi:
-        work = openalex.work(doi)
-        root_id, title, refs = short_id(work["id"]), work.get("title") or doi, []
+        root_id, title, refs = None, doi, []
+        if not offline:
+            work = openalex.work(doi)
+            root_id, title = short_id(work["id"]), work.get("title") or doi
     else:
         if bib_path:
             refs = bib.read_references(bib_path)
             label = label or Path(bib_path).stem
-        work, title = None, label or "manuscript"
-        root_id = f"M:{label or 'manuscript'}"
+        title = label or "manuscript"
+        root_id = f"M:{title}"
     ref_keys = {r["doi"]: r["key"] for r in refs or [] if r.get("doi")}
     # Offline checks only read: open read-only so a shipped store is never rewritten.
     conn = relate.connect(store_path, read_only=True) if offline else store.open_store(store_path)
     try:
+        if offline:
+            found = store.find_manuscript(conn, doi=norm_doi(doi) if doi else None,
+                                          root_id=None if doi else root_id)
+            if not found:
+                what = f"doi:{norm_doi(doi)}" if doi else root_id
+                raise LookupError(f"{what} is not a checked manuscript in {store_path}; "
+                                  "run without --offline to build it")
+            root_id, title = found["id"], found["title"] or title
         ex = None if offline else expand.build(conn, refs or [], root_id, title, work, depth, s2_limit=s2_limit)
         rows = store.exposure(conn, root_id, depth)
         ignored = store.ignored_citations(conn, root_id, depth)

@@ -182,3 +182,22 @@ def test_impossible_citations_are_excluded_or_downgraded():
     lb = {tuple(r["chain"]) for r in conn.execute(store.LOAD_BEARING_ONLY, {"root": "M"})}
     assert lb == {("M", "A", "R")}
     conn.close()
+
+
+def test_offline_check_uses_only_the_store(monkeypatch):
+    """--offline with --doi must resolve the paper from the shipped store, never the network."""
+    from loadbearing import check, openalex
+
+    def no_network(*a, **k):
+        raise AssertionError("offline check touched the network")
+
+    monkeypatch.setattr(openalex, "work", no_network)
+    res = check.run_check("data/demo.rl", doi="https://doi.org/10.1016/J.REDOX.2025.103611", depth=3, offline=True)
+    assert res.root_id == "W4408770418" and res.title.startswith("Absence of astrocytic ceruloplasmin")
+    assert res.summary["counts"]["load_bearing"] == 23
+    try:
+        check.run_check("data/demo.rl", doi="10.1000/not-in-store", offline=True)
+    except LookupError as e:
+        assert "not a checked manuscript" in str(e)
+    else:
+        raise AssertionError("missing manuscript should raise")

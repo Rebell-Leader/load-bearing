@@ -195,6 +195,15 @@ def exposure(conn, root: str, depth: int = 3) -> list[dict]:
     return list(conn.execute(q, {"root": root, "load_bearing": LOAD_BEARING_INTENTS}))
 
 
+def find_manuscript(conn, *, doi: str | None = None, root_id: str | None = None) -> dict | None:
+    """A checked manuscript by DOI or id, or None. Lets offline checks run without any network."""
+    if doi:
+        rows = list(conn.execute("MATCH (m:Manuscript {doi: $doi}) RETURN m.id AS id, m.title AS title", {"doi": doi}))
+    else:
+        rows = list(conn.execute("MATCH (m:Manuscript {id: $id}) RETURN m.id AS id, m.title AS title", {"id": root_id}))
+    return dict(rows[0]) if rows else None
+
+
 def stats(conn) -> dict:
     row = conn.execute(
         "MATCH (p:Paper) WITH count(p) AS papers "

@@ -1,5 +1,5 @@
 Load-Bearing check: Absence of astrocytic ceruloplasmin reverses the senescence process with aging of learning and memory abilities
-  72/72 references resolved
+  offline: read from data/demo.rl, no network
   56 of your references reach 349 retracted papers within 3 citation hops
   evidence: read the citing sentence for 606 of 1288 citations on those paths (47%); 62 were made after the retraction
   store data/demo.rl: 926 papers, 1,305 citations, 349 retracted

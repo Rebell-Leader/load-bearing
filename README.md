@@ -30,7 +30,7 @@ That prints the full report for the demo paper from the shipped Relate store
 
 ```bash
 python3 -m http.server 8765        # open http://localhost:8765/viewer/ : the same graph, in the browser
-uv run pytest -q                   # 11 offline tests, including Relate path queries
+uv run pytest -q                   # 12 offline tests, including Relate path queries
 ```
 
 With the [Relate CLI](https://relatedb.ai/docs/get-started/install/) installed, you can query the store
