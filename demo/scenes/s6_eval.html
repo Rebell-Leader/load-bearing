@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>Scene 6: measured</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=block" rel="stylesheet">
+<link rel="stylesheet" href="common.css">
+<style>
+  #a { left: 40px; top: 66px; width: 580px; height: 268px; }
+  #b { left: 640px; top: 66px; width: 600px; height: 268px; }
+  .cb { padding: 16px 20px; }
+  .hero { font-size: 64px; font-weight: 800; letter-spacing: -.03em; line-height: 1; }
+  .sub { font-size: 15px; color: var(--muted); margin-top: 6px; line-height: 1.4; }
+  .bars { margin-top: 18px; display: grid; gap: 10px; }
+  .brow { display: grid; grid-template-columns: 200px 1fr 56px; gap: 10px; align-items: center; font-size: 14px; }
+  .track { height: 14px; border-radius: 7px; background: var(--soft); overflow: hidden; position: relative; }
+  .fill { height: 100%; border-radius: 7px; width: 0; }
+  .ci { position: absolute; top: 3px; height: 8px; border-radius: 4px; background: rgba(255,255,255,.28); }
+  .v { font-variant-numeric: tabular-nums; font-weight: 700; text-align: right; }
+  #c { left: 40px; top: 352px; width: 1200px; height: 104px; }
+  #c .cb { display: grid; grid-template-columns: 1fr; gap: 6px; }
+  #c .line { font-size: 24px; font-weight: 700; letter-spacing: -.01em; }
+  #c .ex { font-size: 14.5px; color: var(--muted); }
+  #c .ex .q { font-size: 14.5px; }
+  #end { left: 40px; top: 500px; width: 1200px; }
+  #end .name { font-size: 40px; font-weight: 800; letter-spacing: -.02em; }
+  #end .links { margin-top: 8px; font-size: 18px; display: flex; gap: 28px; flex-wrap: wrap; }
+  #end .links span { color: var(--muted); }
+  #end .links b { color: var(--fg); font-weight: 600; }
+  #end .modes { margin-top: 12px; display: flex; gap: 8px; flex-wrap: wrap; }
+  .fine { left: 40px; top: 690px; font-size: 12px; color: var(--mo); }
+</style></head>
+<body>
+<div class="label" id="lab"><span class="n">6</span><b>Measured, not assumed</b></div>
+
+<div class="card" id="a"><h4>Citation intent model · SciCite test set (1,861 sentences)</h4>
+  <div class="cb">
+    <div class="hero"><span id="f1">0.000</span> <span style="font-size:22px;font-weight:600" class="muted">macro-F1</span></div>
+    <div class="sub">BiomedBERT fine-tuned on SciCite, used to spot method citations</div>
+    <div class="bars">
+      <div class="brow"><span>BiomedBERT + SciCite</span><div class="track"><div class="fill" id="bA" style="background:var(--accent)"></div></div><span class="v" id="vA"></span></div>
+      <div class="brow"><span class="muted">Rules (v0)</span><div class="track"><div class="fill" id="bB" style="background:var(--mo)"></div></div><span class="v muted" id="vB"></span></div>
+    </div>
+  </div>
+</div>
+
+<div class="card" id="b"><h4>Reliance on held-out biomedical sentences (60, labelled after freezing)</h4>
+  <div class="cb">
+    <div class="bars" style="margin-top:4px">
+      <div class="brow"><span>Recall · real reliance found</span><div class="track"><div class="fill" id="bR" style="background:var(--ok)"></div></div><span class="v" id="vR"></span></div>
+      <div class="brow"><span>Precision</span><div class="track"><div class="fill" id="bP" style="background:var(--lb)"></div><div class="ci" id="ciP"></div></div><span class="v" id="vP"></span></div>
+    </div>
+    <div class="sub" style="margin-top:16px" id="pci"></div>
+    <div class="sub">Most flagged citations are not real reliance, so a flag is a prompt to read, never a verdict.</div>
+  </div>
+</div>
+
+<div class="card" id="c"><div class="cb">
+  <div class="line">So every finding shows its sentence, and a person decides.</div>
+  <div class="ex"><span class="pill"><span class="dot" style="background:var(--lb)"></span>load-bearing</span>&nbsp; reed2011 → Lesné 2006 · <b class="i-rel">method</b> · <span class="q" id="exq"></span></div>
+</div></div>
+
+<div class="abs" id="end">
+  <div class="name">Load-Bearing</div>
+  <div class="links"><span>Code <b id="repo"></b></span><span>Viewer <b id="viewer"></b></span></div>
+  <div class="modes">
+    <span class="pill">Relate embedded in Python</span><span class="pill">single-file .rl evidence pack</span>
+    <span class="pill">directory store + live MCP follower</span><span class="pill">WebAssembly in the browser</span>
+  </div>
+</div>
+<div class="abs fine" id="fine"></div>
+
+<script src="timeline.js"></script>
+<script src="../build/data.js"></script>
+<script type="module">
+await TL.fonts();
+const E = DATA.eval, $ = (id) => document.getElementById(id);
+TL.show($("lab"), 0, Infinity, { d: 0.5, dy: 0 });
+TL.show($("a"), 0.2, Infinity, { d: 0.6 });
+TL.count($("f1"), E.scicite_f1, 0.5, 1.6, (v) => v.toFixed(3));
+const bar = (id, vid, v, t0, fmt = (x) => x.toFixed(2)) => {
+  TL.on((t) => { const k = TL.p(t, t0, 1.2); $(id).style.width = `${100 * v * k}%`; $(vid).textContent = fmt(v * k); });
+};
+bar("bA", "vA", E.scicite_f1, 0.8, (x) => x.toFixed(3));
+bar("bB", "vB", E.rules_f1, 1.0, (x) => x.toFixed(3));
+TL.show($("b"), 3.4, Infinity, { d: 0.6 });
+bar("bR", "vR", E.heldout_recall, 3.8);
+bar("bP", "vP", E.heldout_precision, 4.2);
+$("ciP").style.left = `${100 * E.precision_ci[0]}%`; $("ciP").style.width = `${100 * (E.precision_ci[1] - E.precision_ci[0])}%`;
+TL.show($("ciP"), 5.4, Infinity, { d: 0.4, dy: 0 });
+$("pci").textContent = `Precision ${E.heldout_precision.toFixed(2)}, 95% CI ${E.precision_ci[0].toFixed(2)}–${E.precision_ci[1].toFixed(2)}, from ${E.predicted} flagged sentences.`;
+TL.show($("pci"), 5.4, Infinity, { d: 0.4 });
+$("exq").textContent = DATA.agent.reed_sentence;
+TL.show($("c"), 7.6, Infinity, { d: 0.6 });
+$("repo").textContent = DATA.links.repo; $("viewer").textContent = DATA.links.viewer;
+TL.show($("end"), 10.4, Infinity, { d: 0.7 });
+$("fine").textContent = E.footnote;
+TL.show($("fine"), 10.8, Infinity, { d: 0.6, dy: 0 });
+TL.ready(DATA.timing.s6);
+</script>
+</body></html>

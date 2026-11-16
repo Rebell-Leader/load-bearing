@@ -41,12 +41,27 @@ uv run --group demo python scripts/agent_demo.py --budget 3
 
 The run works on a temporary clone of `data/demo.rl`, so the shipped files never change.
 
-## Video script (about 1:45)
+## Video (about 1:54)
+
+The silent video is recorded with headless Chromium by [`scripts/record_demo.py`](../scripts/record_demo.py) from the
+scene pages in [`demo/scenes/`](../demo/scenes/). Every number on screen comes from the repository: the script runs the
+offline check and the Relate CLI query, reads the store and the recorded agent transcript, and drives the hosted
+viewer. Scenes 1–4 and 6 are timelines rendered frame by frame; scene 5 is the live viewer with a visible cursor.
+
+```bash
+uv run --with playwright python scripts/record_demo.py                # demo/build/load-bearing-demo.mp4
+uv run --with playwright python scripts/record_demo.py --scenes 3     # re-record one scene, then reassemble
+```
+
+It writes `demo/build/load-bearing-demo.mp4` (1920×1080, 30 fps, no audio), one clip per scene,
+`load-bearing-demo.srt` with the voice-over below split by sentence at its time codes, and `timing.md`.
+Each scene ends on a still frame, so a scene can be held longer if a voice-over line runs long.
 
 | Time | Screen | Voice-over |
 |---|---|---|
-| 0:00–0:12 | The Lesné 2006 retraction notice next to its citation count | "This *Nature* paper was retracted in 2024 after OpenAlex had counted 2,840 citations. In a 2026 study, none of nine AI research tools reliably caught retracted papers. Flagging a direct citation is easy. The hard part is the papers you rely on that relied on it." |
-| 0:12–0:30 | `loadbearing check --doi 10.1016/j.redox.2025.103611 --offline`, scrolling the report | "Load-Bearing follows citations three hops out in Relate and reads the sentence where each one appears. This 2025 Alzheimer's paper has 72 references: 56 lead to retracted work, and 23 of those paths run through method or result citations." |
-| 0:30–1:05 | `scripts/agent_demo.py` running, then the transcript: tool calls, the Cline sentence, the Cypher, the rewrite | "For agents, Load-Bearing is an MCP server, alongside Relate's own. Claude audits a research assistant's draft. It finds two retracted papers, reads the evidence before acting, keeps one review for its general claim, queries the graph in Cypher, and rewrites the paragraph without inventing a single reference." |
-| 1:05–1:25 | `store.py` with the quantified path query; `relate serve --read-only=live`; `data/demo.rl` | "The core is one Cypher statement: paths from the manuscript to a retracted paper where every hop is a method or result citation. It runs in 1.5 ms. The evidence pack is a single `.rl` file you can hand to an editor. The working graph is a directory store that Relate's MCP server follows live." |
-| 1:25–1:45 | [`docs/EVAL.md`](EVAL.md) table | "We measured it honestly: BiomedBERT on SciCite reaches 0.856 macro-F1, and on held-out sentences our classifier finds 69% of real reliance at 33% precision. So every finding shows its sentence, and a person decides." |
+| 0:00–0:17 | **The problem.** Lesné 2006: the paper, its 2,840 OpenAlex citations, the retraction stamp and notice reasons; then a two-hop path (your draft → Larson & Lesné 2012 → Lesné 2006) with the method sentence | "This Nature paper was retracted in 2024, after OpenAlex had counted 2,840 citations. In a 2026 study, none of nine AI research tools reliably caught retracted papers. Flagging a direct citation is easy. The hard part is what your sources relied on." |
+| 0:17–0:35.5 | **Command line.** `loadbearing check --doi 10.1016/j.redox.2025.103611 --store data/demo.rl --offline` typed and run; the report scrolls to the load-bearing findings and the summary | "Load-Bearing follows citations three hops out into a Relate graph, and reads the sentence where each one appears. This 2025 Alzheimer's paper has 72 references. 56 of them lead to retracted work, and 23 retracted papers are reached only through method or result citations." |
+| 0:35.5–0:58.5 | **For agents.** The recorded agent run replayed: eight tool calls across both MCP servers, the Cline 2018 sentence and the decisions, the agent's own Cypher with its result, and the rewrite as a word diff | "For agents, Load-Bearing is an MCP server, next to Relate's own. Here Claude audits a research assistant's draft. It finds two retracted papers, reads the evidence before acting, keeps one review for its general claim, queries the graph in Cypher, and rewrites the paragraph without inventing a single reference." |
+| 0:58.5–1:21 | **Inside Relate.** `LOAD_BEARING_ONLY` from `store.py` with its two key clauses highlighted; the Relate CLI running it on `data/demo.rl` with the measured time; the single-file pack and the live directory store | "The core is one Cypher statement: paths from the manuscript to a retracted paper where every hop is a method or result citation. Relate answers it in a few milliseconds. The evidence pack is a single file you can hand to an editor, and the working graph is a directory store that Relate's MCP server follows live." |
+| 1:21–1:37.5 | **In the browser.** The live viewer on GitHub Pages: filter to load-bearing, open Lesné 2006, scroll the path diagram and sentences, run a Cypher preset in the console | "The same graph runs in the browser, on Relate's WebAssembly build. Pick a retracted paper, see every path and the sentence behind each citation, and query it in Cypher. Nothing to install, and nothing leaves the page." |
+| 1:37.5–1:54 | **Measured, not assumed.** SciCite macro-F1 against the rules, held-out recall and precision with its confidence interval, an example sentence, and the end card with links | "We measured it honestly. On SciCite, the intent model reaches 0.856 macro-F1. On held-out sentences, it finds 69 percent of real reliance at 33 percent precision. So every finding shows its sentence, and a person decides." |

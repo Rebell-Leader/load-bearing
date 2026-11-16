@@ -1,0 +1,54 @@
+/* Shared look for the demo video scenes. 1280x720 CSS px, recorded at device scale 1.5 (1920x1080). */
+:root {
+  --bg: #0e0f11; --card: #1b1d20; --card2: #17191c; --fg: #ecebe7; --muted: #9a9ea6; --line: #2c2f34;
+  --soft: #23262a; --accent: #7ea2ff; --direct: #ff6b5e; --lb: #f5a524; --unv: #8fa7c2; --mo: #737a83;
+  --ok: #4cc38a; --code: #141619; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; width: 1280px; height: 720px; overflow: hidden; }
+body {
+  background: radial-gradient(1100px 650px at 18% -10%, #1b1f27 0%, var(--bg) 62%);
+  color: var(--fg); font-family: Inter, Lato, "Noto Sans", sans-serif; font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+}
+.mono, pre, code { font-family: "JetBrains Mono", "Ubuntu Mono", "DejaVu Sans Mono", monospace; font-variant-ligatures: none; }
+.abs { position: absolute; }
+.muted { color: var(--muted); }
+
+.label { position: absolute; left: 40px; top: 24px; display: flex; gap: 10px; align-items: center;
+  font-size: 13px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.label b { color: var(--fg); font-weight: 600; }
+.label .n { width: 22px; height: 22px; border-radius: 50%; background: var(--soft); border: 1px solid var(--line);
+  display: grid; place-items: center; color: var(--fg); font-size: 12px; letter-spacing: 0; }
+
+.win { position: absolute; background: var(--card); border: 1px solid var(--line); border-radius: 12px; overflow: hidden;
+  box-shadow: 0 24px 70px rgba(0, 0, 0, .5); }
+.win > .bar { height: 34px; display: flex; align-items: center; gap: 10px; padding: 0 14px; background: var(--card2);
+  border-bottom: 1px solid var(--line); color: var(--muted); font-size: 12.5px; }
+.dots { display: inline-flex; gap: 6px; }
+.dots i { width: 11px; height: 11px; border-radius: 50%; background: #3a3d42; display: inline-block; }
+
+.term { position: relative; background: var(--code); padding: 14px 18px; font-size: 13px; line-height: 1.5; white-space: pre-wrap;
+  overflow: hidden; word-break: break-word; }
+.term.clip { white-space: pre; }
+.term .ln { min-height: 1.5em; border-radius: 4px; padding: 0 4px; margin: 0 -4px; }
+.prompt { color: var(--ok); }
+.caret { display: inline-block; width: .6em; background: var(--fg); margin-left: 1px; }
+
+/* report colouring */
+.s-lb { color: var(--lb); font-weight: 600; } .s-unv { color: var(--unv); font-weight: 600; }
+.s-mo { color: var(--mo); font-weight: 600; } .s-direct { color: var(--direct); font-weight: 600; }
+.i-rel { color: var(--lb); } .i-bg { color: var(--mo); } .i-crit { color: var(--ok); }
+.q { color: #b9b6ad; font-style: italic; } .bad { color: var(--direct); } .bold { font-weight: 700; }
+
+/* Cypher highlighting */
+.k-kw { color: #c9a2ff; } .k-str { color: #b5e08a; } .k-par { color: #ffa36c; } .k-lbl { color: #82aaff; }
+.k-cm { color: #6b7280; font-style: italic; } .k-num { color: #ffa36c; } .k-op { color: #89ddff; }
+
+.card { position: absolute; background: var(--card); border: 1px solid var(--line); border-radius: 14px;
+  box-shadow: 0 16px 50px rgba(0, 0, 0, .4); }
+.card h4 { margin: 0; padding: 12px 16px; font-size: 12px; letter-spacing: .08em; text-transform: uppercase;
+  color: var(--muted); border-bottom: 1px solid var(--line); font-weight: 600; }
+.pill { display: inline-flex; align-items: center; gap: 6px; border-radius: 999px; padding: 3px 10px; font-size: 12.5px;
+  border: 1px solid var(--line); background: var(--soft); white-space: nowrap; }
+.dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }

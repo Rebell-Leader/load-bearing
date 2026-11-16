@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>Scene 5: in the browser</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=block" rel="stylesheet">
+<link rel="stylesheet" href="common.css">
+<style>
+  #win { left: 40px; top: 58px; width: 1200px; height: 642px; }
+  #win .bar { height: 40px; }
+  .url { flex: 1; margin-left: 14px; height: 26px; border-radius: 13px; background: #101214; border: 1px solid var(--line);
+    display: flex; align-items: center; padding: 0 12px; font-size: 13px; color: var(--fg); gap: 8px; }
+  .url .lock { color: var(--ok); font-size: 12px; }
+  iframe { display: block; width: 1200px; height: 600px; border: 0; background: #131416; }
+  #cur { position: absolute; left: 0; top: 0; width: 22px; height: 30px; pointer-events: none; z-index: 10;
+    filter: drop-shadow(0 2px 3px rgba(0,0,0,.6)); }
+  #ring { position: absolute; width: 34px; height: 34px; margin: -17px 0 0 -17px; border-radius: 50%;
+    border: 2px solid rgba(126,162,255,.9); pointer-events: none; z-index: 9; opacity: 0; }
+</style></head>
+<body>
+<div class="label"><span class="n">5</span><b>In the browser</b> · the same graph and Cypher on Relate's WebAssembly build</div>
+<div class="win" id="win">
+  <div class="bar"><span class="dots"><i></i><i></i><i></i></span>
+    <div class="url"><span class="lock">●</span><span id="urltext"></span></div></div>
+  <iframe id="vf" title="Load-Bearing viewer"></iframe>
+</div>
+<div id="ring"></div>
+<svg id="cur" viewBox="0 0 22 30"><path d="M2 2 L2 24 L8 18.5 L12.5 28 L16 26.4 L11.6 17 L19.5 17 Z" fill="#fff" stroke="#111" stroke-width="1.6" stroke-linejoin="round"/></svg>
+<script>
+  const params = new URLSearchParams(location.search);
+  const src = params.get("src");
+  document.getElementById("urltext").textContent = params.get("show") || src;
+  document.getElementById("vf").src = src;
+  // The recorder drives this scene step by step (cursor, clicks, scrolling) in synthetic time.
+  window.cursor = (x, y, press = 0) => {
+    const c = document.getElementById("cur");
+    c.style.transform = `translate(${x}px, ${y}px) scale(${1 - 0.15 * press})`;
+    const r = document.getElementById("ring");
+    r.style.left = `${x}px`; r.style.top = `${y}px`; r.style.opacity = String(press * 0.9);
+    r.style.transform = `scale(${0.6 + 0.6 * press})`;
+  };
+  window.frameOrigin = () => { const r = document.getElementById("vf").getBoundingClientRect(); return [r.left, r.top]; };
+  window.cursor(900, 300);
+</script>
+</body></html>

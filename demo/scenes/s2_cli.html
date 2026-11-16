@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>Scene 2: command line</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=block" rel="stylesheet">
+<link rel="stylesheet" href="common.css">
+<style>
+  #w { left: 40px; top: 60px; width: 1200px; height: 632px; }
+  #term { height: 598px; }
+  #callout { right: 64px; top: 84px; width: 300px; padding: 14px 18px; background: rgba(27, 29, 32, .96);
+    border: 1px solid var(--line); border-radius: 12px; box-shadow: 0 12px 40px rgba(0,0,0,.5); }
+  #callout .big { font-size: 40px; font-weight: 800; letter-spacing: -.02em; }
+  #callout .cap { font-size: 14px; color: var(--muted); line-height: 1.4; }
+  #callout .row { display: flex; gap: 10px; align-items: baseline; margin-top: 8px; font-size: 15px; }
+</style></head>
+<body>
+<div class="label" id="lab"><span class="n">2</span><b>Command line</b> · offline, from the Relate store in the repo</div>
+<div class="win" id="w">
+  <div class="bar"><span class="dots"><i></i><i></i><i></i></span><span>load-bearing — bash</span></div>
+  <div class="term mono" id="term"></div>
+</div>
+<div class="abs" id="callout">
+  <div class="big"><span id="c1">56</span><span class="muted" style="font-size:24px"> / 72</span></div>
+  <div class="cap">references reach retracted work within 3 citation hops</div>
+  <div class="row"><span class="s-lb" style="font-size:22px" id="c2">23</span><span>retracted papers reached only through <b class="i-rel">method</b> or <b class="i-rel">result</b> citations</span></div>
+</div>
+<script src="timeline.js"></script>
+<script src="../build/data.js"></script>
+<script type="module">
+await TL.fonts();
+const D = DATA.cli, $ = (id) => document.getElementById(id), esc = TL.esc;
+const term = $("term");
+const cmdLine = TL.el("div", { class: "ln" }, `<span class="prompt">load-bearing $</span> <span id="cmd"></span><span class="caret" id="caret">&nbsp;</span>`);
+term.append(cmdLine);
+
+function colorize(raw) {
+  let s = esc(raw);
+  if (/^LOAD-BEARING/.test(raw)) return `<span class="s-lb">${s}</span>`;
+  if (/^UNVERIFIED/.test(raw)) return `<span class="s-unv">${s}</span>`;
+  if (/^MENTION-ONLY/.test(raw)) return `<span class="s-mo">${s}</span>`;
+  if (/^DIRECT/.test(raw)) return `<span class="s-direct">${s}</span>`;
+  if (/^Summary:/.test(raw)) return `<span class="bold">${s}</span>`;
+  s = s.replace(/^(\s+)! /, '$1<span class="s-lb">!</span> ')
+       .replace(/(├─|└─) (method|result)(\s+)→/, '$1 <span class="i-rel">$2</span>$3→')
+       .replace(/(├─|└─) (background|unknown)(\s+)→/, '$1 <span class="i-bg">$2</span>$3→')
+       .replace(/(├─|└─) (critical)(\s+)→/, '$1 <span class="i-crit">$2</span>$3→')
+       .replace(/(“[^”]*”)/g, '<span class="q">$1</span>')
+       .replace(/\[cited after retraction\]/g, '<span class="bad">[cited after retraction]</span>');
+  if (/^\s+notice:/.test(raw)) s = `<span class="muted">${s}</span>`;
+  return s;
+}
+const lines = D.output.replace(/\n+$/, "").split("\n").map((raw) => {
+  const div = TL.el("div", { class: "ln" }, colorize(raw) || "&nbsp;");
+  div.dataset.raw = raw; term.append(div); return div;
+});
+const find = (re, from = 0) => lines.findIndex((l, i) => i >= from && re.test(l.dataset.raw));
+
+TL.show($("lab"), 0.0, Infinity, { d: 0.5, dy: 0 });
+const tCmd = TL.type($("cmd"), D.cmd, 0.4, 44);
+TL.caret($("caret"), 0, tCmd + 0.3);
+lines.forEach((l, i) => TL.show(l, tCmd + 0.4 + (i < 8 ? i * 0.06 : 0.5 + i * 0.01), Infinity, { d: 0.12, dy: 0 }));
+
+const iReach = find(/of your references reach/), iLB = find(/^LOAD-BEARING/), iL1 = find(/^\s+! /, iLB);
+const iNext = find(/^\s+! /, iL1 + 1), iSum = find(/^Summary:/);
+TL.hl(lines[iReach], 3.6, 7.0);
+TL.show($("callout"), 4.0, 8.4, { d: 0.5, dx: 20, dy: 0, dOut: 0.4 });
+TL.count($("c1"), 56, 4.0, 1.0); TL.count($("c2"), 23, 4.4, 1.0);
+for (let i = iL1; i < iNext; i++) TL.hl(lines[i], 9.4, 12.6);
+TL.hl(lines[iSum], 14.6);
+
+const top = (i) => lines[i].offsetTop - 14;
+const maxScroll = term.scrollHeight - term.clientHeight;
+TL.scroll(term, [[0, 0], [7.2, 0], [9.0, Math.min(top(iLB) - 10, maxScroll)], [12.6, Math.min(top(iLB) - 10, maxScroll)],
+  [14.4, maxScroll]]);
+TL.ready(DATA.timing.s2);
+</script>
+</body></html>
