@@ -13,7 +13,7 @@ hops. 23 of those paths run only through method or result citations, including L
 retracted in 2024).
 
 **Demo video:** _link added at submission_ · **Agent run:** [`runs/agent_demo.md`](runs/agent_demo.md) ·
-**Browser viewer:** [`viewer/`](viewer/) · **Evaluation:** [`docs/EVAL.md`](docs/EVAL.md)
+**Browser viewer:** [live on GitHub Pages](https://rebell-leader.github.io/load-bearing/viewer/) · **Evaluation:** [`docs/EVAL.md`](docs/EVAL.md)
 
 ## Try it in two minutes
 
@@ -183,7 +183,8 @@ uv run --group demo python scripts/agent_demo.py --budget 3   # ANTHROPIC_API_KE
 
 ### Browser viewer
 
-`python3 -m http.server 8765`, then open `http://localhost:8765/viewer/`. Pick a manuscript, browse
+Open the [hosted copy](https://rebell-leader.github.io/load-bearing/viewer/), or run `python3 -m http.server 8765` and open
+`http://localhost:8765/viewer/`. Pick a manuscript, browse
 retracted papers by status, see the citation paths as a diagram with the citing sentences, and run Cypher
 in the tab. Details: [viewer/README.md](viewer/README.md).
 

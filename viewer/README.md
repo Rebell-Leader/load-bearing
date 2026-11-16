@@ -4,6 +4,8 @@ A static page that runs [Relate](https://relatedb.ai)'s WebAssembly build in the
 evidence pack: which references reach retracted papers, through which citations, with the citing
 sentences. It has no server-side code and nothing to install.
 
+Hosted copy: https://rebell-leader.github.io/load-bearing/viewer/ (GitHub Pages). To run it locally:
+
 ```bash
 python3 -m http.server 8765        # from the repository root
 # open http://localhost:8765/viewer/

@@ -15,7 +15,7 @@ collapsed: retracted science, traced through citation paths in Relate.
 
 - Repository: https://github.com/Rebell-Leader/load-bearing (topics `relate`, `relate-neo4j-hackathon`)
 - Demo video: `[[YouTube link]]`
-- Browser viewer: `[[https://<you>.github.io/load-bearing/viewer/]]` (GitHub Pages), or run it locally
+- Browser viewer: https://rebell-leader.github.io/load-bearing/viewer/ (GitHub Pages), or run it locally
   with `python3 -m http.server 8765`
 
 ## About the project
