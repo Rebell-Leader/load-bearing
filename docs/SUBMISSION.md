@@ -13,7 +13,7 @@ collapsed: retracted science, traced through citation paths in Relate.
 
 ## Links
 
-- Repository: `[[https://github.com/<you>/load-bearing]]` (topics `relate`, `relate-neo4j-hackathon`)
+- Repository: https://github.com/Rebell-Leader/load-bearing (topics `relate`, `relate-neo4j-hackathon`)
 - Demo video: `[[YouTube link]]`
 - Browser viewer: `[[https://<you>.github.io/load-bearing/viewer/]]` (GitHub Pages), or run it locally
   with `python3 -m http.server 8765`
@@ -121,8 +121,8 @@ europe-pmc · semantic-scholar · pytorch · transformers · biomedbert
 ## Submission checklist (from the hackathon page)
 
 - [x] Project description: the use case, and what connects to what (above)
-- [ ] Public GitHub repo with a README on how to set up and use it: README follows the template
-- [ ] GitHub topic `relate` (required) and `relate-neo4j-hackathon` (recommended)
+- [x] Public GitHub repo with a README on how to set up and use it: README follows the template
+- [x] GitHub topic `relate` (required) and `relate-neo4j-hackathon` (recommended)
 - [x] Persistent Relate store judges can inspect: `data/demo.rl` (single file) and `data/evidence/` (directory)
 - [x] Working code with Relate running: the offline check, 11 tests, MCP smoke test, viewer
 - [ ] Demo video, 1–2 minutes: script in [DEMO.md](DEMO.md)

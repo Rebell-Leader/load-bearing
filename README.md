@@ -20,7 +20,7 @@ retracted in 2024).
 No network, no API keys. Needs Python 3.12+ and [uv](https://docs.astral.sh/uv/).
 
 ```bash
-git clone <this repository> load-bearing && cd load-bearing
+git clone https://github.com/Rebell-Leader/load-bearing.git && cd load-bearing
 uv sync
 uv run loadbearing check --doi 10.1016/j.redox.2025.103611 --store data/demo.rl --offline
 ```
