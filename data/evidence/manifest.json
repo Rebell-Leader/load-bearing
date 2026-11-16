@@ -1,0 +1,147 @@
+{
+  "format_version": 5,
+  "next_node_id": 1247,
+  "next_rel_id": 1626,
+  "checkpoint_lsn": 11,
+  "commit_ts": 11,
+  "node_parts": [
+    {
+      "path": "nodes/0-262144-0ba123e40ccbe04550f64dea2641b8a8.parquet",
+      "id_lo": 0,
+      "id_hi": 262144,
+      "rows": 1247,
+      "bytes": 137813
+    }
+  ],
+  "rel_parts": [
+    {
+      "path": "relationships/0-262144-1ccd37f1113cb0f168dccea9b8b318bc.parquet",
+      "id_lo": 0,
+      "id_hi": 262144,
+      "rows": 1626,
+      "bytes": 129157
+    }
+  ],
+  "bytes_per_node": 110.51563753007217,
+  "bytes_per_rel": 79.43234932349324,
+  "codec": "parquet",
+  "indexes": [
+    {
+      "name": "notice_id",
+      "label": "Notice",
+      "property": "id#RANGE#notice_id"
+    },
+    {
+      "name": "paper_id",
+      "label": "Paper",
+      "property": "id#RANGE#paper_id"
+    },
+    {
+      "name": "paper_title",
+      "label": "Paper",
+      "property": "title#FULLTEXT#paper_title"
+    }
+  ],
+  "constraints": [
+    {
+      "name": "notice_id",
+      "relationship": false,
+      "label": "Notice",
+      "properties": [
+        "id"
+      ],
+      "kind": "unique",
+      "property_type": null
+    },
+    {
+      "name": "paper_id",
+      "relationship": false,
+      "label": "Paper",
+      "properties": [
+        "id"
+      ],
+      "kind": "unique",
+      "property_type": null
+    }
+  ],
+  "theater": {
+    "databases": {
+      "neo4j": [
+        25,
+        false
+      ],
+      "system": [
+        25,
+        false
+      ],
+      "system_ontologies": [
+        25,
+        false
+      ]
+    },
+    "index_details": {
+      "notice_id": {
+        "kind": "Range",
+        "relationship": false,
+        "labels": [
+          "Notice"
+        ],
+        "properties": [
+          "id"
+        ],
+        "with_properties": []
+      },
+      "paper_id": {
+        "kind": "Range",
+        "relationship": false,
+        "labels": [
+          "Paper"
+        ],
+        "properties": [
+          "id"
+        ],
+        "with_properties": []
+      },
+      "paper_title": {
+        "kind": "Fulltext",
+        "relationship": false,
+        "labels": [
+          "Paper"
+        ],
+        "properties": [
+          "title"
+        ],
+        "with_properties": []
+      }
+    },
+    "index_options": {
+      "notice_id": {},
+      "paper_id": {},
+      "paper_title": {
+        "indexConfig": {
+          "t": "map",
+          "v": {
+            "fulltext.analyzer": {
+              "t": "string",
+              "v": "standard-no-stop-words"
+            },
+            "fulltext.eventually_consistent": {
+              "t": "bool",
+              "v": false
+            }
+          }
+        }
+      }
+    },
+    "graph_types": {},
+    "current_graph_type": {
+      "node_types": [],
+      "edge_types": [],
+      "constraints": [],
+      "drop_constraint_names": []
+    },
+    "derived_constraints": {}
+  },
+  "query_engine": "in-memory",
+  "write_engine": "local"
+}

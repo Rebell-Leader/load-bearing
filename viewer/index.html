@@ -1,0 +1,457 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Load-Bearing Viewer</title>
+<meta name="description" content="Explore a Load-Bearing evidence pack: which references rest on retracted science, with the citing sentences. Runs Relate (WebAssembly) in your browser.">
+<style>
+:root {
+  --bg: #f7f6f2; --card: #ffffff; --fg: #1d1f23; --muted: #6b6f76; --line: #e3e1da; --soft: #efede7;
+  --accent: #2f5bd3; --direct: #c2362b; --lb: #d97706; --unv: #5b7088; --mo: #9aa0a6; --ok: #2e8b57;
+  --code: #f1efe9; --shadow: 0 1px 2px rgba(0,0,0,.05), 0 4px 16px rgba(0,0,0,.04);
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #131416; --card: #1b1d20; --fg: #e8e6e1; --muted: #9a9ea6; --line: #2c2f34; --soft: #23262a;
+    --accent: #7ea2ff; --direct: #ff6b5e; --lb: #f5a524; --unv: #8fa7c2; --mo: #6f757d; --ok: #4cc38a;
+    --code: #202326; --shadow: none; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #131416; --card: #1b1d20; --fg: #e8e6e1; --muted: #9a9ea6; --line: #2c2f34; --soft: #23262a;
+  --accent: #7ea2ff; --direct: #ff6b5e; --lb: #f5a524; --unv: #8fa7c2; --mo: #6f757d; --ok: #4cc38a;
+  --code: #202326; --shadow: none; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--fg);
+  font: 15px/1.5 ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+code, pre, textarea, .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+a { color: var(--accent); }
+.wrap { max-width: 1240px; margin: 0 auto; padding: 20px 16px 48px; }
+header { display: flex; flex-wrap: wrap; gap: 12px 24px; align-items: flex-end; justify-content: space-between; margin-bottom: 18px; }
+h1 { font-size: 26px; line-height: 1.15; margin: 0; letter-spacing: -0.01em; }
+.tag { color: var(--muted); margin: 4px 0 0; max-width: 60ch; }
+.engine { font-size: 12.5px; color: var(--muted); border: 1px solid var(--line); border-radius: 999px; padding: 4px 10px; background: var(--card); }
+.engine b { color: var(--fg); font-weight: 600; }
+.bar { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-bottom: 16px; }
+select, button, textarea { font: inherit; color: var(--fg); }
+select { background: var(--card); border: 1px solid var(--line); border-radius: 8px; padding: 7px 10px; max-width: 100%; }
+.stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; margin-bottom: 16px; }
+.stat { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; box-shadow: var(--shadow); }
+.stat .v { font-size: 26px; font-weight: 650; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
+.stat .l { color: var(--muted); font-size: 13px; }
+.grid { display: grid; grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.35fr); gap: 16px; align-items: start; }
+.card { background: var(--card); border: 1px solid var(--line); border-radius: 12px; box-shadow: var(--shadow); }
+.card > h2 { font-size: 14px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); margin: 0; padding: 12px 14px; border-bottom: 1px solid var(--line); }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; padding: 10px 14px; border-bottom: 1px solid var(--line); }
+.chip { border: 1px solid var(--line); background: var(--soft); border-radius: 999px; padding: 3px 10px; font-size: 13px; cursor: pointer; }
+.chip[aria-pressed="true"] { background: var(--fg); color: var(--bg); border-color: var(--fg); }
+.dot { display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: 6px; vertical-align: 0; }
+.s-direct { background: var(--direct); } .s-load_bearing { background: var(--lb); } .s-unverified { background: var(--unv); }
+.s-mention_only { background: var(--mo); } .s-defused { background: var(--ok); }
+ul.list { list-style: none; margin: 0; padding: 4px; max-height: 640px; overflow: auto; }
+.item { width: 100%; text-align: left; background: none; border: 0; border-radius: 8px; padding: 9px 10px; cursor: pointer; display: block; }
+.item:hover { background: var(--soft); }
+.item[aria-current="true"] { background: var(--soft); outline: 2px solid var(--accent); outline-offset: -2px; }
+.item .t { font-weight: 560; display: block; }
+.item .m { color: var(--muted); font-size: 13px; }
+.detail { padding: 14px; }
+.detail h3 { margin: 0 0 4px; font-size: 18px; line-height: 1.3; }
+.meta { color: var(--muted); font-size: 13.5px; margin: 0 0 10px; }
+.notice { background: var(--soft); border-radius: 8px; padding: 8px 10px; font-size: 13.5px; margin-bottom: 12px; }
+.badge { display: inline-block; font-size: 12px; font-weight: 600; padding: 2px 8px; border-radius: 999px; color: #fff; margin-right: 6px; }
+.b-direct { background: var(--direct); } .b-load_bearing { background: var(--lb); } .b-unverified { background: var(--unv); }
+.b-mention_only { background: var(--mo); } .b-defused { background: var(--ok); }
+svg.paths { width: 100%; height: auto; display: block; margin: 6px 0 12px; }
+svg.paths text { font-size: 11px; fill: var(--fg); paint-order: stroke; stroke: var(--card); stroke-width: 3px; stroke-linejoin: round; }
+svg.paths .col { font-size: 10px; fill: var(--muted); text-transform: uppercase; letter-spacing: .06em; }
+.legend { display: flex; flex-wrap: wrap; gap: 14px; font-size: 12.5px; color: var(--muted); margin-bottom: 10px; }
+.legend i { display: inline-block; width: 22px; height: 0; border-top: 2px solid; vertical-align: middle; margin-right: 6px; }
+.path { border-top: 1px solid var(--line); padding: 10px 0; }
+.hop { margin: 4px 0 4px 0; font-size: 13.5px; }
+.intent { display: inline-block; min-width: 82px; font-size: 12px; font-weight: 600; border-radius: 6px; padding: 1px 6px; margin-right: 6px; background: var(--soft); text-align: center; }
+.i-method, .i-result { background: color-mix(in srgb, var(--lb) 22%, transparent); }
+.i-critical { background: color-mix(in srgb, var(--ok) 22%, transparent); }
+blockquote { margin: 4px 0 6px 88px; padding: 4px 10px; border-left: 3px solid var(--line); color: var(--muted); font-size: 13.5px; }
+.flag { font-size: 12px; color: var(--direct); margin-left: 6px; }
+.console { margin-top: 16px; }
+.console .body { padding: 12px 14px; }
+textarea { width: 100%; min-height: 120px; background: var(--code); border: 1px solid var(--line); border-radius: 8px; padding: 10px; font-size: 13px; resize: vertical; }
+.row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin: 8px 0; }
+button.primary { background: var(--accent); color: #fff; border: 0; border-radius: 8px; padding: 7px 14px; cursor: pointer; font-weight: 600; }
+.out { overflow: auto; max-height: 420px; border: 1px solid var(--line); border-radius: 8px; }
+table { border-collapse: collapse; width: 100%; font-size: 13px; }
+th, td { text-align: left; padding: 6px 8px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { position: sticky; top: 0; background: var(--card); }
+td { max-width: 420px; overflow-wrap: anywhere; }
+.muted { color: var(--muted); }
+.err { color: var(--direct); white-space: pre-wrap; }
+footer { margin-top: 18px; color: var(--muted); font-size: 13px; }
+#status { min-height: 1.5em; }
+@media (max-width: 900px) {
+  .grid { grid-template-columns: minmax(0, 1fr); }
+  .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  blockquote { margin-left: 12px; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <h1>Load-Bearing</h1>
+      <p class="tag">Which references rest on retracted science, and through which citations. This page runs the
+        <a href="https://relatedb.ai">Relate</a> graph database in your browser: nothing to install, nothing leaves the page.</p>
+    </div>
+    <div class="engine" id="engine">Relate <b>1.0.2</b> · WebAssembly · in memory</div>
+  </header>
+
+  <div class="bar">
+    <label for="ms" class="muted">Manuscript</label>
+    <select id="ms" disabled></select>
+    <span id="status" class="muted" aria-live="polite">Starting…</span>
+  </div>
+
+  <section class="stats" id="stats" aria-label="Summary"></section>
+
+  <div class="grid">
+    <section class="card" aria-label="Retracted papers reached">
+      <h2>Retracted papers reached</h2>
+      <div class="chips" id="chips"></div>
+      <ul class="list" id="list"></ul>
+    </section>
+    <section class="card" aria-label="Evidence">
+      <h2>Evidence</h2>
+      <div class="detail" id="detail"><p class="muted">Pick a retracted paper to see how your references reach it.</p></div>
+    </section>
+  </div>
+
+  <section class="card console" aria-label="Cypher console">
+    <h2>Ask the graph (Cypher, running in this tab)</h2>
+    <div class="body">
+      <div class="row">
+        <select id="preset" aria-label="Example queries"></select>
+        <button class="primary" id="run">Run</button>
+        <span class="muted" id="qinfo"></span>
+      </div>
+      <textarea id="cypher" spellcheck="false" aria-label="Cypher statement"></textarea>
+      <p class="muted" style="margin:6px 0 10px">Parameters: <code>$root</code> is the selected manuscript. Ctrl/⌘+Enter runs.
+        The graph is a copy in this tab: a write changes only the copy, and reloading resets it.</p>
+      <div class="out" id="out"></div>
+    </div>
+  </section>
+
+  <footer>
+    Paths are evidence for a person to review, not verdicts about any paper or author. Citation intent (v1) finds
+    69% of real reliance at 33% precision on held-out sentences, so every finding shows its sentence
+    (<a href="../docs/EVAL.md">evaluation</a>). Notices: Retraction Watch via Crossref, Crossref notice links, OpenAlex.
+    Source: the Load-Bearing repository, <code>viewer/</code>.
+  </footer>
+</div>
+
+<script type="module">
+import init, { RelateDb } from "https://cdn.jsdelivr.net/npm/@relate/relate-wasm@1.0.2/relate.js";
+
+const ORDER = ["direct", "load_bearing", "unverified", "mention_only", "defused"];
+const NAMES = { direct: "Direct", load_bearing: "Load-bearing", unverified: "Unverified", mention_only: "Mention-only", defused: "Defused" };
+const HELP = {
+  direct: "You cite a retracted paper.",
+  load_bearing: "Every citation after yours on the path is a method or result citation.",
+  unverified: "A citation on the path couldn't be read, or its dates conflict.",
+  mention_only: "The path passes through a background mention.",
+  defused: "A paper on the path already flags the problem.",
+};
+let db, pack, current = null, summary = null, filter = null;
+
+// ---------- tiny DOM helpers (text only, never innerHTML with data) ----------
+function h(tag, attrs = {}, ...kids) {
+  const e = document.createElement(tag);
+  for (const [k, v] of Object.entries(attrs)) {
+    if (k === "class") e.className = v; else if (k.startsWith("on")) e.addEventListener(k.slice(2), v); else if (v != null) e.setAttribute(k, v);
+  }
+  for (const k of kids.flat()) if (k != null) e.append(k instanceof Node ? k : String(k));
+  return e;
+}
+const SVG = "http://www.w3.org/2000/svg";
+function s(tag, attrs = {}, text) {
+  const e = document.createElementNS(SVG, tag);
+  for (const [k, v] of Object.entries(attrs)) e.setAttribute(k, v);
+  if (text != null) e.textContent = text;
+  return e;
+}
+const clean = (t) => (t || "untitled").replace(/^(RETRACTED ARTICLE|RETRACTED|Retracted|RETRACTION OF)\s*:\s*/, "");
+const short = (t, n) => { t = clean(t); return t.length > n ? t.slice(0, n - 1) + "…" : t; };
+const status = (msg) => { document.getElementById("status").textContent = msg; };
+
+// ---------- Relate ----------
+function run(statement, params) {
+  const t = performance.now();
+  const env = JSON.parse(db.execute(statement, params ? JSON.stringify(params) : null));
+  env._ms = performance.now() - t;
+  if (env.error) throw new Error(env.error);
+  return env;
+}
+
+function loadPack(p) {
+  run("CREATE CONSTRAINT paper_id IF NOT EXISTS FOR (p:Paper) REQUIRE p.id IS UNIQUE");
+  run("CREATE CONSTRAINT notice_id IF NOT EXISTS FOR (n:Notice) REQUIRE n.id IS UNIQUE");
+  const groups = new Map();
+  for (const n of p.nodes) {
+    const key = n.labels.join(":");
+    if (!/^[A-Za-z]+(:[A-Za-z]+)*$/.test(key)) continue;  // labels go into the statement text: allow letters only
+    if (!groups.has(key)) groups.set(key, []);
+    groups.get(key).push(n.props);
+  }
+  for (const [labels, rows] of groups) run(`UNWIND $rows AS r CREATE (n:${labels}) SET n = r`, { rows });
+  run("MATCH (p:Paper) WHERE p.pub_date IS NOT NULL SET p.pub_date = date(p.pub_date)");
+  run("MATCH (p:Retracted) WHERE p.retraction_date IS NOT NULL SET p.retraction_date = date(p.retraction_date)");
+  run("MATCH (n:Notice) WHERE n.date IS NOT NULL SET n.date = date(n.date)");
+  const cites = p.rels.filter((r) => r.type === "CITES").map((r) => ({ s: r.s, t: r.t, p: r.props }));
+  run("UNWIND $rows AS r MATCH (a:Paper {id: r.s}), (b:Paper {id: r.t}) CREATE (a)-[c:CITES]->(b) SET c = r.p", { rows: cites });
+  const rb = p.rels.filter((r) => r.type === "RETRACTED_BY").map((r) => ({ s: r.s, t: r.t }));
+  run("UNWIND $rows AS r MATCH (a:Paper {id: r.s}), (b:Notice {id: r.t}) CREATE (a)-[:RETRACTED_BY]->(b)", { rows: rb });
+  return run("MATCH (n) WITH count(n) AS nodes MATCH ()-[r]->() RETURN nodes, count(r) AS rels").rows[0];
+}
+
+// ---------- the same statements as the CLI / MCP server (store.py, embedded in evidence.json) ----------
+function exposure(root, depth) {
+  const q = pack.queries.exposure.replace("%(extra)d", String(Math.max(depth - 1, 0)));
+  return run(q, { root, load_bearing: pack.queries.load_bearing_intents });
+}
+
+function summarize(rows) {
+  const byBad = new Map(), edges = new Map();
+  for (const r of rows) {
+    r.chain.slice(0, -1).forEach((a, i) => edges.set(a.id + ">" + r.chain[i + 1].id, r.edges[i]));
+    if (!byBad.has(r.bad_id)) byBad.set(r.bad_id, { id: r.bad_id, title: r.bad_title, year: r.bad_year, doi: r.bad_doi,
+      nature: r.nature, date: r.retraction_date, reasons: r.reasons || [], notice_doi: r.notice_doi,
+      notice_source: r.notice_source, via: new Map(), paths: [] });
+    const g = byBad.get(r.bad_id);
+    g.via.set(r.chain[1].id, r.chain[1]);
+    g.paths.push(r);
+  }
+  const groups = [...byBad.values()];
+  for (const g of groups) {
+    g.status = g.paths.map((p) => p.status).sort((a, b) => ORDER.indexOf(a) - ORDER.indexOf(b))[0];
+    g.paths.sort((a, b) => ORDER.indexOf(a.status) - ORDER.indexOf(b.status) || a.hops - b.hops ||
+      b.edges.filter((e) => e.context).length - a.edges.filter((e) => e.context).length);
+  }
+  groups.sort((a, b) => ORDER.indexOf(a.status) - ORDER.indexOf(b.status) || b.via.size - a.via.size || clean(a.title).localeCompare(clean(b.title)));
+  const ev = [...edges.values()];
+  return { groups, refs: new Set(rows.map((r) => r.chain[1].id)).size, onPath: ev.length,
+    read: ev.filter((e) => e.evidence === "fulltext" || e.evidence === "s2").length,
+    zombies: ev.filter((e) => e.zombie).length };
+}
+
+// ---------- rendering ----------
+function renderStats(sum, ms, root) {
+  const total = run("MATCH (:Manuscript {id: $root})-[:CITES]->(r) RETURN count(r) AS n", { root }).rows[0].n;
+  const counts = Object.fromEntries(ORDER.map((k) => [k, sum.groups.filter((g) => g.status === k).length]));
+  const box = document.getElementById("stats");
+  box.replaceChildren(
+    h("div", { class: "stat" }, h("div", { class: "v" }, `${sum.refs}/${total}`), h("div", { class: "l" }, "references reach retracted work")),
+    h("div", { class: "stat" }, h("div", { class: "v" }, sum.groups.length), h("div", { class: "l" }, "retracted papers reached")),
+    h("div", { class: "stat" }, h("div", { class: "v" }, counts.direct + counts.load_bearing),
+      h("div", { class: "l" }, `direct (${counts.direct}) + load-bearing (${counts.load_bearing})`)),
+    h("div", { class: "stat" }, h("div", { class: "v" }, sum.onPath ? Math.round(100 * sum.read / sum.onPath) + "%" : "–"),
+      h("div", { class: "l" }, `citing sentences read (${sum.read}/${sum.onPath})`)),
+  );
+  status(`Exposure query: ${sum.groups.length ? sum.groups.reduce((n, g) => n + g.paths.length, 0) : 0} paths in ${ms.toFixed(1)} ms`);
+}
+
+function renderChips(sum) {
+  const box = document.getElementById("chips");
+  const mk = (key, label, n) => h("button", { class: "chip", "aria-pressed": String(filter === key), title: key ? HELP[key] : "",
+    onclick: () => { filter = filter === key ? null : key; renderChips(sum); renderList(sum); } },
+    key ? h("span", { class: `dot s-${key}` }) : null, `${label} ${n}`);
+  box.replaceChildren(mk(null, "All", sum.groups.length),
+    ...ORDER.map((k) => [k, sum.groups.filter((g) => g.status === k).length]).filter(([, n]) => n).map(([k, n]) => mk(k, NAMES[k], n)));
+}
+
+function renderList(sum) {
+  const list = document.getElementById("list");
+  const items = sum.groups.filter((g) => !filter || g.status === filter).slice(0, 400);
+  list.replaceChildren(...items.map((g) => h("li", {},
+    h("button", { class: "item", "aria-current": String(current === g.id), onclick: () => { current = g.id; renderList(sum); renderDetail(g); } },
+      h("span", { class: "t" }, h("span", { class: `dot s-${g.status}` }), short(g.title, 110)),
+      h("span", { class: "m" }, `${g.year ?? ""} · ${g.nature || "Retraction"} ${g.date || "(date unknown)"} · via ${g.via.size} of your references`)))));
+  if (!items.length) list.replaceChildren(h("li", { class: "muted", style: "padding:12px" }, "Nothing in this group."));
+}
+
+const EDGE = { method: ["var(--lb)", "", 2.2], result: ["var(--lb)", "", 2.2], critical: ["var(--ok)", "", 2],
+  background: ["var(--mo)", "5 4", 1.4], unknown: ["var(--mo)", "1.5 4", 1.4] };
+
+function pathDiagram(g) {
+  const paths = g.paths.slice(0, 40);
+  const maxHops = Math.max(...paths.map((p) => p.hops));
+  const cols = maxHops + 1, colOf = new Map(), rows = Array.from({ length: cols }, () => []);
+  const place = (node, c) => { if (!colOf.has(node.id)) { colOf.set(node.id, c); rows[c].push(node); } };
+  for (const p of paths) {
+    place(p.chain[0], 0);
+    p.chain.slice(1, -1).forEach((n, i) => place(n, i + 1));
+    place(p.chain[p.chain.length - 1], cols - 1);
+  }
+  const CAP = 12, W = 940, padX = 18, colW = (W - 2 * padX) / Math.max(cols - 1, 1), rowH = 28;
+  const height = Math.max(...rows.map((r) => Math.min(r.length, CAP + 1))) * rowH + 44;
+  const pos = new Map();
+  rows.forEach((r, c) => r.forEach((n, i) => { if (i < CAP) pos.set(n.id, [padX + c * colW, 40 + i * rowH + (height - 44 - Math.min(r.length, CAP) * rowH) / 2]); }));
+  const svg = s("svg", { class: "paths", viewBox: `0 0 ${W} ${height}`, role: "img", "aria-label": "Citation paths to the retracted paper" });
+  const heads = ["Manuscript", "Your references", "Their references", "Retracted"].slice(0, cols);
+  if (cols === 2) heads[1] = "Retracted";
+  if (cols === 3) heads[2] = "Retracted";
+  heads.forEach((t, c) => svg.append(s("text", { x: padX + c * colW, y: 16, class: "col", "text-anchor": c === 0 ? "start" : c === cols - 1 ? "end" : "middle" }, t)));
+  const drawn = new Set();
+  for (const p of paths) for (let i = 0; i < p.chain.length - 1; i++) {
+    const a = pos.get(p.chain[i].id), b = pos.get(p.chain[i + 1].id), key = p.chain[i].id + ">" + p.chain[i + 1].id;
+    if (!a || !b || drawn.has(key)) continue;
+    drawn.add(key);
+    const e = p.edges[i], [stroke, dash, w] = i === 0 ? ["var(--line)", "", 1.6] : (EDGE[e.intent] || EDGE.unknown);
+    const mx = (a[0] + b[0]) / 2;
+    const path = s("path", { d: `M${a[0]},${a[1]} C${mx},${a[1]} ${mx},${b[1]} ${b[0]},${b[1]}`, fill: "none", stroke: e.year_conflict ? "var(--direct)" : stroke,
+      "stroke-width": w, "stroke-dasharray": e.year_conflict ? "6 3" : dash, opacity: 0.9 });
+    path.append(s("title", {}, `${i === 0 ? "cites" : e.intent}${e.context ? ": " + e.context : ""}`));
+    svg.append(path);
+  }
+  for (const [id, [x, y]] of pos) {
+    const c = colOf.get(id), node = rows[c].find((n) => n.id === id), last = c === cols - 1, first = c === 0;
+    const grp = s("g", {});
+    grp.append(s("circle", { cx: x, cy: y, r: last || first ? 6 : 4.5, fill: last ? "var(--direct)" : first ? "var(--fg)" : "var(--card)",
+      stroke: last ? "var(--direct)" : "var(--fg)", "stroke-width": 1.4 }));
+    // Manuscript and retracted labels sit above their node (edges converge there); the rest to the right.
+    const lbl = short(node.title, first || last ? 38 : Math.max(18, Math.floor(colW / 7.2) - 8)) + (node.year ? ` (${node.year})` : "");
+    grp.append(first || last
+      ? s("text", { x: last ? x + 6 : x - 6, y: y - 12, "text-anchor": last ? "end" : "start", "font-weight": 600 }, lbl)
+      : s("text", { x: x + 8, y: y + 4, "text-anchor": "start" }, lbl));
+    grp.append(s("title", {}, `${clean(node.title)}${node.year ? " (" + node.year + ")" : ""}${node.doi ? "\ndoi:" + node.doi : ""}`));
+    svg.append(grp);
+  }
+  rows.forEach((r, c) => { if (r.length > CAP) svg.append(s("text", { x: padX + c * colW + 9, y: 40 + CAP * rowH, class: "col" }, `+${r.length - CAP} more`)); });
+  return svg;
+}
+
+function renderDetail(g) {
+  const d = document.getElementById("detail");
+  const kids = [
+    h("div", {}, h("span", { class: `badge b-${g.status}` }, NAMES[g.status]), h("span", { class: "muted" }, HELP[g.status])),
+    h("h3", {}, clean(g.title)),
+    h("p", { class: "meta" }, `${g.year ?? ""}${g.doi ? " · doi:" + g.doi : ""}`),
+    h("div", { class: "notice" },
+      h("b", {}, `${g.nature || "Retraction"} ${g.date || "(date unknown)"}`),
+      g.reasons.length ? ` · ${g.reasons.slice(0, 4).join("; ")}` : g.notice_doi ? ` · notice doi:${g.notice_doi} (reasons not recorded)` : " · flagged retracted by OpenAlex; no notice found",
+      g.notice_source ? h("span", { class: "muted" }, ` · source: ${g.notice_source.replace("_", " ")}`) : null),
+    h("p", { class: "meta" }, `Reached via ${g.via.size} of your references: `,
+      [...g.via.values()].slice(0, 6).map((v) => short(v.title, 50)).join("; ") + (g.via.size > 6 ? "; …" : "")),
+    h("div", { class: "legend" },
+      h("span", {}, h("i", { style: "border-color:var(--lb)" }), "method / result"),
+      h("span", {}, h("i", { style: "border-color:var(--mo);border-top-style:dashed" }), "background"),
+      h("span", {}, h("i", { style: "border-color:var(--mo);border-top-style:dotted" }), "not read"),
+      h("span", {}, h("i", { style: "border-color:var(--ok)" }), "critical")),
+    pathDiagram(g),
+  ];
+  for (const p of g.paths.slice(0, 8)) {
+    const hops = p.chain.slice(1).map((node, i) => {
+      const e = p.edges[i], role = i === 0 && e.intent === "unknown" ? "cites" : e.intent;
+      return [h("div", { class: "hop" }, h("span", { class: `intent i-${e.intent}` }, role), short(node.title, 90), node.year ? ` (${node.year})` : "",
+          e.zombie ? h("span", { class: "flag" }, "cited after retraction") : null,
+          e.year_conflict ? h("span", { class: "flag" }, "date conflict: likely a metadata error") : null),
+        e.context ? h("blockquote", {}, `“${e.context.length > 320 ? e.context.slice(0, 319) + "…" : e.context}”`, e.section ? h("span", {}, ` [${short(e.section, 50)}]`) : null) : null];
+    });
+    kids.push(h("div", { class: "path" }, h("span", { class: `badge b-${p.status}` }, NAMES[p.status]), h("span", { class: "muted" }, `${p.hops} hop${p.hops > 1 ? "s" : ""}`), ...hops.flat()));
+  }
+  if (g.paths.length > 8) kids.push(h("p", { class: "muted" }, `${g.paths.length - 8} more paths; try the console query below.`));
+  d.replaceChildren(...kids);
+}
+
+// ---------- console ----------
+function presets(depth) {
+  const extra = String(Math.max(depth - 1, 0));
+  return [
+    ["Load-bearing paths (the pitch query)", pack.queries.load_bearing_only.trim()],
+    ["Most-reached retracted papers", `MATCH (m:Manuscript {id: $root})-[:CITES]->(b:Paper)
+      -[c:CITES WHERE NOT coalesce(c.anachronistic, false)]->{0,${extra}}(bad:Retracted)
+RETURN bad.title AS retracted, toString(bad.retraction_date) AS retracted_on, count(DISTINCT b) AS via_your_refs
+ORDER BY via_your_refs DESC LIMIT 15`],
+    ["Cited after the retraction", `MATCH (a:Paper)-[c:CITES {zombie: true}]->(r:Retracted)
+RETURN a.title AS citing, toString(a.pub_date) AS published, r.title AS retracted, toString(r.retraction_date) AS retracted_on
+ORDER BY published DESC LIMIT 25`],
+    ["Retracted for citing retracted work", `MATCH (r:Retracted)
+WHERE any(x IN r.reasons WHERE x CONTAINS 'Cites Retracted')
+RETURN r.title AS title, toString(r.retraction_date) AS retracted_on, r.reasons AS reasons`],
+    ["Impossible citations (bad upstream data)", `MATCH (a:Paper)-[c:CITES]->(b:Paper)
+WHERE c.anachronistic OR c.year_conflict
+RETURN a.title AS citing, a.year AS citing_year, b.title AS cited, b.year AS cited_year, c.anachronistic AS excluded`],
+    ["What the graph holds", `MATCH (n) UNWIND labels(n) AS label
+RETURN label, count(*) AS nodes ORDER BY nodes DESC`],
+  ];
+}
+
+function cell(v) {
+  if (v == null) return h("span", { class: "muted" }, "null");
+  if (typeof v === "object") { const t = JSON.stringify(v); return t.length > 300 ? t.slice(0, 299) + "…" : t; }
+  const t = String(v); return t.length > 300 ? t.slice(0, 299) + "…" : t;
+}
+
+function runConsole() {
+  const out = document.getElementById("out"), info = document.getElementById("qinfo");
+  try {
+    const env = run(document.getElementById("cypher").value, { root: current_ms() });
+    const rows = env.rows.slice(0, 200);
+    info.textContent = `${env.rows.length} row${env.rows.length === 1 ? "" : "s"} in ${env._ms.toFixed(1)} ms, in this tab`;
+    out.replaceChildren(h("table", {}, h("thead", {}, h("tr", {}, env.columns.map((c) => h("th", {}, c)))),
+      h("tbody", {}, rows.map((r) => h("tr", {}, env.columns.map((c) => h("td", {}, cell(r[c]))))))));
+  } catch (e) {
+    info.textContent = "";
+    out.replaceChildren(h("pre", { class: "err", style: "margin:0;padding:10px" }, String(e.message || e)));
+  }
+}
+
+const current_ms = () => document.getElementById("ms").value;
+
+function selectManuscript() {
+  const m = pack.manuscripts.find((x) => x.id === current_ms());
+  const env = exposure(m.id, m.depth);
+  summary = summarize(env.rows);
+  current = null; filter = null;
+  renderStats(summary, env._ms, m.id);
+  renderChips(summary);
+  renderList(summary);
+  const top = summary.groups[0];
+  if (top) { current = top.id; renderList(summary); renderDetail(top); }
+  const pre = presets(m.depth), sel = document.getElementById("preset");
+  sel.replaceChildren(...pre.map(([name], i) => h("option", { value: i }, name)));
+  sel.onchange = () => { document.getElementById("cypher").value = pre[+sel.value][1]; };
+  document.getElementById("cypher").value = pre[0][1];
+  runConsole();
+}
+
+async function boot() {
+  try {
+    const t0 = performance.now();
+    status("Loading the Relate engine (WebAssembly, ~7 MB)…");
+    await init();
+    db = new RelateDb();
+    const t1 = performance.now();
+    status("Loading the evidence pack…");
+    pack = await (await fetch("evidence.json")).json();
+    const counts = loadPack(pack);
+    const t2 = performance.now();
+    document.getElementById("engine").replaceChildren("Relate ", h("b", {}, "1.0.2"), ` · WebAssembly · ${counts.nodes.toLocaleString()} nodes, ${counts.rels.toLocaleString()} relationships loaded in ${Math.round(t2 - t1)} ms`);
+    const sel = document.getElementById("ms");
+    sel.replaceChildren(...pack.manuscripts.slice().sort((a, b) => (a.depth > b.depth ? -1 : 1)).map((m) => h("option", { value: m.id }, m.label)));
+    sel.disabled = false;
+    sel.onchange = selectManuscript;
+    document.getElementById("run").onclick = runConsole;
+    document.getElementById("cypher").addEventListener("keydown", (e) => { if ((e.ctrlKey || e.metaKey) && e.key === "Enter") runConsole(); });
+    selectManuscript();
+    console.log(`engine ${Math.round(t1 - t0)} ms, pack ${Math.round(t2 - t1)} ms`);
+  } catch (e) {
+    status("Failed: " + (e.message || e));
+    console.error(e);
+  }
+}
+boot();
+</script>
+</body>
+</html>

@@ -1,0 +1,108 @@
+Load-Bearing check: Absence of astrocytic ceruloplasmin reverses the senescence process with aging of learning and memory abilities
+  72/72 references resolved
+  56 of your references reach 349 retracted papers within 3 citation hops
+  evidence: read the citing sentence for 606 of 1288 citations on those paths (47%); 62 were made after the retraction
+  store data/demo.rl: 926 papers, 1,305 citations, 349 retracted
+  ignored an impossible citation: Amyloid-β protein dimers isolated directly f… (2008) → Amyloid Oligomers Exacerbate Tau Pathology i… (2012), cited paper is newer
+  1 citation(s) to retracted papers have conflicting dates; those paths are reported as unverified
+
+LOAD-BEARING: reached only through method or result citations (23)
+  ! A specific amyloid-β protein assembly in the brain impairs memory (2006): Retraction 2024-06-24, via 25 of your references
+      notice: Concerns/Issues about Image; Duplication of/in Image; Investigation by Journal/Publisher
+      ├─ background → Soluble Aβ oligomer production and toxicity (2011)
+           “Moreover, the Aβ trimers can exist for many years or even several decades before amyloid fibrils deposition in brain [57,59].” [Discussion]
+      └─ method     → A specific amyloid-β protein assembly in the brain impairs … (2006)
+           “…apparent trimers (13 kDa), hexamers (27 kDa), nonamers (40 kDa) and dodecamers (56 kDa) were detected using antibodies targeting the N-terminus and central domain of Ab, such as 6E10, and using the…”
+  ! The Hepcidin-Binding Site on Ferroportin Is Evolutionarily Conserved (2008): Retraction 2014-06-03, via 9 of your references
+      notice: Error in Data; Error in Image; Investigation by Company/Institution
+      ├─ background → Iron transport across the blood–brain barrier: development,… (2014)
+           “CP is mainly synthesized by liver and secreted into the peripheral blood, while CP of the peripheral blood cannot cross the blood-brain barrier (BBB) and enter the central nervous system (CNS) [[3],…” [Introduction]
+      └─ result     → The Hepcidin-Binding Site on Ferroportin Is Evolutionarily … (2008)  [cited after retraction]
+           “The reported hepcidin-binding motif on Fpn exists in the extracellular loop between transmembrane domains VII and VIII [109].”
+  ! Pericyte loss influences Alzheimer-like neurodegeneration in mice (2013): Retraction 2024-04-03, via 8 of your references
+      notice: Concerns/Issues about Data; Concerns/Issues about Image; Investigation by Journal/Publisher
+      ├─ method     → Functional aspects of meningeal lymphatics in ageing and Al… (2018)
+           “The NOR test was performed following a previous protocol with modifications [18].” [Novel objects recognition (NOR) test]
+      └─ result     → Pericyte loss influences Alzheimer-like neurodegeneration i… (2013)
+           “Furthermore, taking into account the role of the brain vascular endothelium and of other components of the blood-brain barrier, such as pericytes, in the excretion of Aβ from the brain7–9,42, it…” [Discussion]
+  ! Cognitive effects of cell-derived and synthetically derived Aβ oligom… (2010): Retraction 2026-07-01, via 7 of your references
+      notice: doi:10.1016/j.neurobiolaging.2026.03.001 (crossref; reasons not recorded)
+      ├─ background → Iron transport across the blood–brain barrier: development,… (2014)
+           “CP is mainly synthesized by liver and secreted into the peripheral blood, while CP of the peripheral blood cannot cross the blood-brain barrier (BBB) and enter the central nervous system (CNS) [[3],…” [Introduction]
+      ├─ result     → The culprit behind amyloid beta peptide related neurotoxici… (2010)
+           “Immunological analysis revealed that Ab-Fe complexes formed fibrillary oligomers and annular protofibrils, both of which constitute a neurotoxic species [179, 181].”
+      └─ method     → Cognitive effects of cell-derived and synthetically derived… (2010)
+           “A recent publication by Reed and colleagues [58] compares the effects of Aβ derived from synthetic sources, transfected cells and mouse or human brains.” [Extraction procedures]
+  ! The Complex PrPc-Fyn Couples Human Oligomeric Aβ with Pathological Ta… (2012): Retraction 2025-03-12, via 5 of your references
+      notice: Concerns/Issues about Image; Investigation by Company/Institution; Investigation by Third Party
+      ├─ background → The duality of amyloid-β: its role in normal and Alzheimer’… (2024)
+           “On-pathway Aβ oligomers especially Aβ dimers are significantly up-regulated in the brain of AD patients and AD mice with aging, increasing the Aβ plaque load of brain [[55], [56], [57]].” [Discussion]
+      ├─ result     → Amyloid-β Receptors: The Good, the Bad, and the Prion Prote… (2015)
+           “This impairs the uptake and clearance of Aβ aggregates by microglia, contributing to their accumulation in the brain [159, 160].” [Aβ oligomers]
+      └─ result     → The Complex PrPc-Fyn Couples Human Oligomeric Aβ with Patho… (2012)
+           “In addition, the AβO activation of Fyn leads to tau phosphorylation (47).” [Dynamic Signaling Platforms Mediate AβO…]
+  ! Oncogenic role of the ubiquitin ligase subunit Skp2 in human breast c… (2002): Retraction 2016-11-01, via 3 of your references
+      notice: Duplication of/in Image; Error in Image; Original Data and/or Images not Provided and/or not Available
+      ├─ background → Deciphering the Role of p53 and TAp73 in Neuroblastoma: Fro… (2022)
+           “Consequently, this process inhibits the nuclear translocation of MYC, increasing the expression of genes encoding cell cycle kinase inhibitors [31,32].” [MYC phosphorylation was reduced and the…]
+      ├─ result     → p53, SKP2, and DKK3 as MYCN Target Genes and Their Potentia… (2012)
+           “Interestingly, c-MYC has been previously reported to sensitize cells to apoptosis via induction of p14ARF-mediated upregulation of p53 expression, stability, and activity through inhibition of the…” [3. The N-MYC and p53/TAp73 Interplay]
+      └─ result     → Oncogenic role of the ubiquitin ligase subunit Skp2 in huma… (2002)
+           “Overexpression of SKP2 can drive quiescent cells to enter the cell cycle (Sutterluty et al., 1999), and promote adhesion-independent growth of cancer cells (Carrano and Pagano, 2001; Signoretti et…” [SKP2 as an oncoprotein]
+  ! Aggravation of A lzheimer's disease due to the COX ‐2‐mediated recipr… (2014): Retraction 2025-07-08, via 2 of your references
+      notice: doi:10.1111/acel.70158 (crossref; reasons not recorded)
+      ├─ method     → Iron overload suppresses hippocampal neurogenesis in adult … (2023)
+           “The number of TUNEL-positive and DAPI-positive cells was quantified as previously described [12,21,23].” [Terminal deoxynucleotidyltransferase-me…]
+      ├─ result     → Transferrin is responsible for mediating the effects of iro… (2018)
+           “Iron is one of the essential trace elements in human body, playing vital roles in various physiological activities, including synthesis of DNA and RNA, myelin, hemoglobin, and Fe‐S cluster…” [INTRODUCTION]
+      └─ method     → Aggravation of A lzheimer's disease due to the COX ‐2‐media… (2014)
+           “In a separate set of experiments, the cells were grown in serum-free medium for an additional 12 h before incubation with inhibitors in the absence or presence of PGE2 or PGD2, as previously…” [Cell culture]
+  ! Characterising the spatial and temporal brain metal profile in a mous… (2019): Retraction 2024-09-14, via 2 of your references
+      notice: Concerns/Issues about Data; Investigation by Company/Institution; Investigation by Journal/Publisher
+      ├─ background → Brain Iron Homeostasis and Mental Disorders (2023)
+           “Then the Fe3+ is captured by transferrin (Tf) in the interstitial fluid of brain and subsequently distributed to neurons and glial cells of the CNS [11].” [Introduction]
+      ├─ result     → Distribution of Copper, Iron, and Zinc in the Retina, Hippo… (2023)
+           “In contrast, iron is relatively low in the cerebral cortex, white matter and medulla oblongata [52,53].” [2.2. Iron Export from the Brain]
+      └─ result     → Characterising the spatial and temporal brain metal profile… (2019)
+           “Whilst alterations in transition metals in the brain have been characterised before [33], little is known about whether such changes are also mirrored in the retina.” [1. Introduction]
+  ! Complementary roles of IRS-1 and IRS-2 in the hepatic regulation of m… (2005): Retraction 2016-11-01, via 1 of your references
+      notice: Duplication of/in Image; Investigation by Journal/Publisher; Unreliable Image
+      ├─ background → Altered Expression of Diabetes-Related Genes in Alzheimer's… (2013)
+           “Additionally, the CP gene expression data from 52 y to 102 y were found in the GEO database (https://www.ncbi.nlm.nih.gov/geo/): GSE28146 [25], GSE29378 [26], GSE36980 [27], GSE48350 [28] and GSE5281…” [CP gene expression data analysis]
+      ├─ result     → A hepatocyte growth factor receptor (Met)−insulin receptor … (2011)
+           “Recently, Fafalios et al.” [The HGF–MET Axis May Be Involved in Ins…]
+      └─ method     → Complementary roles of IRS-1 and IRS-2 in the hepatic regul… (2005)
+           “We also utilized the RNAi-mediated knock down technique to deliver siRNA to the liver in mice14,15 to investigate the short-term effects of Met impairment on hepatic glucose homeostasis.” [Met is involved in hepatic glucose home…]
+  ! Fangchinoline Promotes Autophagy and Inhibits Apoptosis in Osteoporot… (2019): Retraction date unknown, via 1 of your references
+      ├─ background → Autophagy in Bone Remodeling: A Regulator of Oxidative Stre… (2022)
+           “GSK3 is negatively regulated by the PI3K/Akt pathway, thereby constituting the PI3K/Akt/GSK3 signaling cascade [[33], [34], [35]].” [MYC phosphorylation was reduced and the…]
+      ├─ result     → Vitamin K2 Can Rescue the Dexamethasone-Induced Downregulat… (2020)
+           “Furthermore, downregulation of the expression of autophagy markers, such as LC3-II and ATG7, has been shown to result in the inhibition of osteoblast differentiation (50, 51).” [3.1 Autophagy in Osteoblasts]
+      └─ result     → Fangchinoline Promotes Autophagy and Inhibits Apoptosis in … (2019)
+           “It has consistently been shown as a protective mechanism in maintaining osteoblast viability by allowing cells to survive various stresses (Todde et al., 2009; White and Lowe, 2009; Gu et al., 2016;…” [Introduction]
+  … 13 more (use --json)
+
+UNVERIFIED: reached through citations we could not read (155)
+  ? APP binds DR6 to trigger axon pruning and neuron death via distinct c… (2009): Retraction 2023-12-18, via 10 of your references
+  ? Ceruloplasmin gene defect associated with epilepsy in EL mice (1994): Retraction 1995-09-01, via 7 of your references
+  ? Intraneuronal APP, Not Free Aβ Peptides in 3xTg-AD Mice: Implications… (2011): Retraction 2015-02-25, via 5 of your references
+  ? Mitochondrial Autophagy Is an HIF-1-dependent Adaptive Metabolic Resp… (2008): Retraction 2023-08-07, via 4 of your references
+  ? TGF-β signaling regulates neuronal C1q expression and developmental s… (2013): Retraction 2022-01-13, via 4 of your references
+  ? SIRT1 Suppresses β-Amyloid Production by Activating the α-Secretase G… (2010): Retraction 2014-08-14, via 4 of your references
+  ? Selective killing of cancer cells by a small molecule targeting the s… (2011): Retraction 2018-07-25, via 4 of your references
+  ? AMP-activated Protein Kinase Activity Is Critical for Hypoxia-inducib… (2003): Retraction 2018-11-01, via 3 of your references
+  … 147 more (use --json)
+
+MENTION-ONLY: reached through a background mention (low concern) (171)
+  · Mechanisms of Hybrid Oligomer Formation in the Pathogenesis of Combin… (2008): Retraction 2025-03-18, via 3 of your references
+  · Mutations in mitochondrial cytochrome c oxidase genes segregate with … (1997): Retraction 1998-09-29, via 3 of your references
+  · Effects of microRNA‐10a on synapse remodeling in hippocampal neurons … (2017): Retraction 2021-06-30, via 3 of your references
+  · Brain hydrogen sulfide is severely decreased in Alzheimer's disease (2002): Retraction 2005-06-06, via 2 of your references
+  · GRIM-19 Mediated Translocation of STAT3 to Mitochondria is Necessary … (2012): Retraction 2016-07-01, via 2 of your references
+  · Hippocampal phosphorylated tau induced cognitive decline, dendritic s… (2017): Retraction date unknown, via 2 of your references
+  · Brain-derived exosomes from dementia with Lewy bodies propagate α-syn… (2017): Retraction 2026-01-05, via 2 of your references
+  · Cerebrospinal fluid ferritin in glioblastoma: Evidence for tumor synt… (1998): Retraction 2019-07-29, via 2 of your references
+  … 163 more (use --json)
+
+Summary: 23 load-bearing, 155 unverified, 171 mention-only.
+Paths are evidence for a person to review, not verdicts about any paper or author.

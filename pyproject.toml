@@ -1,0 +1,33 @@
+[project]
+name = "loadbearing"
+version = "0.1.0"
+description = "Find which claims rest on retracted science: a citation-intent evidence graph on Relate"
+authors = [{ name = "Airat Valiev" }]
+readme = "README.md"
+license = "Apache-2.0"
+keywords = ["relate", "graph-database", "retractions", "citations", "research-integrity", "mcp"]
+requires-python = ">=3.12"
+dependencies = [
+    "mcp>=2.3.0",
+    "relate-db>=1.0.1",
+]
+
+[project.scripts]
+loadbearing = "loadbearing.cli:main"
+loadbearing-mcp = "loadbearing.mcp_server:main"
+
+[build-system]
+requires = ["uv_build>=0.13.5,<0.14.0"]
+build-backend = "uv_build"
+
+[dependency-groups]
+demo = [
+    "claude-agent-sdk>=0.2.182",
+]
+dev = [
+    "pytest>=9.2.0",
+]
+train = [
+    "torch>=2.15.0",
+    "transformers>=5.23.0",
+]

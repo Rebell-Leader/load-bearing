@@ -1,0 +1,13 @@
+{
+  "mcpServers": {
+    "load-bearing": {
+      "command": "uv",
+      "args": ["run", "--quiet", "--directory", ".", "loadbearing-mcp"],
+      "env": { "LOADBEARING_STORE": "data/evidence" }
+    },
+    "relate": {
+      "command": "relate",
+      "args": ["serve", "--mcp", "stdio", "--database", "data/evidence", "--read-only=live"]
+    }
+  }
+}

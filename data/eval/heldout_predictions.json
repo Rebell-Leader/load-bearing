@@ -1,0 +1,366 @@
+{
+ "seed": 2026,
+ "pool": 446,
+ "items": {
+  "h001": {
+   "pred": "result",
+   "src": "W2597895499",
+   "dst": "W2158465697",
+   "cited_type": "article"
+  },
+  "h002": {
+   "pred": "result",
+   "src": "W4283735127",
+   "dst": "W2102935755",
+   "cited_type": "article"
+  },
+  "h003": {
+   "pred": "background",
+   "src": "W4382139382",
+   "dst": "W2081020021",
+   "cited_type": "review"
+  },
+  "h004": {
+   "pred": "background",
+   "src": "W4382139382",
+   "dst": "W2762754198",
+   "cited_type": "review"
+  },
+  "h005": {
+   "pred": "result",
+   "src": "W4400723859",
+   "dst": "W2202164390",
+   "cited_type": "article"
+  },
+  "h006": {
+   "pred": "result",
+   "src": "W4408770418",
+   "dst": "W4391338835",
+   "cited_type": "article"
+  },
+  "h007": {
+   "pred": "result",
+   "src": "W2468879160",
+   "dst": "W2077608361",
+   "cited_type": "article"
+  },
+  "h008": {
+   "pred": "result",
+   "src": "W3087617819",
+   "dst": "W2136590857",
+   "cited_type": "article"
+  },
+  "h009": {
+   "pred": "result",
+   "src": "W4400723859",
+   "dst": "W1965552543",
+   "cited_type": "article"
+  },
+  "h010": {
+   "pred": "background",
+   "src": "W4400723859",
+   "dst": "W2035963355",
+   "cited_type": "article"
+  },
+  "h011": {
+   "pred": "background",
+   "src": "W4385620485",
+   "dst": "W2891312833",
+   "cited_type": "review"
+  },
+  "h012": {
+   "pred": "background",
+   "src": "W4312140759",
+   "dst": "W2135458195",
+   "cited_type": "preprint"
+  },
+  "h013": {
+   "pred": "background",
+   "src": "W4403729713",
+   "dst": "W3159661950",
+   "cited_type": "review"
+  },
+  "h014": {
+   "pred": "background",
+   "src": "W4388634092",
+   "dst": "W4224926134",
+   "cited_type": "review"
+  },
+  "h015": {
+   "pred": "result",
+   "src": "W4382139382",
+   "dst": "W4319441968",
+   "cited_type": "article"
+  },
+  "h016": {
+   "pred": "background",
+   "src": "W4408770418",
+   "dst": "W2986108561",
+   "cited_type": "review"
+  },
+  "h017": {
+   "pred": "background",
+   "src": "W4401001687",
+   "dst": "W3093609214",
+   "cited_type": "review"
+  },
+  "h018": {
+   "pred": "background",
+   "src": "W4403729713",
+   "dst": "W2521624524",
+   "cited_type": "review"
+  },
+  "h019": {
+   "pred": "background",
+   "src": "W4403729713",
+   "dst": "W2080821312",
+   "cited_type": "article"
+  },
+  "h020": {
+   "pred": "result",
+   "src": "W4381149624",
+   "dst": "W2142169541",
+   "cited_type": "article"
+  },
+  "h021": {
+   "pred": "result",
+   "src": "W4401001687",
+   "dst": "W4313707033",
+   "cited_type": "article"
+  },
+  "h022": {
+   "pred": "background",
+   "src": "W4403729713",
+   "dst": "W2292195417",
+   "cited_type": "review"
+  },
+  "h023": {
+   "pred": "background",
+   "src": "W4392302571",
+   "dst": "W2888722873",
+   "cited_type": "review"
+  },
+  "h024": {
+   "pred": "background",
+   "src": "W4312140759",
+   "dst": "W4220712627",
+   "cited_type": "review"
+  },
+  "h025": {
+   "pred": "result",
+   "src": "W3113731186",
+   "dst": "W2075481535",
+   "cited_type": "article"
+  },
+  "h026": {
+   "pred": "background",
+   "src": "W1277202934",
+   "dst": "W2112857091",
+   "cited_type": "retraction"
+  },
+  "h027": {
+   "pred": "background",
+   "src": "W4400723859",
+   "dst": "W1998140650",
+   "cited_type": "review"
+  },
+  "h028": {
+   "pred": "result",
+   "src": "W2134887638",
+   "dst": "W2113397956",
+   "cited_type": "article"
+  },
+  "h029": {
+   "pred": "result",
+   "src": "W2530388030",
+   "dst": "W2052548727",
+   "cited_type": "article"
+  },
+  "h030": {
+   "pred": "result",
+   "src": "W4220945110",
+   "dst": "W2738981704",
+   "cited_type": "article"
+  },
+  "h031": {
+   "pred": "background",
+   "src": "W4408770418",
+   "dst": "W2011997876",
+   "cited_type": "review"
+  },
+  "h032": {
+   "pred": "result",
+   "src": "W219891006",
+   "dst": "W2075481535",
+   "cited_type": "article"
+  },
+  "h033": {
+   "pred": "background",
+   "src": "W4316468912",
+   "dst": "W1998664010",
+   "cited_type": "review"
+  },
+  "h034": {
+   "pred": "result",
+   "src": "W1553011341",
+   "dst": "W2034502915",
+   "cited_type": "article"
+  },
+  "h035": {
+   "pred": "result",
+   "src": "W4408770418",
+   "dst": "W2000584154",
+   "cited_type": "article"
+  },
+  "h036": {
+   "pred": "result",
+   "src": "W4400723859",
+   "dst": "W4388209805",
+   "cited_type": "article"
+  },
+  "h037": {
+   "pred": "background",
+   "src": "W4400723859",
+   "dst": "W4283015188",
+   "cited_type": "article"
+  },
+  "h038": {
+   "pred": "background",
+   "src": "W4283735127",
+   "dst": "W2088856765",
+   "cited_type": "review"
+  },
+  "h039": {
+   "pred": "background",
+   "src": "W3042512887",
+   "dst": "W2771492274",
+   "cited_type": "article"
+  },
+  "h040": {
+   "pred": "background",
+   "src": "W4312140759",
+   "dst": "W1969951398",
+   "cited_type": "review"
+  },
+  "h041": {
+   "pred": "result",
+   "src": "W3166501928",
+   "dst": "W2097603366",
+   "cited_type": "article"
+  },
+  "h042": {
+   "pred": "background",
+   "src": "W4310179103",
+   "dst": "W2942783247",
+   "cited_type": "review"
+  },
+  "h043": {
+   "pred": "result",
+   "src": "W4311544071",
+   "dst": "W1992338880",
+   "cited_type": "article"
+  },
+  "h044": {
+   "pred": "background",
+   "src": "W4408770418",
+   "dst": "W1553011341",
+   "cited_type": "review"
+  },
+  "h045": {
+   "pred": "result",
+   "src": "W4311544071",
+   "dst": "W4211159471",
+   "cited_type": "article"
+  },
+  "h046": {
+   "pred": "background",
+   "src": "W4401001687",
+   "dst": "W4210607749",
+   "cited_type": "review"
+  },
+  "h047": {
+   "pred": "result",
+   "src": "W4400723859",
+   "dst": "W2129971794",
+   "cited_type": "article"
+  },
+  "h048": {
+   "pred": "result",
+   "src": "W2133409869",
+   "dst": "W2114499007",
+   "cited_type": "article"
+  },
+  "h049": {
+   "pred": "background",
+   "src": "W4401001687",
+   "dst": "W3029234273",
+   "cited_type": "review"
+  },
+  "h050": {
+   "pred": "background",
+   "src": "W4292361652",
+   "dst": "W2769340459",
+   "cited_type": "article"
+  },
+  "h051": {
+   "pred": "result",
+   "src": "W2158198121",
+   "dst": "W2107015337",
+   "cited_type": "article"
+  },
+  "h052": {
+   "pred": "result",
+   "src": "W4385620485",
+   "dst": "W2898783813",
+   "cited_type": "article"
+  },
+  "h053": {
+   "pred": "background",
+   "src": "W4382139382",
+   "dst": "W4220809213",
+   "cited_type": "review"
+  },
+  "h054": {
+   "pred": "result",
+   "src": "W4224248150",
+   "dst": "W2204107863",
+   "cited_type": "article"
+  },
+  "h055": {
+   "pred": "background",
+   "src": "W4316468912",
+   "dst": "W2892710900",
+   "cited_type": "review"
+  },
+  "h056": {
+   "pred": "background",
+   "src": "W2802724927",
+   "dst": "W2021740213",
+   "cited_type": "article"
+  },
+  "h057": {
+   "pred": "background",
+   "src": "W4400723859",
+   "dst": "W2170709967",
+   "cited_type": "review"
+  },
+  "h058": {
+   "pred": "result",
+   "src": "W4401001687",
+   "dst": "W2112232744",
+   "cited_type": "article"
+  },
+  "h059": {
+   "pred": "background",
+   "src": "W4401001687",
+   "dst": "W2895709605",
+   "cited_type": "review"
+  },
+  "h060": {
+   "pred": "background",
+   "src": "W4388634092",
+   "dst": "W4362458395",
+   "cited_type": "review"
+  }
+ }
+}

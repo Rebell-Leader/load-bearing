@@ -1,0 +1,1131 @@
+{
+ "seed": 7,
+ "pool_sizes": {
+  "critical": 8,
+  "method": 25,
+  "result": 108,
+  "background": 465
+ },
+ "items": {
+  "s001": {
+   "pred": "background",
+   "src": "W1553011341",
+   "dst": "W2131792847",
+   "evidence": "s2",
+   "cited_retracted": false
+  },
+  "s002": {
+   "pred": "background",
+   "src": "W4312140759",
+   "dst": "W2080186620",
+   "evidence": "fulltext",
+   "cited_retracted": false
+  },
+  "s003": {
+   "pred": "result",
+   "src": "W4401001687",
+   "dst": "W4367676125",
+   "evidence": "fulltext",
+   "cited_retracted": false
+  },
+  "s004": {
+   "pred": "background",
+   "src": "W4391338835",
+   "dst": "W2584260978",
+   "evidence": "fulltext",
+   "cited_retracted": false
+  },
+  "s005": {
+   "pred": "result",
+   "src": "W4403729713",
+   "dst": "W1597149208",
+   "evidence": "fulltext",
+   "cited_retracted": false
+  },
+  "s006": {
+   "pred": "background",
+   "src": "W3042512887",
+   "dst": "W2900422742",
+   "evidence": "fulltext",
+   "cited_retracted": true
+  },
+  "s007": {
+   "pred": "background",
+   "src": "W4283735127",
+   "dst": "W2133153589",
+   "evidence": "fulltext",
+   "cited_retracted": false
+  },
+  "s008": {
+   "pred": "background",
+   "src": "W4400723859",
+   "dst": "W3109691907",
+   "evidence": "fulltext",
+   "cited_retracted": false
+  },
+  "s009": {
+   "pred": "method",
+   "src": "W2898783813",
+   "dst": "W1979564777",
+   "evidence": "fulltext",
+   "cited_retracted": true
+  },
+  "s010": {
+   "pred": "result",
+   "src": "W2158198121",
+   "dst": "W2159671939",
+   "evidence": "fulltext",
+   "cited_retracted": false
+  },
+  "s011": {
+   "pred": "result",
+   "src": "W4283015188",
+   "dst": "W2789405288",
+   "evidence": "fulltext",
+   "cited_retracted": true
+  },
+  "s012": {
+   "pred": "result",
+   "src": "W4310179103",
+   "dst": "W1965128141",
+   "evidence": "fulltext",
+   "cited_retracted": false
+  },
+  "s013": {
+   "pred": "background",
+   "src": "W2046846307",
+   "dst": "W1981768772",
+   "evidence": "fulltext",
+   "cited_retracted": true
+  },
+  "s014": {
+   "pred": "background",
+   "src": "W4401001687",
+   "dst": "W2988080152",
+   "evidence": "fulltext",
+   "cited_retracted": false
+  },
+  "s015": {
+   "pred": "background",
+   "src": "W4283735127",
+   "dst": "W2083278580",
+   "evidence": "fulltext",
+   "cited_retracted": false
+  },
+  "s016": {
+   "pred": "background",
+   "src": "W4408770418",
+   "dst": "W2972368830",
+   "evidence": "fulltext",
+   "cited_retracted": false
+  },
+  "s017": {
+   "pred": "background",
+   "src": "W2966203512",
+   "dst": "W2802615002",
+   "evidence": "fulltext",
+   "cited_retracted": true
+  },
+  "s018": {
+   "pred": "result",
+   "src": "W4400723859",
+   "dst": "W2144021345",
+   "evidence": "fulltext",
+   "cited_retracted": true
+  },
+  "s019": {
+   "pred": "method",
+   "src": "W2165292497",
+   "dst": "W2021740213",
+   "evidence": "fulltext",
+   "cited_retracted": true
+  },
+  "s020": {
+   "pred": "result",
+   "src": "W3121008513",
+   "dst": "W2887997888",
+   "evidence": "fulltext",
+   "cited_retracted": true
+  },
+  "s021": {
+   "pred": "result",
+   "src": "W4408770418",
+   "dst": "W3082687067",
+   "evidence": "fulltext",
+   "cited_retracted": false
+  },
+  "s022": {
+   "pred": "result",
+   "src": "W4283015188",
+   "dst": "W3211798976",
+   "evidence": "fulltext",
+   "cited_retracted": true
+  },
+  "s023": {
+   "pred": "background",
+   "src": "W4400723859",
+   "dst": "W2790963596",
+   "evidence": "fulltext",
+   "cited_retracted": false
+  },
+  "s024": {
+   "pred": "result",
+   "src": "W2972443489",
+   "dst": "W2086134602",
+   "evidence": "fulltext",
+   "cited_retracted": true
+  },
+  "s025": {
+   "pred": "result",
+   "src": "W4310179103",
+   "dst": "W3123922203",
+   "evidence": "fulltext",
+   "cited_retracted": false
+  },
+  "s026": {
+   "pred": "method",
+   "src": "W4401001687",
+   "dst": "W4206959599",
+   "evidence": "fulltext",
+   "cited_retracted": false
+  },
+  "s027": {
+   "pred": "result",
+   "src": "W4385620485",
+   "dst": "W2894231856",
+   "evidence": "fulltext",
+   "cited_retracted": false
+  },
+  "s028": {
+   "pred": "background",
+   "src": "W4205335396",
+   "dst": "W2789405288",
+   "evidence": "fulltext",
+   "cited_retracted": true
+  },
+  "s029": {
+   "pred": "method",
+   "src": "W1553011341",
+   "dst": "W2109727228",
+   "evidence": "s2",
+   "cited_retracted": false
+  },
+  "s030": {
+   "pred": "critical",
+   "src": "W1965128141",
+   "dst": "W2020932850",
+   "evidence": "s2",
+   "cited_retracted": false
+  },
+  "s031": {
+   "pred": "result",
+   "src": "W3112948680",
+   "dst": "W2914177337",
+   "evidence": "fulltext",
+   "cited_retracted": true
+  },
+  "s032": {
+   "pred": "result",
+   "src": "W4385620485",
+   "dst": "W2582554076",
+   "evidence": "fulltext",
+   "cited_retracted": false
+  },
+  "s033": {
+   "pred": "background",
+   "src": "W2343938601",
+   "dst": "W2046710779",
+   "evidence": "fulltext",
+   "cited_retracted": true
+  },
+  "s034": {
+   "pred": "method",
+   "src": "W4408770418",
+   "dst": "W4385620485",
+   "evidence": "fulltext",
+   "cited_retracted": false
+  },
+  "s035": {
+   "pred": "method",
+   "src": "W4408770418",
+   "dst": "W4285005312",
+   "evidence": "fulltext",
+   "cited_retracted": false
+  },
+  "s036": {
+   "pred": "result",
+   "src": "W4408770418",
+   "dst": "W2112867510",
+   "evidence": "fulltext",
+   "cited_retracted": false
+  },
+  "s037": {
+   "pred": "result",
+   "src": "W3036721340",
+   "dst": "W2075481535",
+   "evidence": "fulltext",
+   "cited_retracted": true
+  },
+  "s038": {
+   "pred": "result",
+   "src": "W1553011341",
+   "dst": "W2041956586",
+   "evidence": "s2",
+   "cited_retracted": false
+  },
+  "s039": {
+   "pred": "result",
+   "src": "W4280620620",
+   "dst": "W3119402737",
+   "evidence": "fulltext",
+   "cited_retracted": true
+  },
+  "s040": {
+   "pred": "result",
+   "src": "W3193688720",
+   "dst": "W2898201144",
+   "evidence": "fulltext",
+   "cited_retracted": true
+  },
+  "s041": {
+   "pred": "result",
+   "src": "W4283015188",
+   "dst": "W2761011647",
+   "evidence": "fulltext",
+   "cited_retracted": true
+  },
+  "s042": {
+   "pred": "background",
+   "src": "W4388634092",
+   "dst": "W2749527858",
+   "evidence": "fulltext",
+   "cited_retracted": false
+  },
+  "s043": {
+   "pred": "method",
+   "src": "W4403729713",
+   "dst": "W4287921716",
+   "evidence": "fulltext",
+   "cited_retracted": false
+  },
+  "s044": {
+   "pred": "result",
+   "src": "W4404423857",
+   "dst": "W2163225965",
+   "evidence": "fulltext",
+   "cited_retracted": false
+  },
+  "s045": {
+   "pred": "method",
+   "src": "W2800603376",
+   "dst": "W2769609358",
+   "evidence": "fulltext",
+   "cited_retracted": false
+  },
+  "s046": {
+   "pred": "result",
+   "src": "W4311544071",
+   "dst": "W2034733528",
+   "evidence": "fulltext",
+   "cited_retracted": false
+  },
+  "s047": {
+   "pred": "background",
+   "src": "W4312140759",
+   "dst": "W2062500929",
+   "evidence": "fulltext",
+   "cited_retracted": false
+  },
+  "s048": {
+   "pred": "background",
+   "src": "W2158198121",
+   "dst": "W2041544905",
+   "evidence": "fulltext",
+   "cited_retracted": false
+  },
+  "s049": {
+   "pred": "background",
+   "src": "W4408770418",
+   "dst": "W2057172958",
+   "evidence": "fulltext",
+   "cited_retracted": false
+  },
+  "s050": {
+   "pred": "background",
+   "src": "W4382139382",
+   "dst": "W4310396520",
+   "evidence": "fulltext",
+   "cited_retracted": false
+  },
+  "s051": {
+   "pred": "background",
+   "src": "W2192805543",
+   "dst": "W2045855955",
+   "evidence": "fulltext",
+   "cited_retracted": true
+  },
+  "s052": {
+   "pred": "result",
+   "src": "W4388634092",
+   "dst": "W4310641777",
+   "evidence": "fulltext",
+   "cited_retracted": false
+  },
+  "s053": {
+   "pred": "method",
+   "src": "W4408770418",
+   "dst": "W2883628966",
+   "evidence": "fulltext",
+   "cited_retracted": false
+  },
+  "s054": {
+   "pred": "result",
+   "src": "W1553011341",
+   "dst": "W2093715230",
+   "evidence": "s2",
+   "cited_retracted": false
+  },
+  "s055": {
+   "pred": "background",
+   "src": "W4408770418",
+   "dst": "W3166501928",
+   "evidence": "fulltext",
+   "cited_retracted": false
+  },
+  "s056": {
+   "pred": "result",
+   "src": "W4404423857",
+   "dst": "W2789933553",
+   "evidence": "fulltext",
+   "cited_retracted": false
+  },
+  "s057": {
+   "pred": "result",
+   "src": "W4401001687",
+   "dst": "W4206365739",
+   "evidence": "fulltext",
+   "cited_retracted": false
+  },
+  "s058": {
+   "pred": "result",
+   "src": "W4322629090",
+   "dst": "W2072860074",
+   "evidence": "fulltext",
+   "cited_retracted": false
+  },
+  "s059": {
+   "pred": "background",
+   "src": "W4322629090",
+   "dst": "W1983789627",
+   "evidence": "fulltext",
+   "cited_retracted": false
+  },
+  "s060": {
+   "pred": "result",
+   "src": "W2972443489",
+   "dst": "W1844690031",
+   "evidence": "fulltext",
+   "cited_retracted": true
+  },
+  "s061": {
+   "pred": "background",
+   "src": "W4401001687",
+   "dst": "W4324309277",
+   "evidence": "fulltext",
+   "cited_retracted": false
+  },
+  "s062": {
+   "pred": "background",
+   "src": "W4401001687",
+   "dst": "W3174537961",
+   "evidence": "fulltext",
+   "cited_retracted": false
+  },
+  "s063": {
+   "pred": "result",
+   "src": "W4391338835",
+   "dst": "W4220819957",
+   "evidence": "fulltext",
+   "cited_retracted": false
+  },
+  "s064": {
+   "pred": "background",
+   "src": "W4408770418",
+   "dst": "W4316468912",
+   "evidence": "fulltext",
+   "cited_retracted": false
+  },
+  "s065": {
+   "pred": "background",
+   "src": "W4408770418",
+   "dst": "W2036545911",
+   "evidence": "fulltext",
+   "cited_retracted": false
+  },
+  "s066": {
+   "pred": "method",
+   "src": "W4408770418",
+   "dst": "W4310179103",
+   "evidence": "fulltext",
+   "cited_retracted": false
+  },
+  "s067": {
+   "pred": "method",
+   "src": "W2133153589",
+   "dst": "W1975722785",
+   "evidence": "fulltext",
+   "cited_retracted": true
+  },
+  "s068": {
+   "pred": "background",
+   "src": "W4312126437",
+   "dst": "W1277202934",
+   "evidence": "fulltext",
+   "cited_retracted": false
+  },
+  "s069": {
+   "pred": "background",
+   "src": "W4382139382",
+   "dst": "W1979591162",
+   "evidence": "fulltext",
+   "cited_retracted": false
+  },
+  "s070": {
+   "pred": "background",
+   "src": "W4382139382",
+   "dst": "W3121008513",
+   "evidence": "fulltext",
+   "cited_retracted": false
+  },
+  "s071": {
+   "pred": "result",
+   "src": "W4388634092",
+   "dst": "W4200290315",
+   "evidence": "fulltext",
+   "cited_retracted": false
+  },
+  "s072": {
+   "pred": "critical",
+   "src": "W4395116435",
+   "dst": "W1902268867",
+   "evidence": "fulltext",
+   "cited_retracted": false
+  },
+  "s073": {
+   "pred": "method",
+   "src": "W2898783813",
+   "dst": "W2052362708",
+   "evidence": "fulltext",
+   "cited_retracted": true
+  },
+  "s074": {
+   "pred": "background",
+   "src": "W4403729713",
+   "dst": "W4307280821",
+   "evidence": "fulltext",
+   "cited_retracted": false
+  },
+  "s075": {
+   "pred": "background",
+   "src": "W4408770418",
+   "dst": "W2066934465",
+   "evidence": "fulltext",
+   "cited_retracted": false
+  },
+  "s076": {
+   "pred": "background",
+   "src": "W4408770418",
+   "dst": "W2079420389",
+   "evidence": "fulltext",
+   "cited_retracted": false
+  },
+  "s077": {
+   "pred": "result",
+   "src": "W4312126437",
+   "dst": "W2525582099",
+   "evidence": "fulltext",
+   "cited_retracted": false
+  },
+  "s078": {
+   "pred": "method",
+   "src": "W1516940938",
+   "dst": "W2114789645",
+   "evidence": "fulltext",
+   "cited_retracted": true
+  },
+  "s079": {
+   "pred": "background",
+   "src": "W2061387301",
+   "dst": "W2112336037",
+   "evidence": "fulltext",
+   "cited_retracted": true
+  },
+  "s080": {
+   "pred": "result",
+   "src": "W1992282963",
+   "dst": "W2075481535",
+   "evidence": "fulltext",
+   "cited_retracted": true
+  },
+  "s081": {
+   "pred": "method",
+   "src": "W4385620485",
+   "dst": "W4283313316",
+   "evidence": "fulltext",
+   "cited_retracted": false
+  },
+  "s082": {
+   "pred": "background",
+   "src": "W4312140759",
+   "dst": "W2155988062",
+   "evidence": "fulltext",
+   "cited_retracted": false
+  },
+  "s083": {
+   "pred": "result",
+   "src": "W2165292497",
+   "dst": "W2075481535",
+   "evidence": "fulltext",
+   "cited_retracted": true
+  },
+  "s084": {
+   "pred": "background",
+   "src": "W4312126437",
+   "dst": "W2517755772",
+   "evidence": "fulltext",
+   "cited_retracted": false
+  },
+  "s085": {
+   "pred": "background",
+   "src": "W4408770418",
+   "dst": "W4404423857",
+   "evidence": "fulltext",
+   "cited_retracted": false
+  },
+  "s086": {
+   "pred": "result",
+   "src": "W4395116435",
+   "dst": "W2098022922",
+   "evidence": "fulltext",
+   "cited_retracted": false
+  },
+  "s087": {
+   "pred": "background",
+   "src": "W4311544071",
+   "dst": "W2140126848",
+   "evidence": "fulltext",
+   "cited_retracted": false
+  },
+  "s088": {
+   "pred": "background",
+   "src": "W2109081919",
+   "dst": "W2098069894",
+   "evidence": "fulltext",
+   "cited_retracted": true
+  },
+  "s089": {
+   "pred": "result",
+   "src": "W4403729713",
+   "dst": "W2802724927",
+   "evidence": "fulltext",
+   "cited_retracted": false
+  },
+  "s090": {
+   "pred": "background",
+   "src": "W2959179512",
+   "dst": "W1593145356",
+   "evidence": "fulltext",
+   "cited_retracted": true
+  },
+  "s091": {
+   "pred": "background",
+   "src": "W4206959599",
+   "dst": "W1846946632",
+   "evidence": "fulltext",
+   "cited_retracted": true
+  },
+  "s092": {
+   "pred": "method",
+   "src": "W4403729713",
+   "dst": "W4220703849",
+   "evidence": "fulltext",
+   "cited_retracted": false
+  },
+  "s093": {
+   "pred": "method",
+   "src": "W1553011341",
+   "dst": "W2075481535",
+   "evidence": "s2",
+   "cited_retracted": true
+  },
+  "s094": {
+   "pred": "background",
+   "src": "W4311544071",
+   "dst": "W2055117588",
+   "evidence": "fulltext",
+   "cited_retracted": false
+  },
+  "s095": {
+   "pred": "method",
+   "src": "W1553011341",
+   "dst": "W1992282963",
+   "evidence": "s2",
+   "cited_retracted": false
+  },
+  "s096": {
+   "pred": "background",
+   "src": "W4408770418",
+   "dst": "W2770233172",
+   "evidence": "fulltext",
+   "cited_retracted": false
+  },
+  "s097": {
+   "pred": "method",
+   "src": "W4310179103",
+   "dst": "W2883628966",
+   "evidence": "fulltext",
+   "cited_retracted": false
+  },
+  "s098": {
+   "pred": "method",
+   "src": "W4229441257",
+   "dst": "W3129538348",
+   "evidence": "fulltext",
+   "cited_retracted": true
+  },
+  "s099": {
+   "pred": "result",
+   "src": "W3168979117",
+   "dst": "W2155049938",
+   "evidence": "fulltext",
+   "cited_retracted": true
+  },
+  "s100": {
+   "pred": "background",
+   "src": "W4400723859",
+   "dst": "W1968660802",
+   "evidence": "fulltext",
+   "cited_retracted": false
+  },
+  "s101": {
+   "pred": "background",
+   "src": "W4400723859",
+   "dst": "W4308572221",
+   "evidence": "fulltext",
+   "cited_retracted": false
+  },
+  "s102": {
+   "pred": "background",
+   "src": "W2794687462",
+   "dst": "W2086380453",
+   "evidence": "fulltext",
+   "cited_retracted": true
+  },
+  "s103": {
+   "pred": "result",
+   "src": "W4281627323",
+   "dst": "W2144021345",
+   "evidence": "fulltext",
+   "cited_retracted": true
+  },
+  "s104": {
+   "pred": "result",
+   "src": "W4313490196",
+   "dst": "W4220965391",
+   "evidence": "fulltext",
+   "cited_retracted": true
+  },
+  "s105": {
+   "pred": "background",
+   "src": "W1520284233",
+   "dst": "W2075481535",
+   "evidence": "fulltext",
+   "cited_retracted": true
+  },
+  "s106": {
+   "pred": "background",
+   "src": "W4401001687",
+   "dst": "W2416243378",
+   "evidence": "fulltext",
+   "cited_retracted": false
+  },
+  "s107": {
+   "pred": "result",
+   "src": "W4408770418",
+   "dst": "W2753636297",
+   "evidence": "fulltext",
+   "cited_retracted": false
+  },
+  "s108": {
+   "pred": "background",
+   "src": "W2809078375",
+   "dst": "W2613148122",
+   "evidence": "fulltext",
+   "cited_retracted": true
+  },
+  "s109": {
+   "pred": "method",
+   "src": "W2807410315",
+   "dst": "W2755738053",
+   "evidence": "fulltext",
+   "cited_retracted": true
+  },
+  "s110": {
+   "pred": "background",
+   "src": "W2554298913",
+   "dst": "W2005893109",
+   "evidence": "fulltext",
+   "cited_retracted": true
+  },
+  "s111": {
+   "pred": "background",
+   "src": "W2202164390",
+   "dst": "W2155049938",
+   "evidence": "fulltext",
+   "cited_retracted": true
+  },
+  "s112": {
+   "pred": "critical",
+   "src": "W3081725781",
+   "dst": "W2144021345",
+   "evidence": "fulltext",
+   "cited_retracted": true
+  },
+  "s113": {
+   "pred": "result",
+   "src": "W2789933553",
+   "dst": "W2075481535",
+   "evidence": "fulltext",
+   "cited_retracted": true
+  },
+  "s114": {
+   "pred": "result",
+   "src": "W4312140759",
+   "dst": "W2554298913",
+   "evidence": "fulltext",
+   "cited_retracted": false
+  },
+  "s115": {
+   "pred": "method",
+   "src": "W4408770418",
+   "dst": "W1963993567",
+   "evidence": "fulltext",
+   "cited_retracted": false
+  },
+  "s116": {
+   "pred": "result",
+   "src": "W2581159721",
+   "dst": "W2029646606",
+   "evidence": "fulltext",
+   "cited_retracted": true
+  },
+  "s117": {
+   "pred": "result",
+   "src": "W2941930792",
+   "dst": "W1987851658",
+   "evidence": "fulltext",
+   "cited_retracted": false
+  },
+  "s118": {
+   "pred": "background",
+   "src": "W4400723859",
+   "dst": "W2168481427",
+   "evidence": "fulltext",
+   "cited_retracted": false
+  },
+  "s119": {
+   "pred": "critical",
+   "src": "W1553011341",
+   "dst": "W2009755157",
+   "evidence": "s2",
+   "cited_retracted": false
+  },
+  "s120": {
+   "pred": "result",
+   "src": "W3036721340",
+   "dst": "W2021740213",
+   "evidence": "fulltext",
+   "cited_retracted": true
+  },
+  "s121": {
+   "pred": "critical",
+   "src": "W1553011341",
+   "dst": "W2002280328",
+   "evidence": "s2",
+   "cited_retracted": false
+  },
+  "s122": {
+   "pred": "result",
+   "src": "W4308572221",
+   "dst": "W2943194607",
+   "evidence": "fulltext",
+   "cited_retracted": true
+  },
+  "s123": {
+   "pred": "result",
+   "src": "W2133409869",
+   "dst": "W2781700929",
+   "evidence": "fulltext",
+   "cited_retracted": true
+  },
+  "s124": {
+   "pred": "background",
+   "src": "W3166313369",
+   "dst": "W2155049938",
+   "evidence": "fulltext",
+   "cited_retracted": true
+  },
+  "s125": {
+   "pred": "result",
+   "src": "W2988080152",
+   "dst": "W2901419035",
+   "evidence": "fulltext",
+   "cited_retracted": true
+  },
+  "s126": {
+   "pred": "method",
+   "src": "W4408770418",
+   "dst": "W4394981681",
+   "evidence": "fulltext",
+   "cited_retracted": false
+  },
+  "s127": {
+   "pred": "background",
+   "src": "W3008535867",
+   "dst": "W2972783428",
+   "evidence": "fulltext",
+   "cited_retracted": true
+  },
+  "s128": {
+   "pred": "result",
+   "src": "W4389047618",
+   "dst": "W2769340459",
+   "evidence": "fulltext",
+   "cited_retracted": true
+  },
+  "s129": {
+   "pred": "result",
+   "src": "W4401001687",
+   "dst": "W4210627857",
+   "evidence": "fulltext",
+   "cited_retracted": false
+  },
+  "s130": {
+   "pred": "background",
+   "src": "W4408770418",
+   "dst": "W2150730731",
+   "evidence": "fulltext",
+   "cited_retracted": false
+  },
+  "s131": {
+   "pred": "critical",
+   "src": "W2502291980",
+   "dst": "W2163656090",
+   "evidence": "fulltext",
+   "cited_retracted": true
+  },
+  "s132": {
+   "pred": "background",
+   "src": "W4312140759",
+   "dst": "W2053847776",
+   "evidence": "fulltext",
+   "cited_retracted": false
+  },
+  "s133": {
+   "pred": "result",
+   "src": "W1553011341",
+   "dst": "W1993465897",
+   "evidence": "s2",
+   "cited_retracted": false
+  },
+  "s134": {
+   "pred": "critical",
+   "src": "W1520284233",
+   "dst": "W2021740213",
+   "evidence": "fulltext",
+   "cited_retracted": true
+  },
+  "s135": {
+   "pred": "background",
+   "src": "W4382139382",
+   "dst": "W1530520327",
+   "evidence": "fulltext",
+   "cited_retracted": false
+  },
+  "s136": {
+   "pred": "background",
+   "src": "W4388634092",
+   "dst": "W2769544142",
+   "evidence": "fulltext",
+   "cited_retracted": false
+  },
+  "s137": {
+   "pred": "result",
+   "src": "W4400723859",
+   "dst": "W2021811797",
+   "evidence": "fulltext",
+   "cited_retracted": false
+  },
+  "s138": {
+   "pred": "background",
+   "src": "W4401001687",
+   "dst": "W4322492730",
+   "evidence": "fulltext",
+   "cited_retracted": false
+  },
+  "s139": {
+   "pred": "background",
+   "src": "W4281740481",
+   "dst": "W2151498098",
+   "evidence": "fulltext",
+   "cited_retracted": true
+  },
+  "s140": {
+   "pred": "background",
+   "src": "W4401001687",
+   "dst": "W2085397620",
+   "evidence": "fulltext",
+   "cited_retracted": false
+  },
+  "s141": {
+   "pred": "method",
+   "src": "W2898783813",
+   "dst": "W2269531875",
+   "evidence": "fulltext",
+   "cited_retracted": true
+  },
+  "s142": {
+   "pred": "result",
+   "src": "W4392302571",
+   "dst": "W2087207490",
+   "evidence": "fulltext",
+   "cited_retracted": false
+  },
+  "s143": {
+   "pred": "result",
+   "src": "W2941930792",
+   "dst": "W1965254413",
+   "evidence": "fulltext",
+   "cited_retracted": false
+  },
+  "s144": {
+   "pred": "result",
+   "src": "W2891312833",
+   "dst": "W1482134942",
+   "evidence": "fulltext",
+   "cited_retracted": true
+  },
+  "s145": {
+   "pred": "background",
+   "src": "W4312140759",
+   "dst": "W2068678285",
+   "evidence": "fulltext",
+   "cited_retracted": false
+  },
+  "s146": {
+   "pred": "result",
+   "src": "W1553011341",
+   "dst": "W2078212921",
+   "evidence": "s2",
+   "cited_retracted": false
+  },
+  "s147": {
+   "pred": "background",
+   "src": "W4408770418",
+   "dst": "W4387661548",
+   "evidence": "fulltext",
+   "cited_retracted": false
+  },
+  "s148": {
+   "pred": "result",
+   "src": "W4401001687",
+   "dst": "W2959690091",
+   "evidence": "fulltext",
+   "cited_retracted": false
+  },
+  "s149": {
+   "pred": "background",
+   "src": "W4316468912",
+   "dst": "W1970744454",
+   "evidence": "fulltext",
+   "cited_retracted": false
+  },
+  "s150": {
+   "pred": "background",
+   "src": "W4408770418",
+   "dst": "W1595395957",
+   "evidence": "fulltext",
+   "cited_retracted": false
+  },
+  "s151": {
+   "pred": "method",
+   "src": "W4408770418",
+   "dst": "W2573867005",
+   "evidence": "fulltext",
+   "cited_retracted": false
+  },
+  "s152": {
+   "pred": "result",
+   "src": "W2086121216",
+   "dst": "W2050941179",
+   "evidence": "fulltext",
+   "cited_retracted": true
+  },
+  "s153": {
+   "pred": "result",
+   "src": "W4385620485",
+   "dst": "W4313490196",
+   "evidence": "fulltext",
+   "cited_retracted": false
+  },
+  "s154": {
+   "pred": "result",
+   "src": "W2624768339",
+   "dst": "W2589336344",
+   "evidence": "fulltext",
+   "cited_retracted": true
+  },
+  "s155": {
+   "pred": "critical",
+   "src": "W1553011341",
+   "dst": "W2171526610",
+   "evidence": "s2",
+   "cited_retracted": false
+  },
+  "s156": {
+   "pred": "background",
+   "src": "W4388634092",
+   "dst": "W4319057813",
+   "evidence": "fulltext",
+   "cited_retracted": false
+  },
+  "s157": {
+   "pred": "method",
+   "src": "W4403729713",
+   "dst": "W3113731186",
+   "evidence": "fulltext",
+   "cited_retracted": false
+  },
+  "s158": {
+   "pred": "background",
+   "src": "W2986108561",
+   "dst": "W2084652685",
+   "evidence": "s2",
+   "cited_retracted": false
+  },
+  "s159": {
+   "pred": "background",
+   "src": "W4401001687",
+   "dst": "W3127420356",
+   "evidence": "fulltext",
+   "cited_retracted": false
+  },
+  "s160": {
+   "pred": "result",
+   "src": "W2150730731",
+   "dst": "W2097335530",
+   "evidence": "fulltext",
+   "cited_retracted": false
+  }
+ }
+}
