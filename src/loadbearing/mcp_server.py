@@ -9,6 +9,7 @@ Tools
   retraction_status   is this DOI retracted? (instant, no graph expansion)
   check_references    exposure report for a bibliography (BibTeX or DOIs)
   check_paper         exposure report for a published paper
+  audit_claims        review draft claims against a local outcome evidence snapshot
   explain_exposure    every path from a checked manuscript to one retracted paper, with sentences
   graph_schema        what the graph holds, with example Cypher
   query_graph         read-only Cypher over the evidence graph
@@ -27,13 +28,14 @@ from mcp.server.mcpserver import MCPServer
 from mcp.types import ToolAnnotations
 
 from pathlib import Path
-from . import bib, store
+from . import bib, claim_audit, store
 from .check import ORDER, has_retraction_notice, retraction_status as _retraction_status, run_check
 from .openalex import norm_doi
 
 _ROOT = Path(__file__).resolve().parents[2]
 _DEFAULT_STORE = "data/evidence" if Path("data/evidence").exists() else str(_ROOT / "data/evidence")
 STORE = os.environ.get("LOADBEARING_STORE", _DEFAULT_STORE)
+CLAIM_STORE = Path(os.environ.get("LOADBEARING_CLAIM_STORE", str(claim_audit.DEMO_STORE)))
 # A store has one writer. Tool calls run in worker threads, so checks take turns.
 _WRITE_LOCK = threading.Lock()
 MAX_ROWS = 200
@@ -54,7 +56,9 @@ Before citing a paper, call retraction_status. To audit a whole reference list, 
 (BibTeX or DOIs); for a published paper, check_paper. Act on 'direct' and 'load_bearing' findings;
 quote the evidence sentence when you tell the user. Treat an OpenAlex flag as unconfirmed unless
 notice_on_record is true. Report what notices say: never call a paper or
-author fraudulent. A path is evidence for a person to review, not a verdict."""
+author fraudulent. A path is evidence for a person to review, not a verdict.
+Use audit_claims when a draft sentence relies on a particular review outcome. Respect insufficient
+evidence and the snapshot cutoff. Report the evidence locator and notice with any proposed revision."""
 
 mcp = MCPServer(name="load-bearing", title="Load-Bearing", instructions=INSTRUCTIONS, version="0.1.0")
 
@@ -178,6 +182,14 @@ def check_paper(doi: str, depth: int = 2) -> str:
     with _WRITE_LOCK:
         res = run_check(STORE, doi=doi, depth=max(1, min(depth, 3)))
     return _report(res)
+
+
+@mcp.tool(annotations=READ_ONLY)
+def audit_claims(claims: list[dict]) -> list[dict]:
+    """Audit up to 25 claims with id, claim, reference_dois, as_of and optional confirmed outcome_ids."""
+    if not 1 <= len(claims) <= 25:
+        raise ValueError("Pass 1 to 25 claims.")
+    return claim_audit.audit_claims(CLAIM_STORE, claims)
 
 
 def _ro():

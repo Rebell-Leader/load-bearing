@@ -1,0 +1,176 @@
+{
+  "cockayne-mapped": {
+    "family": "cockayne",
+    "condition": "mapped",
+    "action": "review_indirect",
+    "source": "https://bmjopen.bmj.com/content/bmjopen/9/10/e031909.full.pdf#page=5"
+  },
+  "cockayne-paraphrase-mapped": {
+    "family": "cockayne",
+    "condition": "paraphrase-mapped",
+    "action": "review_indirect",
+    "source": "https://bmjopen.bmj.com/content/bmjopen/9/10/e031909.full.pdf#page=5"
+  },
+  "cockayne-paraphrase-unmapped": {
+    "family": "cockayne",
+    "condition": "paraphrase-unmapped",
+    "action": "review_indirect",
+    "source": "https://bmjopen.bmj.com/content/bmjopen/9/10/e031909.full.pdf#page=5"
+  },
+  "cockayne-before-notice": {
+    "family": "cockayne",
+    "condition": "before-notice",
+    "action": "no_notice_as_of",
+    "source": "https://bmjopen.bmj.com/content/bmjopen/9/10/e031909.full.pdf#page=5"
+  },
+  "cockayne-unknown-outcome": {
+    "family": "cockayne",
+    "condition": "unknown-outcome",
+    "action": "insufficient_evidence",
+    "source": "https://bmjopen.bmj.com/content/bmjopen/9/10/e031909.full.pdf#page=5"
+  },
+  "cockayne-outside-scope": {
+    "family": "cockayne",
+    "condition": "outside-scope",
+    "action": "retain_for_this_notice",
+    "source": "https://bmjopen.bmj.com/content/bmjopen/9/10/e031909.full.pdf#page=5"
+  },
+  "cockayne-outside-unmapped": {
+    "family": "cockayne",
+    "condition": "outside-unmapped",
+    "action": "retain_for_this_notice",
+    "source": "https://bmjopen.bmj.com/content/bmjopen/9/10/e031909.full.pdf#page=5"
+  },
+  "gillespie-mapped": {
+    "family": "gillespie",
+    "condition": "mapped",
+    "action": "review_indirect",
+    "source": "https://portal.e-lfh.org.uk/ContentServer/content/FFS_01_004/3cochrane%20falls%20inteventions%20community%20review%202012.pdf#page=17"
+  },
+  "gillespie-paraphrase-mapped": {
+    "family": "gillespie",
+    "condition": "paraphrase-mapped",
+    "action": "review_indirect",
+    "source": "https://portal.e-lfh.org.uk/ContentServer/content/FFS_01_004/3cochrane%20falls%20inteventions%20community%20review%202012.pdf#page=17"
+  },
+  "gillespie-paraphrase-unmapped": {
+    "family": "gillespie",
+    "condition": "paraphrase-unmapped",
+    "action": "review_indirect",
+    "source": "https://portal.e-lfh.org.uk/ContentServer/content/FFS_01_004/3cochrane%20falls%20inteventions%20community%20review%202012.pdf#page=17"
+  },
+  "gillespie-before-notice": {
+    "family": "gillespie",
+    "condition": "before-notice",
+    "action": "no_notice_as_of",
+    "source": "https://portal.e-lfh.org.uk/ContentServer/content/FFS_01_004/3cochrane%20falls%20inteventions%20community%20review%202012.pdf#page=17"
+  },
+  "gillespie-unknown-outcome": {
+    "family": "gillespie",
+    "condition": "unknown-outcome",
+    "action": "insufficient_evidence",
+    "source": "https://portal.e-lfh.org.uk/ContentServer/content/FFS_01_004/3cochrane%20falls%20inteventions%20community%20review%202012.pdf#page=17"
+  },
+  "gillespie-outside-scope": {
+    "family": "gillespie",
+    "condition": "outside-scope",
+    "action": "retain_for_this_notice",
+    "source": "https://portal.e-lfh.org.uk/ContentServer/content/FFS_01_004/3cochrane%20falls%20inteventions%20community%20review%202012.pdf#page=17"
+  },
+  "gillespie-outside-unmapped": {
+    "family": "gillespie",
+    "condition": "outside-unmapped",
+    "action": "retain_for_this_notice",
+    "source": "https://portal.e-lfh.org.uk/ContentServer/content/FFS_01_004/3cochrane%20falls%20inteventions%20community%20review%202012.pdf#page=17"
+  },
+  "dai-mapped": {
+    "family": "dai",
+    "condition": "mapped",
+    "action": "review_indirect",
+    "source": "https://researchnow-admin.flinders.edu.au/ws/portalfiles/portal/53741954/nutrients_07_03322.pdf#page=10"
+  },
+  "dai-paraphrase-mapped": {
+    "family": "dai",
+    "condition": "paraphrase-mapped",
+    "action": "review_indirect",
+    "source": "https://researchnow-admin.flinders.edu.au/ws/portalfiles/portal/53741954/nutrients_07_03322.pdf#page=10"
+  },
+  "dai-paraphrase-unmapped": {
+    "family": "dai",
+    "condition": "paraphrase-unmapped",
+    "action": "review_indirect",
+    "source": "https://researchnow-admin.flinders.edu.au/ws/portalfiles/portal/53741954/nutrients_07_03322.pdf#page=10"
+  },
+  "dai-before-notice": {
+    "family": "dai",
+    "condition": "before-notice",
+    "action": "no_notice_as_of",
+    "source": "https://researchnow-admin.flinders.edu.au/ws/portalfiles/portal/53741954/nutrients_07_03322.pdf#page=10"
+  },
+  "dai-unknown-outcome": {
+    "family": "dai",
+    "condition": "unknown-outcome",
+    "action": "insufficient_evidence",
+    "source": "https://researchnow-admin.flinders.edu.au/ws/portalfiles/portal/53741954/nutrients_07_03322.pdf#page=10"
+  },
+  "herrmann-mapped": {
+    "family": "herrmann",
+    "condition": "mapped",
+    "action": "review_indirect",
+    "source": "https://bmjopen.bmj.com/content/bmjopen/9/10/e031909.full.pdf#page=5"
+  },
+  "herrmann-paraphrase-mapped": {
+    "family": "herrmann",
+    "condition": "paraphrase-mapped",
+    "action": "review_indirect",
+    "source": "https://bmjopen.bmj.com/content/bmjopen/9/10/e031909.full.pdf#page=5"
+  },
+  "herrmann-paraphrase-unmapped": {
+    "family": "herrmann",
+    "condition": "paraphrase-unmapped",
+    "action": "review_indirect",
+    "source": "https://bmjopen.bmj.com/content/bmjopen/9/10/e031909.full.pdf#page=5"
+  },
+  "herrmann-before-notice": {
+    "family": "herrmann",
+    "condition": "before-notice",
+    "action": "no_notice_as_of",
+    "source": "https://bmjopen.bmj.com/content/bmjopen/9/10/e031909.full.pdf#page=5"
+  },
+  "herrmann-unknown-outcome": {
+    "family": "herrmann",
+    "condition": "unknown-outcome",
+    "action": "insufficient_evidence",
+    "source": "https://bmjopen.bmj.com/content/bmjopen/9/10/e031909.full.pdf#page=5"
+  },
+  "peterson-mapped": {
+    "family": "peterson",
+    "condition": "mapped",
+    "action": "review_indirect",
+    "source": "https://bmjopen.bmj.com/content/bmjopen/9/10/e031909.full.pdf#page=5"
+  },
+  "peterson-paraphrase-mapped": {
+    "family": "peterson",
+    "condition": "paraphrase-mapped",
+    "action": "review_indirect",
+    "source": "https://bmjopen.bmj.com/content/bmjopen/9/10/e031909.full.pdf#page=5"
+  },
+  "peterson-paraphrase-unmapped": {
+    "family": "peterson",
+    "condition": "paraphrase-unmapped",
+    "action": "review_indirect",
+    "source": "https://bmjopen.bmj.com/content/bmjopen/9/10/e031909.full.pdf#page=5"
+  },
+  "peterson-before-notice": {
+    "family": "peterson",
+    "condition": "before-notice",
+    "action": "no_notice_as_of",
+    "source": "https://bmjopen.bmj.com/content/bmjopen/9/10/e031909.full.pdf#page=5"
+  },
+  "peterson-unknown-outcome": {
+    "family": "peterson",
+    "condition": "unknown-outcome",
+    "action": "insufficient_evidence",
+    "source": "https://bmjopen.bmj.com/content/bmjopen/9/10/e031909.full.pdf#page=5"
+  }
+}

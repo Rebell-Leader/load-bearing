@@ -1,0 +1,300 @@
+[
+  {
+    "id": "cockayne-mapped",
+    "claim": "Cite the original pooled hip-fracture estimate from the vitamin K review.",
+    "reference_dois": [
+      "10.1001/archinte.166.12.1256"
+    ],
+    "as_of": "2026-11-16",
+    "outcome_ids": [
+      "hip-fracture-original"
+    ]
+  },
+  {
+    "id": "cockayne-paraphrase-mapped",
+    "claim": "Use the full set of trials when quoting the 2006 review's result for broken hips.",
+    "reference_dois": [
+      "10.1001/archinte.166.12.1256"
+    ],
+    "as_of": "2026-11-16",
+    "outcome_ids": [
+      "hip-fracture-original"
+    ]
+  },
+  {
+    "id": "cockayne-paraphrase-unmapped",
+    "claim": "Use the full set of trials when quoting the 2006 review's result for broken hips.",
+    "reference_dois": [
+      "10.1001/archinte.166.12.1256"
+    ],
+    "as_of": "2026-11-16"
+  },
+  {
+    "id": "cockayne-before-notice",
+    "claim": "Cite the original pooled hip-fracture estimate from the vitamin K review.",
+    "reference_dois": [
+      "10.1001/archinte.166.12.1256"
+    ],
+    "as_of": "2016-05-01",
+    "outcome_ids": [
+      "hip-fracture-original"
+    ]
+  },
+  {
+    "id": "cockayne-unknown-outcome",
+    "claim": "Use the cited review for an unrecorded outcome involving follow-up adherence.",
+    "reference_dois": [
+      "10.1001/archinte.166.12.1256"
+    ],
+    "as_of": "2026-11-16",
+    "outcome_ids": [
+      "follow-up-adherence"
+    ]
+  },
+  {
+    "id": "cockayne-outside-scope",
+    "claim": "Report the sensitivity estimate for hip fracture after all three contested trials were excluded.",
+    "reference_dois": [
+      "10.1001/archinte.166.12.1256"
+    ],
+    "as_of": "2026-11-16",
+    "outcome_ids": [
+      "hip-fracture-sensitivity"
+    ]
+  },
+  {
+    "id": "cockayne-outside-unmapped",
+    "claim": "Report the sensitivity estimate for hip fracture after all three contested trials were excluded.",
+    "reference_dois": [
+      "10.1001/archinte.166.12.1256"
+    ],
+    "as_of": "2026-11-16"
+  },
+  {
+    "id": "gillespie-mapped",
+    "claim": "Use the vitamin combination fracture result in Analysis 10.3 of the Cochrane review.",
+    "reference_dois": [
+      "10.1002/14651858.cd007146.pub3"
+    ],
+    "as_of": "2026-11-16",
+    "outcome_ids": [
+      "fractures-vitamin-combination"
+    ]
+  },
+  {
+    "id": "gillespie-paraphrase-mapped",
+    "claim": "Cite the fracture outcome for participants taking the added vitamins with calcium.",
+    "reference_dois": [
+      "10.1002/14651858.cd007146.pub3"
+    ],
+    "as_of": "2026-11-16",
+    "outcome_ids": [
+      "fractures-vitamin-combination"
+    ]
+  },
+  {
+    "id": "gillespie-paraphrase-unmapped",
+    "claim": "Cite the fracture outcome for participants taking the added vitamins with calcium.",
+    "reference_dois": [
+      "10.1002/14651858.cd007146.pub3"
+    ],
+    "as_of": "2026-11-16"
+  },
+  {
+    "id": "gillespie-before-notice",
+    "claim": "Use the vitamin combination fracture result in Analysis 10.3 of the Cochrane review.",
+    "reference_dois": [
+      "10.1002/14651858.cd007146.pub3"
+    ],
+    "as_of": "2016-05-01",
+    "outcome_ids": [
+      "fractures-vitamin-combination"
+    ]
+  },
+  {
+    "id": "gillespie-unknown-outcome",
+    "claim": "Use the cited review for an unrecorded outcome involving follow-up adherence.",
+    "reference_dois": [
+      "10.1002/14651858.cd007146.pub3"
+    ],
+    "as_of": "2026-11-16",
+    "outcome_ids": [
+      "follow-up-adherence"
+    ]
+  },
+  {
+    "id": "gillespie-outside-scope",
+    "claim": "Quote the fracture comparison for calcium by itself versus placebo in Analysis 10.3.",
+    "reference_dois": [
+      "10.1002/14651858.cd007146.pub3"
+    ],
+    "as_of": "2026-11-16",
+    "outcome_ids": [
+      "fractures-calcium-alone"
+    ]
+  },
+  {
+    "id": "gillespie-outside-unmapped",
+    "claim": "Quote the fracture comparison for calcium by itself versus placebo in Analysis 10.3.",
+    "reference_dois": [
+      "10.1002/14651858.cd007146.pub3"
+    ],
+    "as_of": "2026-11-16"
+  },
+  {
+    "id": "dai-mapped",
+    "claim": "Cite the review's B-vitamin intervention evidence for hip fractures after stroke.",
+    "reference_dois": [
+      "10.3390/nu7053322"
+    ],
+    "as_of": "2026-11-16",
+    "outcome_ids": [
+      "stroke-hip-fracture-intervention"
+    ]
+  },
+  {
+    "id": "dai-paraphrase-mapped",
+    "claim": "Use the result on broken hips among survivors given folate and B12.",
+    "reference_dois": [
+      "10.3390/nu7053322"
+    ],
+    "as_of": "2026-11-16",
+    "outcome_ids": [
+      "stroke-hip-fracture-intervention"
+    ]
+  },
+  {
+    "id": "dai-paraphrase-unmapped",
+    "claim": "Use the result on broken hips among survivors given folate and B12.",
+    "reference_dois": [
+      "10.3390/nu7053322"
+    ],
+    "as_of": "2026-11-16"
+  },
+  {
+    "id": "dai-before-notice",
+    "claim": "Cite the review's B-vitamin intervention evidence for hip fractures after stroke.",
+    "reference_dois": [
+      "10.3390/nu7053322"
+    ],
+    "as_of": "2016-05-01",
+    "outcome_ids": [
+      "stroke-hip-fracture-intervention"
+    ]
+  },
+  {
+    "id": "dai-unknown-outcome",
+    "claim": "Use the cited review for an unrecorded outcome involving follow-up adherence.",
+    "reference_dois": [
+      "10.3390/nu7053322"
+    ],
+    "as_of": "2026-11-16",
+    "outcome_ids": [
+      "follow-up-adherence"
+    ]
+  },
+  {
+    "id": "herrmann-mapped",
+    "claim": "Rely on the fracture result cited in the original Herrmann B-vitamin review.",
+    "reference_dois": [
+      "10.1515/cclm.2007.362"
+    ],
+    "as_of": "2026-11-16",
+    "outcome_ids": [
+      "b-vitamin-fracture-evidence"
+    ]
+  },
+  {
+    "id": "herrmann-paraphrase-mapped",
+    "claim": "Draw on the earlier synthesis to describe the apparent reduction in broken hips with supplementation.",
+    "reference_dois": [
+      "10.1515/cclm.2007.362"
+    ],
+    "as_of": "2026-11-16",
+    "outcome_ids": [
+      "b-vitamin-fracture-evidence"
+    ]
+  },
+  {
+    "id": "herrmann-paraphrase-unmapped",
+    "claim": "Draw on the earlier synthesis to describe the apparent reduction in broken hips with supplementation.",
+    "reference_dois": [
+      "10.1515/cclm.2007.362"
+    ],
+    "as_of": "2026-11-16"
+  },
+  {
+    "id": "herrmann-before-notice",
+    "claim": "Rely on the fracture result cited in the original Herrmann B-vitamin review.",
+    "reference_dois": [
+      "10.1515/cclm.2007.362"
+    ],
+    "as_of": "2016-05-01",
+    "outcome_ids": [
+      "b-vitamin-fracture-evidence"
+    ]
+  },
+  {
+    "id": "herrmann-unknown-outcome",
+    "claim": "Use the cited review for an unrecorded outcome involving follow-up adherence.",
+    "reference_dois": [
+      "10.1515/cclm.2007.362"
+    ],
+    "as_of": "2026-11-16",
+    "outcome_ids": [
+      "follow-up-adherence"
+    ]
+  },
+  {
+    "id": "peterson-mapped",
+    "claim": "Use Peterson's reviewed evidence from the Parkinson's osteopenia intervention trial.",
+    "reference_dois": [
+      "10.1016/j.maturitas.2014.02.012"
+    ],
+    "as_of": "2026-11-16",
+    "outcome_ids": [
+      "parkinsons-osteopenia-treatment"
+    ]
+  },
+  {
+    "id": "peterson-paraphrase-mapped",
+    "claim": "Cite the review's evidence on bone loss after supplementation in Parkinson’s disease.",
+    "reference_dois": [
+      "10.1016/j.maturitas.2014.02.012"
+    ],
+    "as_of": "2026-11-16",
+    "outcome_ids": [
+      "parkinsons-osteopenia-treatment"
+    ]
+  },
+  {
+    "id": "peterson-paraphrase-unmapped",
+    "claim": "Cite the review's evidence on bone loss after supplementation in Parkinson’s disease.",
+    "reference_dois": [
+      "10.1016/j.maturitas.2014.02.012"
+    ],
+    "as_of": "2026-11-16"
+  },
+  {
+    "id": "peterson-before-notice",
+    "claim": "Use Peterson's reviewed evidence from the Parkinson's osteopenia intervention trial.",
+    "reference_dois": [
+      "10.1016/j.maturitas.2014.02.012"
+    ],
+    "as_of": "2016-05-01",
+    "outcome_ids": [
+      "parkinsons-osteopenia-treatment"
+    ]
+  },
+  {
+    "id": "peterson-unknown-outcome",
+    "claim": "Use the cited review for an unrecorded outcome involving follow-up adherence.",
+    "reference_dois": [
+      "10.1016/j.maturitas.2014.02.012"
+    ],
+    "as_of": "2026-11-16",
+    "outcome_ids": [
+      "follow-up-adherence"
+    ]
+  }
+]

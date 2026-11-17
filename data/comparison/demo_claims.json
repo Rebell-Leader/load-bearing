@@ -1,0 +1,47 @@
+{
+  "rodents": {
+    "title": "Two outcomes from one meta-analysis",
+    "reference": "Neural stem/progenitor cell therapy in preclinical rodent models",
+    "source_url": "https://link.springer.com/article/10.1186/s13287-022-03231-1",
+    "study": "Rezk et al. · reference 44",
+    "before": "2023-08-01",
+    "claims": [
+      {
+        "id": "rodent-rat",
+        "claim": "Use the pooled rat cognitive-function result from the cited review in our synthesis.",
+        "reference_dois": ["10.1186/s13287-022-03231-1"],
+        "outcome_ids": ["rodent-rat-mwm"],
+        "as_of": "2026-11-16"
+      },
+      {
+        "id": "rodent-mouse",
+        "claim": "Use the pooled mouse cognitive-function result from the cited review in our synthesis.",
+        "reference_dois": ["10.1186/s13287-022-03231-1"],
+        "outcome_ids": ["rodent-mouse-mwm"],
+        "as_of": "2026-11-16"
+      }
+    ]
+  },
+  "recommender": {
+    "title": "Two claims from one recommender overview",
+    "reference": "AI-driven transformation of e-commerce",
+    "source_url": "https://wjaets.com/sites/default/files/fulltext_pdf/WJAETS-2025-0276.pdf#page=5",
+    "study": "Shen et al. · reference 6",
+    "claims": [
+      {
+        "id": "cs-shen-indirect",
+        "claim": "Use the cited overview as evidence that improved K-means can segment users using both behavioral and social data.",
+        "reference_dois": ["10.30574/wjaets.2025.15.1.0276"],
+        "outcome_ids": ["wjaets-kmeans-segmentation"],
+        "as_of": "2026-11-16"
+      },
+      {
+        "id": "cs-shen-unrelated-claim",
+        "claim": "The cited overview describes separating candidate generation from ranking in production recommendation pipelines.",
+        "reference_dois": ["10.30574/wjaets.2025.15.1.0276"],
+        "outcome_ids": ["wjaets-candidate-ranking"],
+        "as_of": "2026-11-16"
+      }
+    ]
+  }
+}

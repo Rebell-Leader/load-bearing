@@ -1,6 +1,6 @@
 ---
 name: load-bearing
-description: Check citations for retracted science before you cite them. Use when writing or reviewing anything with references (a literature review, a paper, a grant, a report from a research agent), when given a .bib file or a list of DOIs, or when asked whether a paper or claim rests on retracted work. Finds direct citations of retracted papers and second-order reliance through method or result citations, with the citing sentence as evidence.
+description: Audit draft claims and bibliographies for reliance on retracted research. Use when writing or reviewing a manuscript, evidence synthesis, grant, or report with a list of references. Finds dated publication notices and traces a claim to study inclusion evidence for a specific review outcome when available.
 ---
 
 # Load-Bearing: check before you cite
@@ -13,15 +13,18 @@ only *mentioned* it. The evidence lives in a Relate graph (a single `.rl` file).
 ## Which interface
 
 1. **MCP tools** (preferred, if the `load-bearing` server is connected):
-   `retraction_status`, `check_references`, `check_paper`, `explain_exposure`, `graph_schema`, `query_graph`.
+   `audit_claims`, `retraction_status`, `check_references`, `check_paper`, `explain_exposure`, `graph_schema`, `query_graph`.
 2. **CLI** (from the repository root):
    ```bash
+   uv run loadbearing audit claims.json --json      # draft claims against the local outcome store
    uv run loadbearing check refs.bib --json          # a bibliography (BibTeX or one DOI per line)
    uv run loadbearing check --doi 10.xxxx/yyyy --json # a published paper
    ```
    Exit code 1 means at least one `direct` or `load_bearing` finding.
 
 ## Workflow
+
+**To audit a draft outcome** use `audit_claims` with the draft sentence, cited DOI, and notice cutoff. Supply an outcome ID only after confirming its source figure or section. If evidence is missing or the match is ambiguous, keep the abstention in the review. When a claim is flagged, give the locator, notice link, and what a reviewer should reassess. An outcome outside the scope of a notice can be retained for that notice.
 
 **While drafting**: before adding a citation, call `retraction_status(dois=[...])` on the candidates. It is
 instant and builds no graph. Drop or replace anything `retracted`; mention an `expression_of_concern`

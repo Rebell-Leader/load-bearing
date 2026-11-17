@@ -4,7 +4,8 @@ from pathlib import Path
 import pytest
 import relate
 
-from loadbearing.claim_audit import audit, build_snapshot
+from loadbearing.claim_audit import audit, audit_claims, build_snapshot
+from loadbearing.cli import main
 
 
 @pytest.fixture
@@ -50,3 +51,38 @@ def test_historical_notice_cutoff(snapshot):
     assert current["findings"][0]["notice"]["kind"] == "retraction"
     with pytest.raises(ValueError, match="later than snapshot"):
         audit(snapshot, as_of="2026-11-17", **args)
+
+
+def test_unrelated_retraction_wording_cannot_clear_a_direct_citation(snapshot):
+    args = {"reference_dois": ["10.1038/nature04533"], "as_of": "2026-11-16"}
+    assert audit(snapshot, claim="Document that the cited paper was retracted.", **args)["action"] == "retain_with_notice"
+    assert audit(snapshot, claim="Discuss the retracted earlier report, then base the conclusion on this paper.",
+                 **args)["action"] == "review_direct"
+
+
+def test_import_preview_confirm_retry_and_audit(tmp_path, capsys):
+    data = Path(__file__).parents[1] / "data/claim_eval"
+    db = tmp_path / "imported.rl"
+    args = ["import-outcomes", str(data / "outcomes.csv"), "--notices", str(data / "notices.csv"),
+            "--as-of", "2026-11-16", "--store", str(db)]
+    assert main(args) == 0
+    assert "Preview only" in capsys.readouterr().out
+    assert not db.exists()
+    assert main([*args, "--confirm"]) == 0
+    assert main([*args, "--confirm"]) == 0
+
+    claims = [row for row in json.loads((data / "claims.json").read_text()) if row["id"] in {
+        "gillespie-mapped", "gillespie-outside-scope", "gillespie-paraphrase-unmapped",
+    }]
+    results = audit_claims(db, claims)
+    assert [row["action"] for row in results] == ["review_indirect", "insufficient_evidence", "retain_for_this_notice"]
+    positive = results[0]["findings"]
+    assert len(positive) == 1
+    assert "Analysis 10.3" in positive[0]["evidence"]["locator"]
+    assert positive[0]["notice"]["url"] == "https://doi.org/10.1016/j.bone.2017.10.007"
+
+    malformed = tmp_path / "invalid.csv"
+    malformed.write_text("review_doi\n10.1234/incorrect\n")
+    assert main(["import-outcomes", str(malformed), "--as-of", "2026-11-16",
+                 "--store", str(db), "--confirm"]) == 2
+    assert audit_claims(db, claims) == results

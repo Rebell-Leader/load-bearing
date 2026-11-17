@@ -7,13 +7,14 @@
 from __future__ import annotations
 
 import argparse
+import csv
 import json
 import sys
 import textwrap
 from collections import defaultdict
 from pathlib import Path
 
-from . import expand, http
+from . import claim_audit, claim_import, expand, http
 from .check import ORDER, notice_label, run_check
 
 HEADINGS = {
@@ -121,6 +122,53 @@ def cmd_check(args) -> int:
     return 1 if summary["counts"]["direct"] or summary["counts"]["load_bearing"] else 0
 
 
+def cmd_audit(args) -> int:
+    if args.claims:
+        claims = json.loads(args.claims.read_text())
+    else:
+        claims = json.loads(claim_audit.DEMO_CLAIMS.read_text())[args.example]["claims"]
+    if args.as_of and isinstance(claims, list):
+        claims = [{**claim, "as_of": args.as_of} if isinstance(claim, dict) else claim for claim in claims]
+    rows = claim_audit.audit_claims(args.store, claims, args.mode)
+    if args.json:
+        print(json.dumps(rows, indent=2, ensure_ascii=False))
+    else:
+        print(f"Load-Bearing claim audit · {args.mode.replace('_', ' ')} · offline")
+        for row in rows:
+            print(f"\n{row['claim']}")
+            print(f"  {claim_audit.ACTIONS[row['action']]} ({row['as_of']})")
+            for finding in row["findings"]:
+                print(f"  {' → '.join(finding['path'])}")
+                if evidence := finding.get("evidence"):
+                    print(f"  {evidence['finding']} [{evidence['locator']}]")
+                    print(f"  Evidence: {evidence['url']}")
+                notice = finding["notice"]
+                print(f"  {notice['kind'].replace('_', ' ').capitalize()} {notice['date']}: {notice['url']}")
+            if row["unresolved_references"]:
+                print(f"  Outside the snapshot: {', '.join(row['unresolved_references'])}")
+    return 0
+
+
+def cmd_import_outcomes(args) -> int:
+    facts = claim_import.read_tables(args.outcomes, args.notices, args.as_of)
+    print(f"Cutoff: {facts['as_of']} · target: {args.store}")
+    for review in facts["publications"]:
+        for outcome in review["outcomes"]:
+            for role in ("uses", "outside_scope"):
+                for doi in outcome[role]:
+                    evidence = outcome["study_evidence"][doi]
+                    print(f"  {review['doi']} · {outcome['id']} · {role} · {doi}")
+                    print(f"    {evidence['locator']} · {evidence['url']} · reviewed by {evidence['reviewed_by']}")
+    for notice in facts["notices"]:
+        print(f"  {notice['doi']} · {notice['kind']} · {notice['date']} · {notice['url']}")
+    if args.confirm:
+        claim_audit.write_snapshot(args.store, facts)
+        print("Saved the reviewed evidence to Relate.")
+    else:
+        print("Preview only. Verify the DOIs and source locators, then rerun with --confirm to save.")
+    return 0
+
+
 def main(argv: list[str] | None = None) -> int:
     p = argparse.ArgumentParser(prog="loadbearing", description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     sub = p.add_subparsers(dest="cmd", required=True)
@@ -132,10 +180,29 @@ def main(argv: list[str] | None = None) -> int:
     c.add_argument("--offline", action="store_true", help="query the existing store only; no network")
     c.add_argument("--s2-limit", type=int, default=40, help="max Semantic Scholar fallback calls (default: %(default)s)")
     c.add_argument("--json", action="store_true", help="machine-readable output for agents")
+    audit = sub.add_parser("audit", help="audit claim JSON or run a bundled example offline")
+    audit.add_argument("claims", type=Path, nargs="?", help="JSON array of claims")
+    audit.add_argument("--example", choices=("rodents", "recommender"), default="rodents", help="bundled case")
+    audit.add_argument("--store", type=Path, default=claim_audit.DEMO_STORE, help="versioned claim evidence store")
+    audit.add_argument("--as-of", help="override the claim dates (YYYY-MM-DD)")
+    audit.add_argument("--mode", choices=claim_audit.MODES, default="claim_aware")
+    audit.add_argument("--json", action="store_true", help="machine-readable output for agents")
+    importer = sub.add_parser("import-outcomes", help="preview or save a source-checked inclusion table")
+    importer.add_argument("outcomes", type=Path)
+    importer.add_argument("--notices", type=Path, help="CSV of dated publication notices")
+    importer.add_argument("--store", type=Path, required=True, help="new or existing claim store")
+    importer.add_argument("--as-of", required=True, help="snapshot cutoff (YYYY-MM-DD)")
+    importer.add_argument("--confirm", action="store_true", help="save after reviewing the DOIs and locators")
     args = p.parse_args(argv)
     if args.cmd == "check" and not (args.bib or args.doi):
         p.error("give a .bib file or --doi")
-    return cmd_check(args)
+    if args.cmd == "check":
+        return cmd_check(args)
+    try:
+        return cmd_audit(args) if args.cmd == "audit" else cmd_import_outcomes(args)
+    except (ValueError, OSError, csv.Error, RuntimeError) as error:
+        print(f"loadbearing: {error}", file=sys.stderr)
+        return 2
 
 
 if __name__ == "__main__":

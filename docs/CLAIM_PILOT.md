@@ -4,7 +4,7 @@ A bibliography check tells you that one of your references cites a retracted pap
 
 Two sentences in the same draft can cite the same review:
 - One cites a pooled estimate that included a later-retracted trial (**needs review**).
-- The next sentence cites a different outcome from the same review—for example, a mouse meta-analysis where the retracted study was a rat trial—or cites the review only for general background (**safe to keep**).
+- The next sentence cites a different outcome from the same review, such as a mouse meta-analysis that used a separate set of studies (**outside the scope of this notice**).
 
 A direct DOI check misses the first sentence because the review itself is not retracted. An untyped citation-path check flags both sentences because both cite the same review.
 
@@ -86,3 +86,47 @@ PYTHONPATH="$pilot_dir/deps" uv run python scripts/run_claim_comparison.py \
 ```
 
 Add `--claude` to that command to re-run the four live Claude Haiku sessions.
+
+## Evaluation on new reviews
+
+The second comparison imports 11 source-checked study-to-outcome links across the Cockayne, Gillespie, Dai, Herrmann, and Peterson reviews. All five are outside the development and pilot families. Inclusion and exclusion decisions come from the independently published Avenell review and the underlying analyses where available. The test sentences and controlled variants were authored for this project. The 29 inputs share five review families and one retraction cohort. They test the import and audit workflow under these conditions. [Avenell et al.](https://doi.org/10.1136/bmjopen-2019-031909) · [Outcome rows](../data/claim_eval/outcomes.csv) · [Expected actions and locators](../data/claim_eval/labels.json)
+
+| Method | Exact actions (29) | Affected variants found (15) | False alerts (14 other inputs) | Abstentions |
+| --- | ---: | ---: | ---: | ---: |
+| Direct DOI notices | 5 | 0 | 0 | 0 |
+| Untyped two-hop paths | 20 | 15 | 9 | 0 |
+| Claim-scoped Relate paths | 22 | 10 | 0 | 12 |
+
+All **12 mapped current-date inputs** received a disposition, including both same-review controls. Five affected and two unaffected paraphrases without a confirmed outcome ID abstained, as did five deliberately unrecorded outcomes. An abstention on an affected claim counts as a miss. The external publication adjudicates the underlying evidence; a separate reviewer did not label the new draft wording. [Full results](../runs/eval_claim_import.json)
+
+```bash
+uv run --offline --no-sync python scripts/eval_claim_import.py
+```
+
+### CSV and claim input
+
+Supply the following headers in the inclusion CSV.
+
+| Field | Value |
+| --- | --- |
+| `review_doi`, `outcome_id`, `outcome_label` | Stable identity of the exact result in the cited work |
+| `study_doi`, `role` | Study cited by that work and either `uses` or `outside_scope` for this result |
+| `source_url`, `locator`, `evidence_summary`, `reviewed_by` | Source, page or figure, what it establishes, and attribution for the recorded review |
+
+Use `outside_scope` only when the source shows the relation. Keep ambiguous cases out of the table so the audit can abstain. The optional notice CSV has `study_doi,kind,date,url`; dates use YYYY-MM-DD. The importer previews both tables. After verifying the links, pass `--confirm` to write atomically. Imports with the same cutoff can add or update rows. Create a new store for a new cutoff.
+
+The JSON audit input is an array of objects. A confirmed outcome ID is scoped to a single cited review DOI. With multiple reference DOIs, the bundled phrase rules can match recorded outcomes where available. Imported outcomes require a confirmed ID.
+
+```json
+[
+  {
+    "id": "draft-claim-1",
+    "claim": "Use the fracture comparison for calcium alone.",
+    "reference_dois": ["10.1002/14651858.cd007146.pub3"],
+    "outcome_ids": ["fractures-calcium-alone"],
+    "as_of": "2026-11-16"
+  }
+]
+```
+
+The regular Load-Bearing MCP server accepts the same records in `audit_claims`. Set `LOADBEARING_CLAIM_STORE` to use an imported snapshot. The original PaperOrchestra replay still runs against its pinned pilot fixtures.

@@ -21,6 +21,7 @@ import time
 from mcp import Client
 from mcp.client.stdio import StdioServerParameters
 
+from loadbearing.claim_audit import DEMO_CLAIMS
 from loadbearing import store as lb_store
 
 SRC = sys.argv[1] if len(sys.argv) > 1 else "data/demo.rl"
@@ -69,7 +70,11 @@ async def main() -> int:
 
         # Load-Bearing server
         tools = {t.name for t in (await lb.list_tools()).tools}
-        report("load-bearing: list_tools", len(tools) == 6, ", ".join(sorted(tools)))
+        report("load-bearing: list_tools", len(tools) == 7 and "audit_claims" in tools, ", ".join(sorted(tools)))
+        featured = json.loads(DEMO_CLAIMS.read_text())["rodents"]["claims"]
+        audit = await lb.call_tool("audit_claims", {"claims": featured})
+        actions = [row["action"] for row in audit.structured_content["result"]]
+        report("load-bearing: audit_claims", actions == ["review_indirect", "retain_for_this_notice"], str(actions))
         r = text(await lb.call_tool("retraction_status", {"dois": [LESNE, "10.1126/science.1241224"]}))
         report("load-bearing: retraction_status", r[0]["status"] == "retracted" and r[1]["status"] == "no_notice_found",
                f"{r[0]['status']} ({r[0]['notice']['date'] if r[0]['notice'] else '-'}), {r[1]['status']}")
