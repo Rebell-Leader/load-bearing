@@ -99,7 +99,7 @@ def test_exposure_statuses():
     ])
     store.mark_manuscript(conn, "M")
     store.mark_retracted(conn, [{"id": "R", "nature": "Retraction", "date": "2024-06-24", "reasons": ["Concerns about images"],
-                                 "notice_id": "RW1", "notice_doi": None}])
+                                 "notice_id": "RW1", "notice_doi": None, "source": "retraction_watch"}])
     store.upsert_citations(conn, [{"src": s, "dst": d} for s, d in
                                   [("M", "A"), ("A", "R"), ("M", "B"), ("B", "R"), ("M", "C"), ("C", "R"), ("M", "R")]])
     store.annotate_citations(conn, [
@@ -142,6 +142,51 @@ def test_notice_labels_never_call_a_flag_a_retraction():
     assert check.notice_label(eoc).endswith("only notice found is an expression of concern (2022-03-01)")
     assert check.notice_label(flag) == "marked retracted by OpenAlex, no notice found"
     assert not check.has_retraction_notice(eoc) and not check.has_retraction_notice(flag)
+    assert not check.has_retraction_notice({"nature": "Retraction"})
+    assert "no retraction notice" in check.notice_label({})
+
+
+def test_direct_status_and_graph_use_the_same_notice_evidence(monkeypatch):
+    from loadbearing import check, crossref, openalex, retractionwatch
+
+    def notice(nature):
+        return {"nature": nature, "date": "2024-06-24", "reasons": [], "notice_doi": "10.1000/notice"}
+
+    flag, concern, upgraded, recorded = [f"10.1000/{key}" for key in ("flag", "concern", "upgraded", "recorded")]
+    works = [{"id": f"W{i}", "doi": doi, "is_retracted": doi != recorded}
+             for i, doi in enumerate((flag, concern, upgraded, recorded), 1)]
+    rw = {concern: notice("Expression of concern"), upgraded: notice("Correction"), recorded: notice("Retraction")}
+    monkeypatch.setattr(openalex, "works_by_dois", lambda *args, **kwargs: works)
+    monkeypatch.setattr(retractionwatch, "load", lambda: rw)
+    monkeypatch.setattr(crossref, "notice", lambda doi: notice("Retraction") if doi == upgraded else None)
+
+    direct = check.retraction_status([flag, concern, upgraded, recorded])
+    assert [r["status"] for r in direct] == ["marked_retracted", "expression_of_concern", "retracted", "retracted"]
+    assert [r["notice_on_record"] for r in direct] == [False, False, True, True]
+    assert direct[0]["notice"] is None and direct[1]["openalex_marked_retracted"]
+
+    ex = expand.expand([{"doi": w["doi"]} for w in works], "M", "draft", None, 1)
+    assert [(r["source"], r["nature"]) for r in expand.retraction_rows(ex)] == [
+        ("openalex", None), ("retraction_watch", "Expression of concern"),
+        ("crossref", "Retraction"), ("retraction_watch", "Retraction"),
+    ]
+
+
+def test_legacy_date_flags_require_a_retraction_notice():
+    conn = relate.connect(":memory:")
+    try:
+        store.upsert_papers(conn, [{"id": i, "pub_date": "2025-01-01"} for i in ("M", "R", "C")])
+        store.mark_manuscript(conn, "M")
+        store.mark_retracted(conn, [
+            {"id": i, "nature": kind, "date": "2024-06-24", "source": "crossref", "reasons": [],
+             "notice_id": None, "notice_doi": None}
+            for i, kind in (("R", "Retraction"), ("C", "Correction"))
+        ])
+        store.upsert_citations(conn, [{"src": "M", "dst": i} for i in ("R", "C")])
+        conn.execute("MATCH ()-[c:CITES]->() SET c.zombie = true")
+        assert {r["bad_id"]: r["edges"][0]["zombie"] for r in store.exposure(conn, "M", 1)} == {"C": False, "R": True}
+    finally:
+        conn.close()
 
 
 def test_intent_v1():
@@ -211,22 +256,91 @@ def test_impossible_citations_are_excluded_or_downgraded():
 
 def test_offline_check_uses_only_the_store(monkeypatch):
     """--offline with --doi must resolve the paper from the shipped store, never the network."""
+    from pathlib import Path
     from loadbearing import check, openalex
 
     def no_network(*a, **k):
         raise AssertionError("offline check touched the network")
 
     monkeypatch.setattr(openalex, "work", no_network)
+    demo_store = str(Path(__file__).resolve().parents[1] / "data/demo.rl")
     DEMO = "https://doi.org/10.1016/J.REDOX.2025.103611"
-    res = check.run_check("data/demo.rl", doi=DEMO, depth=3, offline=True)
+    res = check.run_check(demo_store, doi=DEMO, depth=3, offline=True)
     assert res.root_id == "W4408770418" and res.title.startswith("Absence of astrocytic ceruloplasmin")
     assert res.summary["counts"]["load_bearing"] == 23
     lb = [g for g in res.summary["retracted"] if g["status"] == "load_bearing"]
     assert sum(g["notice_on_record"] for g in lb) == 21  # one OpenAlex flag only, one expression of concern
-    assert check.run_check("data/demo.rl", doi=DEMO, depth=1, offline=True).summary["retracted"] == []
+    assert check.run_check(demo_store, doi=DEMO, depth=1, offline=True).summary["retracted"] == []
     try:
-        check.run_check("data/demo.rl", doi="10.1000/not-in-store", offline=True)
+        check.run_check(demo_store, doi="10.1000/not-in-store", offline=True)
     except LookupError as e:
         assert "not a checked manuscript" in str(e)
     else:
         raise AssertionError("missing manuscript should raise")
+
+
+def test_first_hop_critical_citation_defuses_path():
+    conn = relate.connect(":memory:")
+    for stmt in store.SCHEMA:
+        conn.execute(stmt)
+    store.upsert_papers(conn, [
+        {"id": "M", "title": "manuscript", "year": 2026, "doi": None, "pub_date": "2026-01-01"},
+        {"id": "A", "title": "intermediate", "year": 2020, "doi": None, "pub_date": "2020-01-01"},
+        {"id": "R", "title": "retracted paper", "year": 2006, "doi": "10.1038/nature04533", "pub_date": "2006-01-01"},
+    ])
+    store.mark_manuscript(conn, "M")
+    store.mark_retracted(conn, [{"id": "R", "nature": "Retraction", "date": "2024-06-24", "reasons": [],
+                                 "notice_id": "RW1", "notice_doi": None, "source": "retraction_watch"}])
+    store.upsert_citations(conn, [{"src": "M", "dst": "R"}, {"src": "M", "dst": "A"}, {"src": "A", "dst": "R"}])
+    store.annotate_citations(conn, [
+        {"src": "M", "dst": "R", "intent": "critical", "rule": "cue: retracted", "section": "Discussion",
+         "context": "Lesné 2006 was retracted.", "evidence": "fulltext", "n_contexts": 1, "classifier": "v1"},
+        {"src": "M", "dst": "A", "intent": "critical", "rule": "cue: failed to replicate", "section": "Discussion",
+         "context": "Failed to replicate A.", "evidence": "fulltext", "n_contexts": 1, "classifier": "v1"},
+        {"src": "A", "dst": "R", "intent": "method", "rule": "section: methods", "section": "Methods",
+         "context": "Purified as described.", "evidence": "fulltext", "n_contexts": 1, "classifier": "v1"},
+    ])
+    statuses = {tuple(n["id"] for n in r["chain"]): r["status"] for r in store.exposure(conn, "M", 3)}
+    assert statuses[("M", "R")] == "defused"
+    assert statuses[("M", "A", "R")] == "defused"
+    conn.close()
+
+
+def test_fulltext_vector_search_and_dispositions():
+    conn = relate.connect(":memory:")
+    for stmt in store.SCHEMA:
+        conn.execute(stmt)
+    store.upsert_papers(conn, [
+        {"id": "M:draft", "title": "Grant draft", "year": 2026, "doi": None, "pub_date": "2026-01-01"},
+        {"id": "W1", "title": "A specific amyloid-beta protein assembly in the brain impairs memory",
+         "year": 2006, "doi": "10.1038/nature04533", "pub_date": "2006-03-16"},
+        {"id": "W2", "title": "Iron transport across the blood-brain barrier",
+         "year": 2014, "doi": "10.1000/iron", "pub_date": "2014-01-01"},
+    ])
+    store.mark_manuscript(conn, "M:draft")
+    store.mark_retracted(conn, [{"id": "W1", "nature": "Retraction", "date": "2024-06-24", "reasons": [],
+                                 "notice_id": "RW1", "notice_doi": None, "source": "retraction_watch"}])
+
+    ft_hits = store.search_papers(conn, "amyloid memory", limit=3)
+    assert ft_hits and ft_hits[0]["id"] == "W1" and ft_hits[0]["retracted"] is True
+
+    n_indexed = store.index_paper_vectors(conn)
+    assert n_indexed == 3
+    vec_hits = store.vector_search_papers(conn, "amyloid-beta protein assembly memory", limit=2)
+    assert vec_hits and vec_hits[0]["id"] == "W1"
+
+    recorded = store.record_dispositions(conn, "M:draft", [{
+        "claim_id": "c1",
+        "claim": "Aβ*56 impairs memory in Tg2576 mice.",
+        "action": "drop_citation",
+        "rationale": "Sole support is Lesné 2006 (retracted 2024-06-24).",
+        "revision": "Removed Aβ*56 sentence.",
+        "reference_dois": ["https://doi.org/10.1038/nature04533"],
+    }])
+    assert recorded == 1
+    disps = store.get_dispositions(conn, "M:draft")
+    assert len(disps) == 1
+    assert disps[0]["action"] == "drop_citation"
+    assert disps[0]["references"] == ["10.1038/nature04533"]
+    conn.close()
+

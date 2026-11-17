@@ -30,7 +30,8 @@ def plain(value):
 
 def export(store: str) -> dict:
     conn = relate.connect(store, read_only=True)
-    nodes = [{"id": r["id"], "labels": sorted(r["labels"]), "props": {k: plain(v) for k, v in r["props"].items() if v is not None}}
+    nodes = [{"id": r["id"], "labels": sorted(r["labels"]),
+              "props": {k: plain(v) for k, v in r["props"].items() if v is not None and k != "vec"}}
              for r in conn.execute("MATCH (n) RETURN n.id AS id, labels(n) AS labels, properties(n) AS props ORDER BY id")]
     rels = [{"type": r["type"], "s": r["s"], "t": r["t"], "props": {k: plain(v) for k, v in r["props"].items() if v is not None}}
             for r in conn.execute("MATCH (a)-[r]->(b) RETURN type(r) AS type, a.id AS s, b.id AS t, properties(r) AS props ORDER BY s, t")]

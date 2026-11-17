@@ -25,17 +25,20 @@ import relate
 from mcp.server.mcpserver import MCPServer
 from mcp.types import ToolAnnotations
 
+from pathlib import Path
 from . import bib, store
-from .check import ORDER, retraction_status as _retraction_status, run_check
+from .check import ORDER, has_retraction_notice, retraction_status as _retraction_status, run_check
 from .openalex import norm_doi
 
-STORE = os.environ.get("LOADBEARING_STORE", "data/evidence")
+_ROOT = Path(__file__).resolve().parents[2]
+_DEFAULT_STORE = "data/evidence" if Path("data/evidence").exists() else str(_ROOT / "data/evidence")
+STORE = os.environ.get("LOADBEARING_STORE", _DEFAULT_STORE)
 # A store has one writer. Tool calls run in worker threads, so checks take turns.
 _WRITE_LOCK = threading.Lock()
 MAX_ROWS = 200
 
 GUIDANCE = {
-    "direct": "You cite a retracted paper. Remove it, or cite it only to discuss the retraction.",
+    "direct": "You cite a flagged paper. Check the notice and the purpose of the citation before recommending a change.",
     "load_bearing": "A paper you cite may rely on retracted work for a method or result. Read the quoted "
                     "sentence first: intent v1 finds most real reliance but has ~33% precision on held-out "
                     "sentences (docs/EVAL.md). If your claim depends on that result, find independent support.",
@@ -48,7 +51,8 @@ GUIDANCE = {
 INSTRUCTIONS = """Load-Bearing finds where a bibliography rests on retracted science.
 Before citing a paper, call retraction_status. To audit a whole reference list, call check_references
 (BibTeX or DOIs); for a published paper, check_paper. Act on 'direct' and 'load_bearing' findings;
-quote the evidence sentence when you tell the user. Report what notices say: never call a paper or
+quote the evidence sentence when you tell the user. Treat an OpenAlex flag as unconfirmed unless
+notice_on_record is true. Report what notices say: never call a paper or
 author fraudulent. A path is evidence for a person to review, not a verdict."""
 
 mcp = MCPServer(name="load-bearing", title="Load-Bearing", instructions=INSTRUCTIONS, version="0.1.0")
@@ -74,6 +78,14 @@ def _hops(path: dict) -> list[dict]:
     return hops
 
 
+def _notice(item: dict) -> dict | None:
+    source = item.get("notice_source")
+    if not source or source == "openalex":
+        return None
+    return {"nature": item["nature"], "date": item["retraction_date"], "reasons": item["reasons"],
+            "notice_doi": item.get("notice_doi"), "source": source}
+
+
 def _report(res, limits: dict[str, int] | None = None) -> str:
     limits = limits or {"direct": 50, "load_bearing": 15, "unverified": 10, "mention_only": 5, "defused": 5}
     s = res.summary
@@ -86,8 +98,7 @@ def _report(res, limits: dict[str, int] | None = None) -> str:
         shown[st] += 1
         item = {
             "status": st, "retracted_id": g["id"], "title": g["title"], "year": g["year"], "doi": g["doi"],
-            "notice": {"nature": g["nature"], "date": g["retraction_date"], "reasons": g["reasons"],
-                       "notice_doi": g.get("notice_doi"), "source": g.get("notice_source")},
+            "notice": _notice(g),
             "notice_on_record": g["notice_on_record"],
             "via_your_references": [{k: v for k, v in r.items() if v is not None} for r in g["via"]],
         }
@@ -111,14 +122,14 @@ def _report(res, limits: dict[str, int] | None = None) -> str:
         "intent_classifier": "v1 (held-out reliance recall 0.69, precision 0.33; see docs/EVAL.md)",
         "findings": findings,
         "truncated": {k: s["counts"][k] - shown[k] for k in ORDER if s["counts"][k] > shown[k]},
-        "next": f"explain_exposure(manuscript_id='{res.root_id}', retracted='<retracted_id>') lists every path with its sentences.",
+        "next": f"explain_exposure(manuscript_id='{res.root_id}', retracted='<retracted_id>') shows up to 30 paths with their sentences.",
     }
     return json.dumps(out, ensure_ascii=False, default=str)
 
 
 @mcp.tool(annotations=LOOKUP)
 def retraction_status(dois: list[str]) -> str:
-    """Check whether specific papers are retracted, corrected or under an expression of concern.
+    """Check DOI notices and distinguish an unconfirmed OpenAlex retraction flag.
 
     Fast and direct: no citation graph is built. Use it before citing a paper.
     Args:
@@ -128,7 +139,8 @@ def retraction_status(dois: list[str]) -> str:
 
 
 @mcp.tool(annotations=BUILDS)
-def check_references(references: str, label: str = "draft", depth: int = 2) -> str:
+def check_references(references: str, label: str = "draft", depth: int = 2,
+                     dispositions: list[dict] | None = None) -> str:
     """Find which references in a bibliography rest on retracted science, directly or through the papers they cite.
 
     Builds or extends the citation graph in Relate, reads the sentence where each citation on a path
@@ -137,12 +149,19 @@ def check_references(references: str, label: str = "draft", depth: int = 2) -> s
         references: BibTeX entries, or text with one DOI per line.
         label: a short name for this manuscript; findings are stored under manuscript_id 'M:<label>'.
         depth: citation hops from the manuscript (1-3). 2 takes seconds; 3 can take minutes on a cold cache.
+        dispositions: optional list of claim audit decisions ({claim_id, claim, action, rationale, revision, reference_dois}) to persist in the Relate graph.
     """
     refs = bib.parse_references(references)
     if not any(r.get("doi") for r in refs):
         return json.dumps({"error": "no DOIs found; pass BibTeX with doi fields or one DOI per line"})
     with _WRITE_LOCK:
         res = run_check(STORE, refs=refs, label=label, depth=max(1, min(depth, 3)))
+        if dispositions:
+            conn = store.open_store(STORE)
+            try:
+                store.record_dispositions(conn, res.root_id, dispositions)
+            finally:
+                conn.close()
     return _report(res)
 
 
@@ -166,16 +185,22 @@ def _ro():
 
 @mcp.tool(annotations=READ_ONLY)
 def explain_exposure(manuscript_id: str, retracted: str) -> str:
-    """List every citation path from a checked manuscript to one retracted paper, with the citing sentences.
+    """List up to 30 citation paths from a checked manuscript to one flagged paper, with the citing sentences.
 
     Args:
         manuscript_id: from a check result ('M:<label>' or an OpenAlex id like 'W4408770418').
-        retracted: the retracted paper's OpenAlex id (retracted_id in findings) or its DOI.
+        retracted: the retracted paper's OpenAlex id (retracted_id in findings), DOI, or title query.
     """
     key = retracted if retracted.upper().startswith("W") else norm_doi(retracted)
     conn = _ro()
     try:
-        rows = [r for r in store.exposure(conn, manuscript_id, 3) if key in (r["bad_id"], r["bad_doi"])]
+        all_rows = store.exposure(conn, manuscript_id, 3)
+        rows = [r for r in all_rows if key in (r["bad_id"], r["bad_doi"])]
+        if not rows and retracted:
+            hits = {h["id"] for h in store.search_papers(conn, retracted, limit=5) if h.get("retracted")}
+            if not hits:
+                hits = {h["id"] for h in store.vector_search_papers(conn, retracted, limit=5) if h.get("retracted")}
+            rows = [r for r in all_rows if r["bad_id"] in hits]
     finally:
         conn.close()
     if not rows:
@@ -183,7 +208,7 @@ def explain_exposure(manuscript_id: str, retracted: str) -> str:
     first = rows[0]
     return json.dumps({
         "retracted": {"id": first["bad_id"], "title": first["bad_title"], "doi": first["bad_doi"],
-                      "notice": {"nature": first["nature"], "date": first["retraction_date"], "reasons": first["reasons"]}},
+                      "notice": _notice(first), "notice_on_record": has_retraction_notice(first)},
         "paths": [{"status": r["status"], "hops": _hops(r)} for r in rows[:30]],
         "total_paths": len(rows),
     }, ensure_ascii=False, default=str)
@@ -215,9 +240,14 @@ def graph_schema() -> str:
             "most_reached_retracted": "MATCH (m:Manuscript {id: $root})-[:CITES]->(b:Paper)"
                                       "-[c:CITES WHERE NOT coalesce(c.anachronistic, false)]->{0,2}(bad:Retracted) "
                                       "RETURN bad.title AS title, count(DISTINCT b) AS via ORDER BY via DESC LIMIT 10",
+            "fulltext_search": "MATCH (p:Paper) SEARCH p IN (FULLTEXT INDEX paper_title FOR $q LIMIT 5) SCORE AS s "
+                               "RETURN p.id AS id, p.title AS title, p:Retracted AS retracted, s ORDER BY s DESC",
+            "claim_dispositions": "MATCH (m:Manuscript {id: $root})-[:HAS_CLAIM]->(c:Claim)-[:HAS_DISPOSITION]->(d:Disposition) "
+                                  "RETURN c.id AS claim_id, d.action AS action, d.revision AS revision",
             "impossible_citations": "MATCH (a:Paper)-[c:CITES]->(b:Paper) WHERE c.anachronistic OR c.year_conflict "
                                     "RETURN a.title, a.year, b.title, b.year, c.anachronistic, c.year_conflict",
             "cited_after_retraction": "MATCH (a:Paper)-[c:CITES {zombie: true}]->(r:Retracted) "
+                                      "WHERE r.nature = 'Retraction' AND r.notice_source IN ['retraction_watch', 'crossref'] "
                                       "RETURN a.title, toString(a.pub_date), r.title, toString(r.retraction_date) LIMIT 20",
             "retracted_for_citing_retracted": "MATCH (r:Retracted) WHERE any(x IN r.reasons WHERE x CONTAINS 'Cites Retracted') "
                                               "RETURN r.title, toString(r.retraction_date)",

@@ -1,0 +1,54 @@
+{
+  "as_of": "2026-11-16",
+  "notices": [
+    {"doi":"10.1007/s11011-021-00890-6","kind":"retraction","date":"2023-08-29","url":"https://doi.org/10.1007/s11011-023-01282-8"},
+    {"doi":"10.1016/j.fertnstert.2008.06.013","kind":"retraction","date":"2020-09-08","url":"https://doi.org/10.1016/j.fertnstert.2020.08.1409"},
+    {"doi":"10.7326/0003-4819-144-9-200605020-00009","kind":"retraction","date":"2015-12-01","url":"https://doi.org/10.7326/M15-2625"},
+    {"doi":"10.1001/jama.2012.216237","kind":"retraction","date":"2015-10-13","url":"https://doi.org/10.1001/jama.2015.10811"},
+    {"doi":"10.1007/s44196-023-00321-7","kind":"retraction","date":"2024-03-27","url":"https://link.springer.com/article/10.1007/s44196-024-00476-x"},
+    {"doi":"10.1007/s44196-023-00307-5","kind":"retraction","date":"2024-04-02","url":"https://link.springer.com/article/10.1007/s44196-024-00493-w"},
+    {"doi":"10.1038/nature04533","kind":"expression_of_concern","date":"2022-07-14","url":"https://www.nature.com/articles/nature04533"},
+    {"doi":"10.1038/nature04533","kind":"retraction","date":"2024-06-24","url":"https://doi.org/10.1038/s41586-024-07691-8"}
+  ],
+  "publications": [
+    {
+      "doi":"10.1186/s13287-022-03231-1", "citations":["10.1007/s11011-021-00890-6"],
+      "outcomes":[
+        {"id":"rodent-rat-mwm","terms":["rat","cognitive function"],"url":"https://link.springer.com/article/10.1186/s13287-022-03231-1#Fig3","locator":"Results, Cognitive function, Figure 3b and reference 44","basis":"primary_source","uses":["10.1007/s11011-021-00890-6"],"outside_scope":[],"finding":"The rat cognitive-function pool lists references 37–44. The retracted Rezk study is reference 44."},
+        {"id":"rodent-mouse-mwm","terms":["mouse","cognitive function"],"url":"https://link.springer.com/article/10.1186/s13287-022-03231-1#Fig3","locator":"Results, Cognitive function, Figure 3a","basis":"primary_source","uses":[],"outside_scope":["10.1007/s11011-021-00890-6"],"finding":"The mouse cognitive-function pool lists 19 mouse studies. Reference 44 contributes to the separate rat pool."},
+        {"id":"rodent-mouse-abeta","terms":["mouse","amyloid deposition"],"url":"https://link.springer.com/article/10.1186/s13287-022-03231-1#Fig4","locator":"Results, Aβ deposition, Figure 4","basis":"primary_source","uses":[],"outside_scope":["10.1007/s11011-021-00890-6"],"finding":"The nine listed mouse amyloid-deposition studies exclude reference 44."}
+      ]
+    },
+    {
+      "doi":"10.1111/jog.12393", "citations":["10.1016/j.fertnstert.2008.06.013"],
+      "outcomes":[
+        {"id":"liu-dominant-follicles","terms":["dominant follicle","figure 9"],"url":"https://rcastoragev2.blob.core.windows.net/75629a6957bbcca995ecdc438330a1c4/xuch082068.ww1.pdf#page=391","locator":"VITALITY Case 2, Liu Figure 9","basis":"published_reanalysis","uses":["10.1016/j.fertnstert.2008.06.013"],"outside_scope":[],"finding":"The independent reanalysis identifies Badawy in the Figure 9 pool. Removing it changed direction and significance in that reanalysis."}
+      ]
+    },
+    {
+      "doi":"10.1097/md.0000000000021006", "citations":["10.1016/j.fertnstert.2008.06.013"],
+      "outcomes":[
+        {"id":"qin-total-pregnancy","terms":["total pregnancy rate","figure 4"],"url":"https://pmc.ncbi.nlm.nih.gov/articles/PMC7402796/","locator":"Table 1, reference 20, Section 2.8.1 and Figure 4","basis":"primary_source","uses":["10.1016/j.fertnstert.2008.06.013"],"outside_scope":[],"finding":"Figure 4 pools all six included studies. Badawy 2009 is included and appears as reference 20."}
+      ]
+    },
+    {
+      "doi":"10.1097/mjt.0000000000000011", "citations":["10.7326/0003-4819-144-9-200605020-00009","10.1001/jama.2012.216237"],
+      "outcomes":[
+        {"id":"barrons-walking-distance","terms":["treadmill","walking distance","figure 4"],"url":"https://rcastoragev2.blob.core.windows.net/75629a6957bbcca995ecdc438330a1c4/xuch082068.ww1.pdf#page=393","locator":"VITALITY Case 3, Barrons Figure 4","basis":"published_reanalysis","uses":["10.7326/0003-4819-144-9-200605020-00009","10.1001/jama.2012.216237"],"outside_scope":[],"finding":"The independent reanalysis identifies both trials in this pool. Excluding both reduces the pool from four studies to two."}
+      ]
+    },
+    {
+      "doi":"10.1016/j.atherosclerosis.2013.09.037", "citations":["10.7326/0003-4819-144-9-200605020-00009","10.1001/jama.2012.216237"],
+      "outcomes":[
+        {"id":"shahin-walking-synthesis","terms":["walking outcomes"],"url":"https://rcastoragev2.blob.core.windows.net/75629a6957bbcca995ecdc438330a1c4/xuch082068.ww1.pdf#page=392","locator":"VITALITY Case 3, Shahin review","basis":"published_reanalysis_synthesis_level","uses":["10.7326/0003-4819-144-9-200605020-00009","10.1001/jama.2012.216237"],"outside_scope":[],"finding":"The independent reanalysis identifies both trials in the walking-outcomes synthesis. The original outcome-specific locator is pending."}
+      ]
+    },
+    {
+      "doi":"10.30574/wjaets.2025.15.1.0276", "citations":["10.1007/s44196-023-00321-7"],
+      "outcomes":[
+        {"id":"wjaets-kmeans-segmentation","terms":["k means","segment"],"url":"https://wjaets.com/sites/default/files/fulltext_pdf/WJAETS-2025-0276.pdf#page=5","locator":"Page 983, section 3.2 and reference 6","basis":"primary_source","uses":["10.1007/s44196-023-00321-7"],"outside_scope":[],"finding":"The overview attributes combined behavioral and social segmentation with improved K-means to the retracted Shen article."},
+        {"id":"wjaets-candidate-ranking","terms":["candidate generation","ranking"],"url":"https://wjaets.com/sites/default/files/fulltext_pdf/WJAETS-2025-0276.pdf#page=5","locator":"Page 983, section 3.3 and reference 5","basis":"primary_source","uses":[],"outside_scope":["10.1007/s44196-023-00321-7"],"finding":"The overview attributes the two-stage recommendation architecture to Loukili (reference 5). Shen is reference 6 in the preceding section."}
+      ]
+    }
+  ]
+}

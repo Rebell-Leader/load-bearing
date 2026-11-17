@@ -1,0 +1,2265 @@
+{
+  "inputs_sha256": {
+    "cases.jsonl": "e7722b3ec7d49b0a497eecbb4a096c85272abadd1cbbaca942d283ddc17530f1",
+    "claim_facts.json": "a9f3d21b0d9cbabffbe42b1604891fddbee7aa013890fd0c2b605e1dbfb414f5",
+    "paper_orchestra_metadata.json": "50817496a432b245eee90c2fcf39cfaef179c856d6128058ef52e60368abda5e"
+  },
+  "paper_orchestra": {
+    "commit": "d9bae997e793a015ed38bb1605be9eb58c00284f",
+    "metadata_mode": "public metadata replay with paraphrased abstracts",
+    "requested": 11,
+    "accepted": 11,
+    "bibtex_dois": 0,
+    "bridged_dois": 11,
+    "accepted_dois": [
+      "10.1007/s11011-021-00890-6",
+      "10.1007/s44196-023-00307-5",
+      "10.1007/s44196-023-00321-7",
+      "10.1016/j.atherosclerosis.2013.09.037",
+      "10.1016/j.fertnstert.2008.06.013",
+      "10.1038/nature04533",
+      "10.1097/md.0000000000021006",
+      "10.1097/mjt.0000000000000011",
+      "10.1111/jog.12393",
+      "10.1186/s13287-022-03231-1",
+      "10.30574/wjaets.2025.15.1.0276"
+    ],
+    "identities": [
+      {
+        "doi": "10.1007/s11011-021-00890-6",
+        "title": "Effects of Rosemary Oil (Rosmarinus officinalis) supplementation on the fate of the transplanted human olfactory bulb neural stem cells against ibotenic acid-induced neurotoxicity (Alzheimer model) in rat",
+        "source": "https://link.springer.com/article/10.1007/s11011-021-00890-6"
+      },
+      {
+        "doi": "10.1007/s44196-023-00307-5",
+        "title": "A Computational Model for Predicting Customer Behaviors Using Transformer Adapted with Tabular Features",
+        "source": "https://link.springer.com/article/10.1007/s44196-023-00307-5"
+      },
+      {
+        "doi": "10.1007/s44196-023-00321-7",
+        "title": "E-commerce User Recommendation Algorithm Based on Social Relationship Characteristics and Improved K-Means Algorithm",
+        "source": "https://link.springer.com/article/10.1007/s44196-023-00321-7"
+      },
+      {
+        "doi": "10.1016/j.atherosclerosis.2013.09.037",
+        "title": "Meta-analysis of angiotensin converting enzyme inhibitors effect on walking ability and ankle brachial pressure index in patients with intermittent claudication",
+        "source": "https://pubmed.ncbi.nlm.nih.gov/24267241/"
+      },
+      {
+        "doi": "10.1016/j.fertnstert.2008.06.013",
+        "title": "Clomiphene citrate or aromatase inhibitors for superovulation in women with unexplained infertility undergoing intrauterine insemination: a prospective randomized trial",
+        "source": "https://www.sciencedirect.com/science/article/pii/S0015028208013137"
+      },
+      {
+        "doi": "10.1038/nature04533",
+        "title": "A specific amyloid-β protein assembly in the brain impairs memory",
+        "source": "https://www.nature.com/articles/nature04533"
+      },
+      {
+        "doi": "10.1097/md.0000000000021006",
+        "title": "Comparison of clomiphene and letrozole for superovulation in patients with unexplained infertility undergoing intrauterine insemination: A systematic review and meta-analysis",
+        "source": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7402796/"
+      },
+      {
+        "doi": "10.1097/mjt.0000000000000011",
+        "title": "The Roles of ACE Inhibitors in Lower Extremity Peripheral Artery Disease",
+        "source": "https://doi.org/10.1097/mjt.0000000000000011"
+      },
+      {
+        "doi": "10.1111/jog.12393",
+        "title": "Letrozole versus clomiphene citrate for unexplained infertility: a systematic review and meta-analysis",
+        "source": "https://obgyn.onlinelibrary.wiley.com/doi/abs/10.1111/jog.12393"
+      },
+      {
+        "doi": "10.1186/s13287-022-03231-1",
+        "title": "Neural stem/progenitor cell therapy for Alzheimer disease in preclinical rodent models: a systematic review and meta-analysis",
+        "source": "https://link.springer.com/article/10.1186/s13287-022-03231-1"
+      },
+      {
+        "doi": "10.30574/wjaets.2025.15.1.0276",
+        "title": "AI-driven transformation of E-commerce: Technical implementation and impact",
+        "source": "https://wjaets.com/sites/default/files/fulltext_pdf/WJAETS-2025-0276.pdf"
+      }
+    ]
+  },
+  "graph_arms": {
+    "direct": {
+      "metrics": {
+        "cases": 17,
+        "returned": 17,
+        "exact_actions": 6,
+        "required_review_actions": 11,
+        "correct_review_actions": 5,
+        "false_alerts_on_controls": 1,
+        "indirect_detected": 0,
+        "indirect_total": 6
+      },
+      "rows": [
+        {
+          "id": "rodent-rat",
+          "action": "no_notice_as_of",
+          "findings": [],
+          "as_of": "2026-11-16",
+          "snapshot_date": "2026-11-16",
+          "resolved_references": [
+            "10.1186/s13287-022-03231-1"
+          ],
+          "unresolved_references": []
+        },
+        {
+          "id": "rodent-mouse",
+          "action": "no_notice_as_of",
+          "findings": [],
+          "as_of": "2026-11-16",
+          "snapshot_date": "2026-11-16",
+          "resolved_references": [
+            "10.1186/s13287-022-03231-1"
+          ],
+          "unresolved_references": []
+        },
+        {
+          "id": "rodent-mouse-abeta",
+          "action": "no_notice_as_of",
+          "findings": [],
+          "as_of": "2026-11-16",
+          "snapshot_date": "2026-11-16",
+          "resolved_references": [
+            "10.1186/s13287-022-03231-1"
+          ],
+          "unresolved_references": []
+        },
+        {
+          "id": "rodent-direct",
+          "action": "review_direct",
+          "findings": [
+            {
+              "action": "review_direct",
+              "path": [
+                "10.1007/s11011-021-00890-6"
+              ],
+              "notice": {
+                "ref": "10.1007/s11011-021-00890-6",
+                "doi": "10.1007/s11011-021-00890-6",
+                "kind": "retraction",
+                "date": "2023-08-29",
+                "url": "https://doi.org/10.1007/s11011-023-01282-8"
+              }
+            }
+          ],
+          "as_of": "2026-11-16",
+          "snapshot_date": "2026-11-16",
+          "resolved_references": [
+            "10.1007/s11011-021-00890-6"
+          ],
+          "unresolved_references": []
+        },
+        {
+          "id": "rodent-context-unavailable",
+          "action": "no_notice_as_of",
+          "findings": [],
+          "as_of": "2026-11-16",
+          "snapshot_date": "2026-11-16",
+          "resolved_references": [
+            "10.1186/s13287-022-03231-1"
+          ],
+          "unresolved_references": []
+        },
+        {
+          "id": "rodent-before-notice",
+          "action": "no_notice_as_of",
+          "findings": [],
+          "as_of": "2023-08-01",
+          "snapshot_date": "2026-11-16",
+          "resolved_references": [
+            "10.1186/s13287-022-03231-1"
+          ],
+          "unresolved_references": []
+        },
+        {
+          "id": "infertility-liu-follicles",
+          "action": "no_notice_as_of",
+          "findings": [],
+          "as_of": "2026-11-16",
+          "snapshot_date": "2026-11-16",
+          "resolved_references": [
+            "10.1111/jog.12393"
+          ],
+          "unresolved_references": []
+        },
+        {
+          "id": "infertility-qin-pregnancy",
+          "action": "no_notice_as_of",
+          "findings": [],
+          "as_of": "2026-11-16",
+          "snapshot_date": "2026-11-16",
+          "resolved_references": [
+            "10.1097/md.0000000000021006"
+          ],
+          "unresolved_references": []
+        },
+        {
+          "id": "infertility-badawy-direct",
+          "action": "review_direct",
+          "findings": [
+            {
+              "action": "review_direct",
+              "path": [
+                "10.1016/j.fertnstert.2008.06.013"
+              ],
+              "notice": {
+                "ref": "10.1016/j.fertnstert.2008.06.013",
+                "doi": "10.1016/j.fertnstert.2008.06.013",
+                "kind": "retraction",
+                "date": "2020-09-08",
+                "url": "https://doi.org/10.1016/j.fertnstert.2020.08.1409"
+              }
+            }
+          ],
+          "as_of": "2026-11-16",
+          "snapshot_date": "2026-11-16",
+          "resolved_references": [
+            "10.1016/j.fertnstert.2008.06.013"
+          ],
+          "unresolved_references": []
+        },
+        {
+          "id": "vascular-barrons-walking",
+          "action": "no_notice_as_of",
+          "findings": [],
+          "as_of": "2026-11-16",
+          "snapshot_date": "2026-11-16",
+          "resolved_references": [
+            "10.1097/mjt.0000000000000011"
+          ],
+          "unresolved_references": []
+        },
+        {
+          "id": "vascular-shahin-synthesis",
+          "action": "no_notice_as_of",
+          "findings": [],
+          "as_of": "2026-11-16",
+          "snapshot_date": "2026-11-16",
+          "resolved_references": [
+            "10.1016/j.atherosclerosis.2013.09.037"
+          ],
+          "unresolved_references": []
+        },
+        {
+          "id": "cs-shen-indirect",
+          "action": "no_notice_as_of",
+          "findings": [],
+          "as_of": "2026-11-16",
+          "snapshot_date": "2026-11-16",
+          "resolved_references": [
+            "10.30574/wjaets.2025.15.1.0276"
+          ],
+          "unresolved_references": []
+        },
+        {
+          "id": "cs-shen-unrelated-claim",
+          "action": "no_notice_as_of",
+          "findings": [],
+          "as_of": "2026-11-16",
+          "snapshot_date": "2026-11-16",
+          "resolved_references": [
+            "10.30574/wjaets.2025.15.1.0276"
+          ],
+          "unresolved_references": []
+        },
+        {
+          "id": "cs-shen-notice-context",
+          "action": "review_direct",
+          "findings": [
+            {
+              "action": "review_direct",
+              "path": [
+                "10.1007/s44196-023-00321-7"
+              ],
+              "notice": {
+                "ref": "10.1007/s44196-023-00321-7",
+                "doi": "10.1007/s44196-023-00321-7",
+                "kind": "retraction",
+                "date": "2024-03-27",
+                "url": "https://link.springer.com/article/10.1007/s44196-024-00476-x"
+              }
+            }
+          ],
+          "as_of": "2026-11-16",
+          "snapshot_date": "2026-11-16",
+          "resolved_references": [
+            "10.1007/s44196-023-00321-7"
+          ],
+          "unresolved_references": []
+        },
+        {
+          "id": "cs-transformer-direct",
+          "action": "review_direct",
+          "findings": [
+            {
+              "action": "review_direct",
+              "path": [
+                "10.1007/s44196-023-00307-5"
+              ],
+              "notice": {
+                "ref": "10.1007/s44196-023-00307-5",
+                "doi": "10.1007/s44196-023-00307-5",
+                "kind": "retraction",
+                "date": "2024-04-02",
+                "url": "https://link.springer.com/article/10.1007/s44196-024-00493-w"
+              }
+            }
+          ],
+          "as_of": "2026-11-16",
+          "snapshot_date": "2026-11-16",
+          "resolved_references": [
+            "10.1007/s44196-023-00307-5"
+          ],
+          "unresolved_references": []
+        },
+        {
+          "id": "lesne-current",
+          "action": "review_direct",
+          "findings": [
+            {
+              "action": "review_direct",
+              "path": [
+                "10.1038/nature04533"
+              ],
+              "notice": {
+                "ref": "10.1038/nature04533",
+                "doi": "10.1038/nature04533",
+                "kind": "retraction",
+                "date": "2024-06-24",
+                "url": "https://doi.org/10.1038/s41586-024-07691-8"
+              }
+            }
+          ],
+          "as_of": "2026-11-16",
+          "snapshot_date": "2026-11-16",
+          "resolved_references": [
+            "10.1038/nature04533"
+          ],
+          "unresolved_references": []
+        },
+        {
+          "id": "lesne-historical-concern",
+          "action": "review_notice",
+          "findings": [
+            {
+              "action": "review_notice",
+              "path": [
+                "10.1038/nature04533"
+              ],
+              "notice": {
+                "ref": "10.1038/nature04533",
+                "doi": "10.1038/nature04533",
+                "kind": "expression_of_concern",
+                "date": "2022-07-14",
+                "url": "https://www.nature.com/articles/nature04533"
+              }
+            }
+          ],
+          "as_of": "2023-01-01",
+          "snapshot_date": "2026-11-16",
+          "resolved_references": [
+            "10.1038/nature04533"
+          ],
+          "unresolved_references": []
+        }
+      ],
+      "pilot_split_metrics": {
+        "cases": 9,
+        "returned": 9,
+        "exact_actions": 2,
+        "required_review_actions": 7,
+        "correct_review_actions": 2,
+        "false_alerts_on_controls": 1,
+        "indirect_detected": 0,
+        "indirect_total": 5
+      }
+    },
+    "untyped": {
+      "metrics": {
+        "cases": 17,
+        "returned": 17,
+        "exact_actions": 12,
+        "required_review_actions": 11,
+        "correct_review_actions": 11,
+        "false_alerts_on_controls": 5,
+        "indirect_detected": 6,
+        "indirect_total": 6
+      },
+      "rows": [
+        {
+          "id": "rodent-rat",
+          "action": "review_indirect",
+          "findings": [
+            {
+              "path": [
+                "10.1186/s13287-022-03231-1",
+                "10.1007/s11011-021-00890-6"
+              ],
+              "notice": {
+                "ref": "10.1186/s13287-022-03231-1",
+                "doi": "10.1007/s11011-021-00890-6",
+                "kind": "retraction",
+                "date": "2023-08-29",
+                "url": "https://doi.org/10.1007/s11011-023-01282-8"
+              },
+              "action": "review_indirect"
+            }
+          ],
+          "as_of": "2026-11-16",
+          "snapshot_date": "2026-11-16",
+          "resolved_references": [
+            "10.1186/s13287-022-03231-1"
+          ],
+          "unresolved_references": []
+        },
+        {
+          "id": "rodent-mouse",
+          "action": "review_indirect",
+          "findings": [
+            {
+              "path": [
+                "10.1186/s13287-022-03231-1",
+                "10.1007/s11011-021-00890-6"
+              ],
+              "notice": {
+                "ref": "10.1186/s13287-022-03231-1",
+                "doi": "10.1007/s11011-021-00890-6",
+                "kind": "retraction",
+                "date": "2023-08-29",
+                "url": "https://doi.org/10.1007/s11011-023-01282-8"
+              },
+              "action": "review_indirect"
+            }
+          ],
+          "as_of": "2026-11-16",
+          "snapshot_date": "2026-11-16",
+          "resolved_references": [
+            "10.1186/s13287-022-03231-1"
+          ],
+          "unresolved_references": []
+        },
+        {
+          "id": "rodent-mouse-abeta",
+          "action": "review_indirect",
+          "findings": [
+            {
+              "path": [
+                "10.1186/s13287-022-03231-1",
+                "10.1007/s11011-021-00890-6"
+              ],
+              "notice": {
+                "ref": "10.1186/s13287-022-03231-1",
+                "doi": "10.1007/s11011-021-00890-6",
+                "kind": "retraction",
+                "date": "2023-08-29",
+                "url": "https://doi.org/10.1007/s11011-023-01282-8"
+              },
+              "action": "review_indirect"
+            }
+          ],
+          "as_of": "2026-11-16",
+          "snapshot_date": "2026-11-16",
+          "resolved_references": [
+            "10.1186/s13287-022-03231-1"
+          ],
+          "unresolved_references": []
+        },
+        {
+          "id": "rodent-direct",
+          "action": "review_direct",
+          "findings": [
+            {
+              "action": "review_direct",
+              "path": [
+                "10.1007/s11011-021-00890-6"
+              ],
+              "notice": {
+                "ref": "10.1007/s11011-021-00890-6",
+                "doi": "10.1007/s11011-021-00890-6",
+                "kind": "retraction",
+                "date": "2023-08-29",
+                "url": "https://doi.org/10.1007/s11011-023-01282-8"
+              }
+            }
+          ],
+          "as_of": "2026-11-16",
+          "snapshot_date": "2026-11-16",
+          "resolved_references": [
+            "10.1007/s11011-021-00890-6"
+          ],
+          "unresolved_references": []
+        },
+        {
+          "id": "rodent-context-unavailable",
+          "action": "review_indirect",
+          "findings": [
+            {
+              "path": [
+                "10.1186/s13287-022-03231-1",
+                "10.1007/s11011-021-00890-6"
+              ],
+              "notice": {
+                "ref": "10.1186/s13287-022-03231-1",
+                "doi": "10.1007/s11011-021-00890-6",
+                "kind": "retraction",
+                "date": "2023-08-29",
+                "url": "https://doi.org/10.1007/s11011-023-01282-8"
+              },
+              "action": "review_indirect"
+            }
+          ],
+          "as_of": "2026-11-16",
+          "snapshot_date": "2026-11-16",
+          "resolved_references": [
+            "10.1186/s13287-022-03231-1"
+          ],
+          "unresolved_references": []
+        },
+        {
+          "id": "rodent-before-notice",
+          "action": "no_notice_as_of",
+          "findings": [],
+          "as_of": "2023-08-01",
+          "snapshot_date": "2026-11-16",
+          "resolved_references": [
+            "10.1186/s13287-022-03231-1"
+          ],
+          "unresolved_references": []
+        },
+        {
+          "id": "infertility-liu-follicles",
+          "action": "review_indirect",
+          "findings": [
+            {
+              "path": [
+                "10.1111/jog.12393",
+                "10.1016/j.fertnstert.2008.06.013"
+              ],
+              "notice": {
+                "ref": "10.1111/jog.12393",
+                "doi": "10.1016/j.fertnstert.2008.06.013",
+                "kind": "retraction",
+                "date": "2020-09-08",
+                "url": "https://doi.org/10.1016/j.fertnstert.2020.08.1409"
+              },
+              "action": "review_indirect"
+            }
+          ],
+          "as_of": "2026-11-16",
+          "snapshot_date": "2026-11-16",
+          "resolved_references": [
+            "10.1111/jog.12393"
+          ],
+          "unresolved_references": []
+        },
+        {
+          "id": "infertility-qin-pregnancy",
+          "action": "review_indirect",
+          "findings": [
+            {
+              "path": [
+                "10.1097/md.0000000000021006",
+                "10.1016/j.fertnstert.2008.06.013"
+              ],
+              "notice": {
+                "ref": "10.1097/md.0000000000021006",
+                "doi": "10.1016/j.fertnstert.2008.06.013",
+                "kind": "retraction",
+                "date": "2020-09-08",
+                "url": "https://doi.org/10.1016/j.fertnstert.2020.08.1409"
+              },
+              "action": "review_indirect"
+            }
+          ],
+          "as_of": "2026-11-16",
+          "snapshot_date": "2026-11-16",
+          "resolved_references": [
+            "10.1097/md.0000000000021006"
+          ],
+          "unresolved_references": []
+        },
+        {
+          "id": "infertility-badawy-direct",
+          "action": "review_direct",
+          "findings": [
+            {
+              "action": "review_direct",
+              "path": [
+                "10.1016/j.fertnstert.2008.06.013"
+              ],
+              "notice": {
+                "ref": "10.1016/j.fertnstert.2008.06.013",
+                "doi": "10.1016/j.fertnstert.2008.06.013",
+                "kind": "retraction",
+                "date": "2020-09-08",
+                "url": "https://doi.org/10.1016/j.fertnstert.2020.08.1409"
+              }
+            }
+          ],
+          "as_of": "2026-11-16",
+          "snapshot_date": "2026-11-16",
+          "resolved_references": [
+            "10.1016/j.fertnstert.2008.06.013"
+          ],
+          "unresolved_references": []
+        },
+        {
+          "id": "vascular-barrons-walking",
+          "action": "review_indirect",
+          "findings": [
+            {
+              "path": [
+                "10.1097/mjt.0000000000000011",
+                "10.7326/0003-4819-144-9-200605020-00009"
+              ],
+              "notice": {
+                "ref": "10.1097/mjt.0000000000000011",
+                "doi": "10.7326/0003-4819-144-9-200605020-00009",
+                "kind": "retraction",
+                "date": "2015-12-01",
+                "url": "https://doi.org/10.7326/M15-2625"
+              },
+              "action": "review_indirect"
+            },
+            {
+              "path": [
+                "10.1097/mjt.0000000000000011",
+                "10.1001/jama.2012.216237"
+              ],
+              "notice": {
+                "ref": "10.1097/mjt.0000000000000011",
+                "doi": "10.1001/jama.2012.216237",
+                "kind": "retraction",
+                "date": "2015-10-13",
+                "url": "https://doi.org/10.1001/jama.2015.10811"
+              },
+              "action": "review_indirect"
+            }
+          ],
+          "as_of": "2026-11-16",
+          "snapshot_date": "2026-11-16",
+          "resolved_references": [
+            "10.1097/mjt.0000000000000011"
+          ],
+          "unresolved_references": []
+        },
+        {
+          "id": "vascular-shahin-synthesis",
+          "action": "review_indirect",
+          "findings": [
+            {
+              "path": [
+                "10.1016/j.atherosclerosis.2013.09.037",
+                "10.7326/0003-4819-144-9-200605020-00009"
+              ],
+              "notice": {
+                "ref": "10.1016/j.atherosclerosis.2013.09.037",
+                "doi": "10.7326/0003-4819-144-9-200605020-00009",
+                "kind": "retraction",
+                "date": "2015-12-01",
+                "url": "https://doi.org/10.7326/M15-2625"
+              },
+              "action": "review_indirect"
+            },
+            {
+              "path": [
+                "10.1016/j.atherosclerosis.2013.09.037",
+                "10.1001/jama.2012.216237"
+              ],
+              "notice": {
+                "ref": "10.1016/j.atherosclerosis.2013.09.037",
+                "doi": "10.1001/jama.2012.216237",
+                "kind": "retraction",
+                "date": "2015-10-13",
+                "url": "https://doi.org/10.1001/jama.2015.10811"
+              },
+              "action": "review_indirect"
+            }
+          ],
+          "as_of": "2026-11-16",
+          "snapshot_date": "2026-11-16",
+          "resolved_references": [
+            "10.1016/j.atherosclerosis.2013.09.037"
+          ],
+          "unresolved_references": []
+        },
+        {
+          "id": "cs-shen-indirect",
+          "action": "review_indirect",
+          "findings": [
+            {
+              "path": [
+                "10.30574/wjaets.2025.15.1.0276",
+                "10.1007/s44196-023-00321-7"
+              ],
+              "notice": {
+                "ref": "10.30574/wjaets.2025.15.1.0276",
+                "doi": "10.1007/s44196-023-00321-7",
+                "kind": "retraction",
+                "date": "2024-03-27",
+                "url": "https://link.springer.com/article/10.1007/s44196-024-00476-x"
+              },
+              "action": "review_indirect"
+            }
+          ],
+          "as_of": "2026-11-16",
+          "snapshot_date": "2026-11-16",
+          "resolved_references": [
+            "10.30574/wjaets.2025.15.1.0276"
+          ],
+          "unresolved_references": []
+        },
+        {
+          "id": "cs-shen-unrelated-claim",
+          "action": "review_indirect",
+          "findings": [
+            {
+              "path": [
+                "10.30574/wjaets.2025.15.1.0276",
+                "10.1007/s44196-023-00321-7"
+              ],
+              "notice": {
+                "ref": "10.30574/wjaets.2025.15.1.0276",
+                "doi": "10.1007/s44196-023-00321-7",
+                "kind": "retraction",
+                "date": "2024-03-27",
+                "url": "https://link.springer.com/article/10.1007/s44196-024-00476-x"
+              },
+              "action": "review_indirect"
+            }
+          ],
+          "as_of": "2026-11-16",
+          "snapshot_date": "2026-11-16",
+          "resolved_references": [
+            "10.30574/wjaets.2025.15.1.0276"
+          ],
+          "unresolved_references": []
+        },
+        {
+          "id": "cs-shen-notice-context",
+          "action": "review_direct",
+          "findings": [
+            {
+              "action": "review_direct",
+              "path": [
+                "10.1007/s44196-023-00321-7"
+              ],
+              "notice": {
+                "ref": "10.1007/s44196-023-00321-7",
+                "doi": "10.1007/s44196-023-00321-7",
+                "kind": "retraction",
+                "date": "2024-03-27",
+                "url": "https://link.springer.com/article/10.1007/s44196-024-00476-x"
+              }
+            }
+          ],
+          "as_of": "2026-11-16",
+          "snapshot_date": "2026-11-16",
+          "resolved_references": [
+            "10.1007/s44196-023-00321-7"
+          ],
+          "unresolved_references": []
+        },
+        {
+          "id": "cs-transformer-direct",
+          "action": "review_direct",
+          "findings": [
+            {
+              "action": "review_direct",
+              "path": [
+                "10.1007/s44196-023-00307-5"
+              ],
+              "notice": {
+                "ref": "10.1007/s44196-023-00307-5",
+                "doi": "10.1007/s44196-023-00307-5",
+                "kind": "retraction",
+                "date": "2024-04-02",
+                "url": "https://link.springer.com/article/10.1007/s44196-024-00493-w"
+              }
+            }
+          ],
+          "as_of": "2026-11-16",
+          "snapshot_date": "2026-11-16",
+          "resolved_references": [
+            "10.1007/s44196-023-00307-5"
+          ],
+          "unresolved_references": []
+        },
+        {
+          "id": "lesne-current",
+          "action": "review_direct",
+          "findings": [
+            {
+              "action": "review_direct",
+              "path": [
+                "10.1038/nature04533"
+              ],
+              "notice": {
+                "ref": "10.1038/nature04533",
+                "doi": "10.1038/nature04533",
+                "kind": "retraction",
+                "date": "2024-06-24",
+                "url": "https://doi.org/10.1038/s41586-024-07691-8"
+              }
+            }
+          ],
+          "as_of": "2026-11-16",
+          "snapshot_date": "2026-11-16",
+          "resolved_references": [
+            "10.1038/nature04533"
+          ],
+          "unresolved_references": []
+        },
+        {
+          "id": "lesne-historical-concern",
+          "action": "review_notice",
+          "findings": [
+            {
+              "action": "review_notice",
+              "path": [
+                "10.1038/nature04533"
+              ],
+              "notice": {
+                "ref": "10.1038/nature04533",
+                "doi": "10.1038/nature04533",
+                "kind": "expression_of_concern",
+                "date": "2022-07-14",
+                "url": "https://www.nature.com/articles/nature04533"
+              }
+            }
+          ],
+          "as_of": "2023-01-01",
+          "snapshot_date": "2026-11-16",
+          "resolved_references": [
+            "10.1038/nature04533"
+          ],
+          "unresolved_references": []
+        }
+      ],
+      "pilot_split_metrics": {
+        "cases": 9,
+        "returned": 9,
+        "exact_actions": 7,
+        "required_review_actions": 7,
+        "correct_review_actions": 7,
+        "false_alerts_on_controls": 2,
+        "indirect_detected": 5,
+        "indirect_total": 5
+      }
+    },
+    "claim_aware": {
+      "metrics": {
+        "cases": 17,
+        "returned": 17,
+        "exact_actions": 17,
+        "required_review_actions": 11,
+        "correct_review_actions": 11,
+        "false_alerts_on_controls": 0,
+        "indirect_detected": 6,
+        "indirect_total": 6
+      },
+      "rows": [
+        {
+          "id": "rodent-rat",
+          "action": "review_indirect",
+          "findings": [
+            {
+              "path": [
+                "10.1186/s13287-022-03231-1",
+                "10.1007/s11011-021-00890-6"
+              ],
+              "notice": {
+                "ref": "10.1186/s13287-022-03231-1",
+                "doi": "10.1007/s11011-021-00890-6",
+                "kind": "retraction",
+                "date": "2023-08-29",
+                "url": "https://doi.org/10.1007/s11011-023-01282-8"
+              },
+              "evidence": {
+                "id": "rodent-rat-mwm",
+                "role": "uses",
+                "locator": "Results, Cognitive function, Figure 3b and reference 44",
+                "url": "https://link.springer.com/article/10.1186/s13287-022-03231-1#Fig3",
+                "finding": "The rat cognitive-function pool lists references 37–44. The retracted Rezk study is reference 44.",
+                "basis": "primary_source"
+              },
+              "action": "review_indirect"
+            }
+          ],
+          "as_of": "2026-11-16",
+          "snapshot_date": "2026-11-16",
+          "resolved_references": [
+            "10.1186/s13287-022-03231-1"
+          ],
+          "unresolved_references": []
+        },
+        {
+          "id": "rodent-mouse",
+          "action": "retain_for_this_notice",
+          "findings": [
+            {
+              "path": [
+                "10.1186/s13287-022-03231-1",
+                "10.1007/s11011-021-00890-6"
+              ],
+              "notice": {
+                "ref": "10.1186/s13287-022-03231-1",
+                "doi": "10.1007/s11011-021-00890-6",
+                "kind": "retraction",
+                "date": "2023-08-29",
+                "url": "https://doi.org/10.1007/s11011-023-01282-8"
+              },
+              "evidence": {
+                "id": "rodent-mouse-mwm",
+                "role": "outside_scope",
+                "locator": "Results, Cognitive function, Figure 3a",
+                "url": "https://link.springer.com/article/10.1186/s13287-022-03231-1#Fig3",
+                "finding": "The mouse cognitive-function pool lists 19 mouse studies. Reference 44 contributes to the separate rat pool.",
+                "basis": "primary_source"
+              },
+              "action": "retain_for_this_notice"
+            }
+          ],
+          "as_of": "2026-11-16",
+          "snapshot_date": "2026-11-16",
+          "resolved_references": [
+            "10.1186/s13287-022-03231-1"
+          ],
+          "unresolved_references": []
+        },
+        {
+          "id": "rodent-mouse-abeta",
+          "action": "retain_for_this_notice",
+          "findings": [
+            {
+              "path": [
+                "10.1186/s13287-022-03231-1",
+                "10.1007/s11011-021-00890-6"
+              ],
+              "notice": {
+                "ref": "10.1186/s13287-022-03231-1",
+                "doi": "10.1007/s11011-021-00890-6",
+                "kind": "retraction",
+                "date": "2023-08-29",
+                "url": "https://doi.org/10.1007/s11011-023-01282-8"
+              },
+              "evidence": {
+                "id": "rodent-mouse-abeta",
+                "role": "outside_scope",
+                "locator": "Results, Aβ deposition, Figure 4",
+                "url": "https://link.springer.com/article/10.1186/s13287-022-03231-1#Fig4",
+                "finding": "The nine listed mouse amyloid-deposition studies exclude reference 44.",
+                "basis": "primary_source"
+              },
+              "action": "retain_for_this_notice"
+            }
+          ],
+          "as_of": "2026-11-16",
+          "snapshot_date": "2026-11-16",
+          "resolved_references": [
+            "10.1186/s13287-022-03231-1"
+          ],
+          "unresolved_references": []
+        },
+        {
+          "id": "rodent-direct",
+          "action": "review_direct",
+          "findings": [
+            {
+              "action": "review_direct",
+              "path": [
+                "10.1007/s11011-021-00890-6"
+              ],
+              "notice": {
+                "ref": "10.1007/s11011-021-00890-6",
+                "doi": "10.1007/s11011-021-00890-6",
+                "kind": "retraction",
+                "date": "2023-08-29",
+                "url": "https://doi.org/10.1007/s11011-023-01282-8"
+              }
+            }
+          ],
+          "as_of": "2026-11-16",
+          "snapshot_date": "2026-11-16",
+          "resolved_references": [
+            "10.1007/s11011-021-00890-6"
+          ],
+          "unresolved_references": []
+        },
+        {
+          "id": "rodent-context-unavailable",
+          "action": "insufficient_evidence",
+          "findings": [
+            {
+              "path": [
+                "10.1186/s13287-022-03231-1",
+                "10.1007/s11011-021-00890-6"
+              ],
+              "notice": {
+                "ref": "10.1186/s13287-022-03231-1",
+                "doi": "10.1007/s11011-021-00890-6",
+                "kind": "retraction",
+                "date": "2023-08-29",
+                "url": "https://doi.org/10.1007/s11011-023-01282-8"
+              },
+              "action": "insufficient_evidence"
+            }
+          ],
+          "as_of": "2026-11-16",
+          "snapshot_date": "2026-11-16",
+          "resolved_references": [
+            "10.1186/s13287-022-03231-1"
+          ],
+          "unresolved_references": []
+        },
+        {
+          "id": "rodent-before-notice",
+          "action": "no_notice_as_of",
+          "findings": [],
+          "as_of": "2023-08-01",
+          "snapshot_date": "2026-11-16",
+          "resolved_references": [
+            "10.1186/s13287-022-03231-1"
+          ],
+          "unresolved_references": []
+        },
+        {
+          "id": "infertility-liu-follicles",
+          "action": "review_indirect",
+          "findings": [
+            {
+              "path": [
+                "10.1111/jog.12393",
+                "10.1016/j.fertnstert.2008.06.013"
+              ],
+              "notice": {
+                "ref": "10.1111/jog.12393",
+                "doi": "10.1016/j.fertnstert.2008.06.013",
+                "kind": "retraction",
+                "date": "2020-09-08",
+                "url": "https://doi.org/10.1016/j.fertnstert.2020.08.1409"
+              },
+              "evidence": {
+                "id": "liu-dominant-follicles",
+                "role": "uses",
+                "locator": "VITALITY Case 2, Liu Figure 9",
+                "url": "https://rcastoragev2.blob.core.windows.net/75629a6957bbcca995ecdc438330a1c4/xuch082068.ww1.pdf#page=391",
+                "finding": "The independent reanalysis identifies Badawy in the Figure 9 pool. Removing it changed direction and significance in that reanalysis.",
+                "basis": "published_reanalysis"
+              },
+              "action": "review_indirect"
+            }
+          ],
+          "as_of": "2026-11-16",
+          "snapshot_date": "2026-11-16",
+          "resolved_references": [
+            "10.1111/jog.12393"
+          ],
+          "unresolved_references": []
+        },
+        {
+          "id": "infertility-qin-pregnancy",
+          "action": "review_indirect",
+          "findings": [
+            {
+              "path": [
+                "10.1097/md.0000000000021006",
+                "10.1016/j.fertnstert.2008.06.013"
+              ],
+              "notice": {
+                "ref": "10.1097/md.0000000000021006",
+                "doi": "10.1016/j.fertnstert.2008.06.013",
+                "kind": "retraction",
+                "date": "2020-09-08",
+                "url": "https://doi.org/10.1016/j.fertnstert.2020.08.1409"
+              },
+              "evidence": {
+                "id": "qin-total-pregnancy",
+                "role": "uses",
+                "locator": "Table 1, reference 20, Section 2.8.1 and Figure 4",
+                "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7402796/",
+                "finding": "Figure 4 pools all six included studies. Badawy 2009 is included and appears as reference 20.",
+                "basis": "primary_source"
+              },
+              "action": "review_indirect"
+            }
+          ],
+          "as_of": "2026-11-16",
+          "snapshot_date": "2026-11-16",
+          "resolved_references": [
+            "10.1097/md.0000000000021006"
+          ],
+          "unresolved_references": []
+        },
+        {
+          "id": "infertility-badawy-direct",
+          "action": "review_direct",
+          "findings": [
+            {
+              "action": "review_direct",
+              "path": [
+                "10.1016/j.fertnstert.2008.06.013"
+              ],
+              "notice": {
+                "ref": "10.1016/j.fertnstert.2008.06.013",
+                "doi": "10.1016/j.fertnstert.2008.06.013",
+                "kind": "retraction",
+                "date": "2020-09-08",
+                "url": "https://doi.org/10.1016/j.fertnstert.2020.08.1409"
+              }
+            }
+          ],
+          "as_of": "2026-11-16",
+          "snapshot_date": "2026-11-16",
+          "resolved_references": [
+            "10.1016/j.fertnstert.2008.06.013"
+          ],
+          "unresolved_references": []
+        },
+        {
+          "id": "vascular-barrons-walking",
+          "action": "review_indirect",
+          "findings": [
+            {
+              "path": [
+                "10.1097/mjt.0000000000000011",
+                "10.7326/0003-4819-144-9-200605020-00009"
+              ],
+              "notice": {
+                "ref": "10.1097/mjt.0000000000000011",
+                "doi": "10.7326/0003-4819-144-9-200605020-00009",
+                "kind": "retraction",
+                "date": "2015-12-01",
+                "url": "https://doi.org/10.7326/M15-2625"
+              },
+              "evidence": {
+                "id": "barrons-walking-distance",
+                "role": "uses",
+                "locator": "VITALITY Case 3, Barrons Figure 4",
+                "url": "https://rcastoragev2.blob.core.windows.net/75629a6957bbcca995ecdc438330a1c4/xuch082068.ww1.pdf#page=393",
+                "finding": "The independent reanalysis identifies both trials in this pool. Excluding both reduces the pool from four studies to two.",
+                "basis": "published_reanalysis"
+              },
+              "action": "review_indirect"
+            },
+            {
+              "path": [
+                "10.1097/mjt.0000000000000011",
+                "10.1001/jama.2012.216237"
+              ],
+              "notice": {
+                "ref": "10.1097/mjt.0000000000000011",
+                "doi": "10.1001/jama.2012.216237",
+                "kind": "retraction",
+                "date": "2015-10-13",
+                "url": "https://doi.org/10.1001/jama.2015.10811"
+              },
+              "evidence": {
+                "id": "barrons-walking-distance",
+                "role": "uses",
+                "locator": "VITALITY Case 3, Barrons Figure 4",
+                "url": "https://rcastoragev2.blob.core.windows.net/75629a6957bbcca995ecdc438330a1c4/xuch082068.ww1.pdf#page=393",
+                "finding": "The independent reanalysis identifies both trials in this pool. Excluding both reduces the pool from four studies to two.",
+                "basis": "published_reanalysis"
+              },
+              "action": "review_indirect"
+            }
+          ],
+          "as_of": "2026-11-16",
+          "snapshot_date": "2026-11-16",
+          "resolved_references": [
+            "10.1097/mjt.0000000000000011"
+          ],
+          "unresolved_references": []
+        },
+        {
+          "id": "vascular-shahin-synthesis",
+          "action": "review_indirect",
+          "findings": [
+            {
+              "path": [
+                "10.1016/j.atherosclerosis.2013.09.037",
+                "10.7326/0003-4819-144-9-200605020-00009"
+              ],
+              "notice": {
+                "ref": "10.1016/j.atherosclerosis.2013.09.037",
+                "doi": "10.7326/0003-4819-144-9-200605020-00009",
+                "kind": "retraction",
+                "date": "2015-12-01",
+                "url": "https://doi.org/10.7326/M15-2625"
+              },
+              "evidence": {
+                "id": "shahin-walking-synthesis",
+                "role": "uses",
+                "locator": "VITALITY Case 3, Shahin review",
+                "url": "https://rcastoragev2.blob.core.windows.net/75629a6957bbcca995ecdc438330a1c4/xuch082068.ww1.pdf#page=392",
+                "finding": "The independent reanalysis identifies both trials in the walking-outcomes synthesis. The original outcome-specific locator is pending.",
+                "basis": "published_reanalysis_synthesis_level"
+              },
+              "action": "review_indirect"
+            },
+            {
+              "path": [
+                "10.1016/j.atherosclerosis.2013.09.037",
+                "10.1001/jama.2012.216237"
+              ],
+              "notice": {
+                "ref": "10.1016/j.atherosclerosis.2013.09.037",
+                "doi": "10.1001/jama.2012.216237",
+                "kind": "retraction",
+                "date": "2015-10-13",
+                "url": "https://doi.org/10.1001/jama.2015.10811"
+              },
+              "evidence": {
+                "id": "shahin-walking-synthesis",
+                "role": "uses",
+                "locator": "VITALITY Case 3, Shahin review",
+                "url": "https://rcastoragev2.blob.core.windows.net/75629a6957bbcca995ecdc438330a1c4/xuch082068.ww1.pdf#page=392",
+                "finding": "The independent reanalysis identifies both trials in the walking-outcomes synthesis. The original outcome-specific locator is pending.",
+                "basis": "published_reanalysis_synthesis_level"
+              },
+              "action": "review_indirect"
+            }
+          ],
+          "as_of": "2026-11-16",
+          "snapshot_date": "2026-11-16",
+          "resolved_references": [
+            "10.1016/j.atherosclerosis.2013.09.037"
+          ],
+          "unresolved_references": []
+        },
+        {
+          "id": "cs-shen-indirect",
+          "action": "review_indirect",
+          "findings": [
+            {
+              "path": [
+                "10.30574/wjaets.2025.15.1.0276",
+                "10.1007/s44196-023-00321-7"
+              ],
+              "notice": {
+                "ref": "10.30574/wjaets.2025.15.1.0276",
+                "doi": "10.1007/s44196-023-00321-7",
+                "kind": "retraction",
+                "date": "2024-03-27",
+                "url": "https://link.springer.com/article/10.1007/s44196-024-00476-x"
+              },
+              "evidence": {
+                "id": "wjaets-kmeans-segmentation",
+                "role": "uses",
+                "locator": "Page 983, section 3.2 and reference 6",
+                "url": "https://wjaets.com/sites/default/files/fulltext_pdf/WJAETS-2025-0276.pdf#page=5",
+                "finding": "The overview attributes combined behavioral and social segmentation with improved K-means to the retracted Shen article.",
+                "basis": "primary_source"
+              },
+              "action": "review_indirect"
+            }
+          ],
+          "as_of": "2026-11-16",
+          "snapshot_date": "2026-11-16",
+          "resolved_references": [
+            "10.30574/wjaets.2025.15.1.0276"
+          ],
+          "unresolved_references": []
+        },
+        {
+          "id": "cs-shen-unrelated-claim",
+          "action": "retain_for_this_notice",
+          "findings": [
+            {
+              "path": [
+                "10.30574/wjaets.2025.15.1.0276",
+                "10.1007/s44196-023-00321-7"
+              ],
+              "notice": {
+                "ref": "10.30574/wjaets.2025.15.1.0276",
+                "doi": "10.1007/s44196-023-00321-7",
+                "kind": "retraction",
+                "date": "2024-03-27",
+                "url": "https://link.springer.com/article/10.1007/s44196-024-00476-x"
+              },
+              "evidence": {
+                "id": "wjaets-candidate-ranking",
+                "role": "outside_scope",
+                "locator": "Page 983, section 3.3 and reference 5",
+                "url": "https://wjaets.com/sites/default/files/fulltext_pdf/WJAETS-2025-0276.pdf#page=5",
+                "finding": "The overview attributes the two-stage recommendation architecture to Loukili (reference 5). Shen is reference 6 in the preceding section.",
+                "basis": "primary_source"
+              },
+              "action": "retain_for_this_notice"
+            }
+          ],
+          "as_of": "2026-11-16",
+          "snapshot_date": "2026-11-16",
+          "resolved_references": [
+            "10.30574/wjaets.2025.15.1.0276"
+          ],
+          "unresolved_references": []
+        },
+        {
+          "id": "cs-shen-notice-context",
+          "action": "retain_with_notice",
+          "findings": [
+            {
+              "action": "retain_with_notice",
+              "path": [
+                "10.1007/s44196-023-00321-7"
+              ],
+              "notice": {
+                "ref": "10.1007/s44196-023-00321-7",
+                "doi": "10.1007/s44196-023-00321-7",
+                "kind": "retraction",
+                "date": "2024-03-27",
+                "url": "https://link.springer.com/article/10.1007/s44196-024-00476-x"
+              }
+            }
+          ],
+          "as_of": "2026-11-16",
+          "snapshot_date": "2026-11-16",
+          "resolved_references": [
+            "10.1007/s44196-023-00321-7"
+          ],
+          "unresolved_references": []
+        },
+        {
+          "id": "cs-transformer-direct",
+          "action": "review_direct",
+          "findings": [
+            {
+              "action": "review_direct",
+              "path": [
+                "10.1007/s44196-023-00307-5"
+              ],
+              "notice": {
+                "ref": "10.1007/s44196-023-00307-5",
+                "doi": "10.1007/s44196-023-00307-5",
+                "kind": "retraction",
+                "date": "2024-04-02",
+                "url": "https://link.springer.com/article/10.1007/s44196-024-00493-w"
+              }
+            }
+          ],
+          "as_of": "2026-11-16",
+          "snapshot_date": "2026-11-16",
+          "resolved_references": [
+            "10.1007/s44196-023-00307-5"
+          ],
+          "unresolved_references": []
+        },
+        {
+          "id": "lesne-current",
+          "action": "review_direct",
+          "findings": [
+            {
+              "action": "review_direct",
+              "path": [
+                "10.1038/nature04533"
+              ],
+              "notice": {
+                "ref": "10.1038/nature04533",
+                "doi": "10.1038/nature04533",
+                "kind": "retraction",
+                "date": "2024-06-24",
+                "url": "https://doi.org/10.1038/s41586-024-07691-8"
+              }
+            }
+          ],
+          "as_of": "2026-11-16",
+          "snapshot_date": "2026-11-16",
+          "resolved_references": [
+            "10.1038/nature04533"
+          ],
+          "unresolved_references": []
+        },
+        {
+          "id": "lesne-historical-concern",
+          "action": "review_notice",
+          "findings": [
+            {
+              "action": "review_notice",
+              "path": [
+                "10.1038/nature04533"
+              ],
+              "notice": {
+                "ref": "10.1038/nature04533",
+                "doi": "10.1038/nature04533",
+                "kind": "expression_of_concern",
+                "date": "2022-07-14",
+                "url": "https://www.nature.com/articles/nature04533"
+              }
+            }
+          ],
+          "as_of": "2023-01-01",
+          "snapshot_date": "2026-11-16",
+          "resolved_references": [
+            "10.1038/nature04533"
+          ],
+          "unresolved_references": []
+        }
+      ],
+      "pilot_split_metrics": {
+        "cases": 9,
+        "returned": 9,
+        "exact_actions": 9,
+        "required_review_actions": 7,
+        "correct_review_actions": 7,
+        "false_alerts_on_controls": 0,
+        "indirect_detected": 5,
+        "indirect_total": 5
+      }
+    }
+  },
+  "agent_arms": {
+    "identity": {
+      "rows": [
+        {
+          "id": "rodent-rat",
+          "action": "insufficient_evidence",
+          "revision": "Use the pooled rat cognitive-function result from the cited review in our synthesis.",
+          "source_urls": [
+            "https://link.springer.com/article/10.1186/s13287-022-03231-1"
+          ]
+        },
+        {
+          "id": "rodent-mouse",
+          "action": "insufficient_evidence",
+          "revision": "Use the pooled mouse cognitive-function result from the cited review in our synthesis.",
+          "source_urls": [
+            "https://link.springer.com/article/10.1186/s13287-022-03231-1"
+          ]
+        },
+        {
+          "id": "rodent-mouse-abeta",
+          "action": "insufficient_evidence",
+          "revision": "Use the pooled mouse amyloid-deposition result from the cited review in our synthesis.",
+          "source_urls": [
+            "https://link.springer.com/article/10.1186/s13287-022-03231-1"
+          ]
+        },
+        {
+          "id": "rodent-direct",
+          "action": "review_direct",
+          "revision": "Cite the rat study (Effects of Rosemary Oil supplementation on transplanted human olfactory bulb neural stem cells against ibotenic acid-induced neurotoxicity in rat) as a single preclinical rat study for this point, not as primary evidence for the review as a whole.",
+          "source_urls": [
+            "https://link.springer.com/article/10.1007/s11011-021-00890-6"
+          ]
+        },
+        {
+          "id": "rodent-context-unavailable",
+          "action": "insufficient_evidence",
+          "revision": "Use the pooled rat cognitive-function result from the cited review in our synthesis.",
+          "source_urls": [
+            "https://link.springer.com/article/10.1186/s13287-022-03231-1"
+          ]
+        },
+        {
+          "id": "rodent-before-notice",
+          "action": "insufficient_evidence",
+          "revision": "Use the pooled rat cognitive-function result from the cited review in our synthesis.",
+          "source_urls": [
+            "https://link.springer.com/article/10.1186/s13287-022-03231-1"
+          ]
+        },
+        {
+          "id": "infertility-liu-follicles",
+          "action": "insufficient_evidence",
+          "revision": "Use the pooled dominant-follicle result from Figure 9 of the cited systematic review.",
+          "source_urls": [
+            "https://obgyn.onlinelibrary.wiley.com/doi/abs/10.1111/jog.12393"
+          ]
+        },
+        {
+          "id": "infertility-qin-pregnancy",
+          "action": "insufficient_evidence",
+          "revision": "Cite the total pregnancy rate pooled in Figure 4 of this meta-analysis.",
+          "source_urls": [
+            "https://pmc.ncbi.nlm.nih.gov/articles/PMC7402796/"
+          ]
+        },
+        {
+          "id": "infertility-badawy-direct",
+          "action": "review_direct",
+          "revision": "Cite this randomized prospective trial (clomiphene citrate vs aromatase inhibitors for superovulation in women with unexplained infertility undergoing intrauterine insemination) as one primary trial for that population and comparison, not as evidence beyond it.",
+          "source_urls": [
+            "https://www.sciencedirect.com/science/article/pii/S0015028208013137"
+          ]
+        },
+        {
+          "id": "vascular-barrons-walking",
+          "action": "insufficient_evidence",
+          "revision": "Use the maximum treadmill walking-distance estimate in Figure 4 of this review.",
+          "source_urls": [
+            "https://doi.org/10.1097/mjt.0000000000000011"
+          ]
+        },
+        {
+          "id": "vascular-shahin-synthesis",
+          "action": "review_direct",
+          "revision": "Cite this meta-analysis of ACE inhibitors and walking ability and ankle-brachial pressure index in intermittent claudication as evidence on walking outcomes for ACE inhibitors in claudication patients. It is a meta-analysis, not a narrative review, and the evidence is limited to ACE inhibitors.",
+          "source_urls": [
+            "https://pubmed.ncbi.nlm.nih.gov/24267241/"
+          ]
+        },
+        {
+          "id": "cs-shen-indirect",
+          "action": "review_indirect",
+          "revision": "The WJAETS overview (AI-driven transformation of E-commerce) is not shown here to cover K-means user segmentation, so it should not be cited for that point. For improved K-means segmentation using social relationship characteristics, cite 10.1007/s44196-023-00321-7 instead; its title supports social-relationship features and an improved K-means algorithm, but behavioral data use is not confirmed from the title alone.",
+          "source_urls": [
+            "https://wjaets.com/sites/default/files/fulltext_pdf/WJAETS-2025-0276.pdf",
+            "https://link.springer.com/article/10.1007/s44196-023-00321-7"
+          ]
+        },
+        {
+          "id": "cs-shen-unrelated-claim",
+          "action": "insufficient_evidence",
+          "revision": "The cited overview describes separating candidate generation from ranking in production recommendation pipelines.",
+          "source_urls": [
+            "https://wjaets.com/sites/default/files/fulltext_pdf/WJAETS-2025-0276.pdf"
+          ]
+        },
+        {
+          "id": "cs-shen-notice-context",
+          "action": "insufficient_evidence",
+          "revision": "Document that the cited recommendation paper was retracted as an example of a publication-status change.",
+          "source_urls": [
+            "https://link.springer.com/article/10.1007/s44196-023-00321-7"
+          ]
+        },
+        {
+          "id": "cs-transformer-direct",
+          "action": "review_direct",
+          "revision": "Cite this paper (A Computational Model for Predicting Customer Behaviors Using Transformer Adapted with Tabular Features) for its own reported results on customer-behavior prediction, not as general benchmark-performance evidence.",
+          "source_urls": [
+            "https://link.springer.com/article/10.1007/s44196-023-00307-5"
+          ]
+        },
+        {
+          "id": "lesne-current",
+          "action": "review_direct",
+          "revision": "Cite this original study (A specific amyloid-β protein assembly in the brain impairs memory) as evidence that a specific amyloid-β assembly impairs memory. It supports only that assembly-specific memory finding, not broader amyloid claims.",
+          "source_urls": [
+            "https://www.nature.com/articles/nature04533"
+          ]
+        },
+        {
+          "id": "lesne-historical-concern",
+          "action": "review_direct",
+          "revision": "Cite this original study (A specific amyloid-β protein assembly in the brain impairs memory) as evidence that a specific amyloid-β assembly impairs memory. It supports only that assembly-specific memory finding, not broader amyloid claims.",
+          "source_urls": [
+            "https://www.nature.com/articles/nature04533"
+          ]
+        }
+      ],
+      "tools": [
+        "StructuredOutput"
+      ],
+      "usage": {
+        "input_tokens": 2,
+        "cache_creation_input_tokens": 4190,
+        "cache_read_input_tokens": 0,
+        "output_tokens": 7653,
+        "output_tokens_details": {
+          "thinking_tokens": 5496
+        },
+        "server_tool_use": {
+          "web_search_requests": 0,
+          "web_fetch_requests": 0
+        },
+        "service_tier": "standard",
+        "cache_creation": {
+          "ephemeral_1h_input_tokens": 4190,
+          "ephemeral_5m_input_tokens": 0
+        },
+        "inference_geo": "global",
+        "iterations": [],
+        "speed": "standard",
+        "fallback_credit": null
+      },
+      "model_usage": {
+        "claude-haiku-5-5": {
+          "inputTokens": 2,
+          "outputTokens": 7653,
+          "cacheReadInputTokens": 0,
+          "cacheCreationInputTokens": 4190,
+          "webSearchRequests": 0,
+          "costUSD": 0.0046647,
+          "contextWindow": 1000000,
+          "maxOutputTokens": 128000,
+          "thinkingTokens": 5496,
+          "cacheCreationEphemeral5mInputTokens": 0,
+          "cacheCreationEphemeral1hInputTokens": 4190,
+          "canonicalModel": "claude-haiku-5-5",
+          "provider": "firstParty",
+          "costBasis": "list"
+        }
+      },
+      "cost_usd": 0.0046647,
+      "duration_ms": 29733,
+      "metrics": {
+        "cases": 17,
+        "returned": 17,
+        "exact_actions": 6,
+        "required_review_actions": 11,
+        "correct_review_actions": 5,
+        "false_alerts_on_controls": 0,
+        "indirect_detected": 1,
+        "indirect_total": 6,
+        "controls_preserved_verbatim": 6,
+        "controls_total": 6,
+        "grounded_review_revisions": 0
+      },
+      "pilot_split_metrics": {
+        "cases": 9,
+        "returned": 9,
+        "exact_actions": 3,
+        "required_review_actions": 7,
+        "correct_review_actions": 3,
+        "false_alerts_on_controls": 0,
+        "indirect_detected": 1,
+        "indirect_total": 5,
+        "controls_preserved_verbatim": 2,
+        "controls_total": 2,
+        "grounded_review_revisions": 0
+      }
+    },
+    "direct": {
+      "rows": [
+        {
+          "id": "rodent-rat",
+          "action": "no_notice_as_of",
+          "revision": "Use the pooled rat cognitive-function result from the cited review in our synthesis.",
+          "source_urls": []
+        },
+        {
+          "id": "rodent-mouse",
+          "action": "no_notice_as_of",
+          "revision": "Use the pooled mouse cognitive-function result from the cited review in our synthesis.",
+          "source_urls": []
+        },
+        {
+          "id": "rodent-mouse-abeta",
+          "action": "no_notice_as_of",
+          "revision": "Use the pooled mouse amyloid-deposition result from the cited review in our synthesis.",
+          "source_urls": []
+        },
+        {
+          "id": "rodent-direct",
+          "action": "review_direct",
+          "revision": "Do not use the cited rat study (10.1007/s11011-021-00890-6) as primary evidence. It was retracted on 2023-08-29 (notice: https://doi.org/10.1007/s11011-023-01282-8). Replace it with a non-retracted primary rat study.",
+          "source_urls": [
+            "https://doi.org/10.1007/s11011-023-01282-8"
+          ]
+        },
+        {
+          "id": "rodent-context-unavailable",
+          "action": "no_notice_as_of",
+          "revision": "Use the pooled rat cognitive-function result from the cited review in our synthesis.",
+          "source_urls": []
+        },
+        {
+          "id": "rodent-before-notice",
+          "action": "no_notice_as_of",
+          "revision": "Use the pooled rat cognitive-function result from the cited review in our synthesis.",
+          "source_urls": []
+        },
+        {
+          "id": "infertility-liu-follicles",
+          "action": "no_notice_as_of",
+          "revision": "Use the pooled dominant-follicle result from Figure 9 of the cited systematic review.",
+          "source_urls": []
+        },
+        {
+          "id": "infertility-qin-pregnancy",
+          "action": "no_notice_as_of",
+          "revision": "Cite the total pregnancy rate pooled in Figure 4 of this meta-analysis.",
+          "source_urls": []
+        },
+        {
+          "id": "infertility-badawy-direct",
+          "action": "review_direct",
+          "revision": "Do not rely on the cited trial (10.1016/j.fertnstert.2008.06.013) as the primary prospective trial. It was retracted on 2020-09-08 (notice: https://doi.org/10.1016/j.fertnstert.2020.08.1409). Replace it with a non-retracted primary prospective trial.",
+          "source_urls": [
+            "https://doi.org/10.1016/j.fertnstert.2020.08.1409"
+          ]
+        },
+        {
+          "id": "vascular-barrons-walking",
+          "action": "no_notice_as_of",
+          "revision": "Use the maximum treadmill walking-distance estimate in Figure 4 of this review.",
+          "source_urls": []
+        },
+        {
+          "id": "vascular-shahin-synthesis",
+          "action": "no_notice_as_of",
+          "revision": "Use this review's synthesis of walking outcomes as evidence in our discussion.",
+          "source_urls": []
+        },
+        {
+          "id": "cs-shen-indirect",
+          "action": "no_notice_as_of",
+          "revision": "Use the cited overview as evidence that improved K-means can segment users using both behavioral and social data.",
+          "source_urls": []
+        },
+        {
+          "id": "cs-shen-unrelated-claim",
+          "action": "no_notice_as_of",
+          "revision": "The cited overview describes separating candidate generation from ranking in production recommendation pipelines.",
+          "source_urls": []
+        },
+        {
+          "id": "cs-shen-notice-context",
+          "action": "review_direct",
+          "revision": "The cited recommendation paper (10.1007/s44196-023-00321-7) was retracted; the retraction notice is dated 2024-03-27 (https://link.springer.com/article/10.1007/s44196-024-00476-x). Cite it only as a retracted example of a publication-status change.",
+          "source_urls": [
+            "https://link.springer.com/article/10.1007/s44196-024-00476-x"
+          ]
+        },
+        {
+          "id": "cs-transformer-direct",
+          "action": "review_direct",
+          "revision": "Do not use the cited tabular-transformer paper (10.1007/s44196-023-00307-5) as evidence for benchmark performance. It was retracted on 2024-04-02 (https://link.springer.com/article/10.1007/s44196-024-00493-w). Replace it with a non-retracted benchmark source.",
+          "source_urls": [
+            "https://link.springer.com/article/10.1007/s44196-024-00493-w"
+          ]
+        },
+        {
+          "id": "lesne-current",
+          "action": "review_direct",
+          "revision": "Do not use the cited original study (10.1038/nature04533) as evidence for the assembly-specific result. It was retracted on 2024-06-24 (https://doi.org/10.1038/s41586-024-07691-8). Replace it with a non-retracted source.",
+          "source_urls": [
+            "https://doi.org/10.1038/s41586-024-07691-8"
+          ]
+        },
+        {
+          "id": "lesne-historical-concern",
+          "action": "review_notice",
+          "revision": "Use the cited original study (10.1038/nature04533) as evidence for the assembly-specific result only with qualification: as of 2023-01-01 it carried an expression of concern dated 2022-07-14 (https://www.nature.com/articles/nature04533), so the result should be flagged as under concern.",
+          "source_urls": [
+            "https://www.nature.com/articles/nature04533"
+          ]
+        }
+      ],
+      "tools": [
+        "StructuredOutput"
+      ],
+      "usage": {
+        "input_tokens": 2,
+        "cache_creation_input_tokens": 5457,
+        "cache_read_input_tokens": 0,
+        "output_tokens": 3971,
+        "output_tokens_details": {
+          "thinking_tokens": 2155
+        },
+        "server_tool_use": {
+          "web_search_requests": 0,
+          "web_fetch_requests": 0
+        },
+        "service_tier": "standard",
+        "cache_creation": {
+          "ephemeral_1h_input_tokens": 5457,
+          "ephemeral_5m_input_tokens": 0
+        },
+        "inference_geo": "global",
+        "iterations": [],
+        "speed": "standard",
+        "fallback_credit": null
+      },
+      "model_usage": {
+        "claude-haiku-5-5": {
+          "inputTokens": 2,
+          "outputTokens": 3971,
+          "cacheReadInputTokens": 0,
+          "cacheCreationInputTokens": 5457,
+          "webSearchRequests": 0,
+          "costUSD": 0.0030771,
+          "contextWindow": 1000000,
+          "maxOutputTokens": 128000,
+          "thinkingTokens": 2155,
+          "cacheCreationEphemeral5mInputTokens": 0,
+          "cacheCreationEphemeral1hInputTokens": 5457,
+          "canonicalModel": "claude-haiku-5-5",
+          "provider": "firstParty",
+          "costBasis": "list"
+        }
+      },
+      "cost_usd": 0.0030771,
+      "duration_ms": 14554,
+      "metrics": {
+        "cases": 17,
+        "returned": 17,
+        "exact_actions": 6,
+        "required_review_actions": 11,
+        "correct_review_actions": 5,
+        "false_alerts_on_controls": 1,
+        "indirect_detected": 0,
+        "indirect_total": 6,
+        "controls_preserved_verbatim": 5,
+        "controls_total": 6,
+        "grounded_review_revisions": 5
+      },
+      "pilot_split_metrics": {
+        "cases": 9,
+        "returned": 9,
+        "exact_actions": 2,
+        "required_review_actions": 7,
+        "correct_review_actions": 2,
+        "false_alerts_on_controls": 1,
+        "indirect_detected": 0,
+        "indirect_total": 5,
+        "controls_preserved_verbatim": 1,
+        "controls_total": 2,
+        "grounded_review_revisions": 2
+      }
+    },
+    "static_graph": {
+      "rows": [
+        {
+          "id": "rodent-rat",
+          "action": "review_indirect",
+          "revision": "Use the pooled rat cognitive-function result from the cited review (10.1186/s13287-022-03231-1) only with a qualification: the rat pool (references 37–44) includes reference 44, the Rezk study (10.1007/s11011-021-00890-6), which was retracted on 2023-08-29. The pooled rat result therefore includes a retracted study and should be recomputed or reported with that study excluded before use.",
+          "source_urls": [
+            "https://link.springer.com/article/10.1186/s13287-022-03231-1#Fig3",
+            "https://doi.org/10.1007/s11011-023-01282-8"
+          ]
+        },
+        {
+          "id": "rodent-mouse",
+          "action": "retain_for_this_notice",
+          "revision": "Use the pooled mouse cognitive-function result from the cited review in our synthesis.",
+          "source_urls": [
+            "https://link.springer.com/article/10.1186/s13287-022-03231-1#Fig3",
+            "https://doi.org/10.1007/s11011-023-01282-8"
+          ]
+        },
+        {
+          "id": "rodent-mouse-abeta",
+          "action": "retain_for_this_notice",
+          "revision": "Use the pooled mouse amyloid-deposition result from the cited review in our synthesis.",
+          "source_urls": [
+            "https://link.springer.com/article/10.1186/s13287-022-03231-1#Fig4",
+            "https://doi.org/10.1007/s11013-023-01282-8"
+          ]
+        },
+        {
+          "id": "rodent-direct",
+          "action": "review_direct",
+          "revision": "Do not use the cited rat study (10.1007/s11011-021-00890-6) as primary evidence for this review. It was retracted on 2023-08-29, so it may be cited only to document the retraction (https://doi.org/10.1007/s11011-023-01282-8).",
+          "source_urls": [
+            "https://doi.org/10.1007/s11011-023-01282-8"
+          ]
+        },
+        {
+          "id": "rodent-context-unavailable",
+          "action": "insufficient_evidence",
+          "revision": "Use the pooled rat cognitive-function result from the cited review in our synthesis.",
+          "source_urls": [
+            "https://doi.org/10.1007/s11011-023-01282-8"
+          ]
+        },
+        {
+          "id": "rodent-before-notice",
+          "action": "no_notice_as_of",
+          "revision": "Use the pooled rat cognitive-function result from the cited review in our synthesis.",
+          "source_urls": [
+            "https://doi.org/10.1007/s11011-023-01282-8"
+          ]
+        },
+        {
+          "id": "infertility-liu-follicles",
+          "action": "review_indirect",
+          "revision": "The pooled dominant-follicle result in Figure 9 of the cited systematic review (10.1111/jog.12393) includes the Badawy trial (10.1016/j.fertnstert.2008.06.013), which was retracted on 2020-09-08. A published reanalysis reports that removing Badawy changes the direction and significance of this pooled result, so the result should be used only with that qualification and not as a reliable pooled finding.",
+          "source_urls": [
+            "https://rcastoragev2.blob.core.windows.net/75629a6957bbcca995ecdc438330a1c4/xuch082068.ww1.pdf#page=391",
+            "https://doi.org/10.1016/j.fertnstert.2020.08.1409"
+          ]
+        },
+        {
+          "id": "infertility-qin-pregnancy",
+          "action": "review_indirect",
+          "revision": "Figure 4 of this meta-analysis (10.1097/md.0000000000021006) pools total pregnancy rate across six included studies, one of which is Badawy 2009 (10.1016/j.fertnstert.2008.06.013), retracted on 2020-09-08. If the pooled total pregnancy rate is cited, it must be qualified as including a retracted study, and it should be checked against a version of the pool excluding Badawy.",
+          "source_urls": [
+            "https://pmc.ncbi.nlm.nih.gov/articles/PMC7402796/",
+            "https://doi.org/10.1016/j.fertnstert.2020.08.1409"
+          ]
+        },
+        {
+          "id": "infertility-badawy-direct",
+          "action": "review_direct",
+          "revision": "Do not rely on the Badawy trial (10.1016/j.fertnstert.2008.06.013) as the primary prospective trial in this draft. It was retracted on 2020-09-08, so it may be cited only to document the retraction (https://doi.org/10.1016/j.fertnstert.2020.08.1409).",
+          "source_urls": [
+            "https://doi.org/10.1016/j.fertnstert.2020.08.1409"
+          ]
+        },
+        {
+          "id": "vascular-barrons-walking",
+          "action": "review_indirect",
+          "revision": "The maximum treadmill walking-distance estimate in Figure 4 of this review (10.1097/mjt.0000000000000011) comes from a pool of four studies, two of which were retracted: 10.7326/0003-4819-144-9-200605020-00009 (retracted 2015-12-01) and 10.1001/jama.2012.216237 (retracted 2015-10-13). A published reanalysis reports that excluding both leaves two studies. Any maximum-distance estimate from this figure must be qualified as including retracted trials and not presented as a reliable estimate.",
+          "source_urls": [
+            "https://rcastoragev2.blob.core.windows.net/75629a6957bbcca995ecdc438330a1c4/xuch082068.ww1.pdf#page=393",
+            "https://doi.org/10.7326/M15-2625",
+            "https://doi.org/10.1001/jama.2015.10811"
+          ]
+        },
+        {
+          "id": "vascular-shahin-synthesis",
+          "action": "review_indirect",
+          "revision": "This review's (10.1016/j.atherosclerosis.2013.09.037) synthesis of walking outcomes includes two trials that were retracted: 10.7326/0003-4819-144-9-200605020-00009 (retracted 2015-12-01) and 10.1001/jama.2012.216237 (retracted 2015-10-13). The outcome-specific locator is still pending, so the synthesis may be used in the discussion only with that qualification and not as standalone support for walking outcomes.",
+          "source_urls": [
+            "https://rcastoragev2.blob.core.windows.net/75629a6957bbcca995ecdc438330a1c4/xuch082068.ww1.pdf#page=392",
+            "https://doi.org/10.7326/M15-2625",
+            "https://doi.org/10.1001/jama.2015.10811"
+          ]
+        },
+        {
+          "id": "cs-shen-indirect",
+          "action": "review_indirect",
+          "revision": "The cited overview (10.30574/wjaets.2025.15.1.0276) attributes combined behavioral and social user segmentation with improved K-means to the Shen article (10.1007/s44196-023-00321-7), which was retracted on 2024-03-27. It should not be cited as independent evidence for this capability; the claim needs a non-retracted source or must be qualified as resting on a retracted study.",
+          "source_urls": [
+            "https://wjaets.com/sites/default/files/fulltext_pdf/WJAETS-2025-0276.pdf#page=5",
+            "https://link.springer.com/article/10.1007/s44196-024-00476-x"
+          ]
+        },
+        {
+          "id": "cs-shen-unrelated-claim",
+          "action": "retain_for_this_notice",
+          "revision": "The cited overview describes separating candidate generation from ranking in production recommendation pipelines.",
+          "source_urls": [
+            "https://wjaets.com/sites/default/files/fulltext_pdf/WJAETS-2025-0276.pdf#page=5",
+            "https://link.springer.com/article/10.1007/s44196-024-00476-x"
+          ]
+        },
+        {
+          "id": "cs-shen-notice-context",
+          "action": "retain_with_notice",
+          "revision": "Document that the cited recommendation paper was retracted as an example of a publication-status change.",
+          "source_urls": [
+            "https://link.springer.com/article/10.1007/s44196-024-00476-x"
+          ]
+        },
+        {
+          "id": "cs-transformer-direct",
+          "action": "review_direct",
+          "revision": "Do not use the cited tabular-transformer paper (10.1007/s44196-023-00307-5) as evidence for benchmark performance. It was retracted on 2024-04-02, so it may be cited only to document the retraction (https://link.springer.com/article/10.1007/s44196-024-00493-w).",
+          "source_urls": [
+            "https://link.springer.com/article/10.1007/s44196-024-00493-w"
+          ]
+        },
+        {
+          "id": "lesne-current",
+          "action": "review_direct",
+          "revision": "Do not use the cited original study (10.1038/nature04533) as evidence for the assembly-specific result. It was retracted on 2024-06-24, so it may be cited only to document the retraction (https://doi.org/10.1038/s41586-024-07691-8).",
+          "source_urls": [
+            "https://doi.org/10.1038/s41586-024-07691-8"
+          ]
+        },
+        {
+          "id": "lesne-historical-concern",
+          "action": "review_notice",
+          "revision": "Use the cited original study (10.1038/nature04533) as evidence for the assembly-specific result only with a qualification: an expression of concern was issued on 2022-07-14 (https://www.nature.com/articles/nature04533), so as of 2023-01-01 the result was under editorial concern and should be flagged and checked against the notice before reliance.",
+          "source_urls": [
+            "https://www.nature.com/articles/nature04533"
+          ]
+        }
+      ],
+      "tools": [
+        "StructuredOutput"
+      ],
+      "usage": {
+        "input_tokens": 2,
+        "cache_creation_input_tokens": 9080,
+        "cache_read_input_tokens": 0,
+        "output_tokens": 7246,
+        "output_tokens_details": {
+          "thinking_tokens": 4056
+        },
+        "server_tool_use": {
+          "web_search_requests": 0,
+          "web_fetch_requests": 0
+        },
+        "service_tier": "standard",
+        "cache_creation": {
+          "ephemeral_1h_input_tokens": 9080,
+          "ephemeral_5m_input_tokens": 0
+        },
+        "inference_geo": "global",
+        "iterations": [],
+        "speed": "standard",
+        "fallback_credit": null
+      },
+      "model_usage": {
+        "claude-haiku-5-5": {
+          "inputTokens": 2,
+          "outputTokens": 7246,
+          "cacheReadInputTokens": 0,
+          "cacheCreationInputTokens": 9080,
+          "webSearchRequests": 0,
+          "costUSD": 0.0054392,
+          "contextWindow": 1000000,
+          "maxOutputTokens": 128000,
+          "thinkingTokens": 4056,
+          "cacheCreationEphemeral5mInputTokens": 0,
+          "cacheCreationEphemeral1hInputTokens": 9080,
+          "canonicalModel": "claude-haiku-5-5",
+          "provider": "firstParty",
+          "costBasis": "list"
+        }
+      },
+      "cost_usd": 0.0054392,
+      "duration_ms": 25328,
+      "metrics": {
+        "cases": 17,
+        "returned": 17,
+        "exact_actions": 17,
+        "required_review_actions": 11,
+        "correct_review_actions": 11,
+        "false_alerts_on_controls": 0,
+        "indirect_detected": 6,
+        "indirect_total": 6,
+        "controls_preserved_verbatim": 6,
+        "controls_total": 6,
+        "grounded_review_revisions": 11
+      },
+      "pilot_split_metrics": {
+        "cases": 9,
+        "returned": 9,
+        "exact_actions": 9,
+        "required_review_actions": 7,
+        "correct_review_actions": 7,
+        "false_alerts_on_controls": 0,
+        "indirect_detected": 5,
+        "indirect_total": 5,
+        "controls_preserved_verbatim": 2,
+        "controls_total": 2,
+        "grounded_review_revisions": 7
+      }
+    },
+    "mcp_graph": {
+      "rows": [
+        {
+          "id": "rodent-rat",
+          "action": "review_indirect",
+          "revision": "The pooled rat cognitive-function result in the cited review (Results, Figure 3b) includes reference 44, the Rezk study, which was retracted on 2023-08-29. Any synthesis using this pooled rat result must exclude or explicitly qualify that retracted study.",
+          "source_urls": [
+            "https://link.springer.com/article/10.1186/s13287-022-03231-1#Fig3",
+            "https://doi.org/10.1007/s11011-023-01282-8"
+          ]
+        },
+        {
+          "id": "rodent-mouse",
+          "action": "retain_for_this_notice",
+          "revision": "Use the pooled mouse cognitive-function result from the cited review in our synthesis.",
+          "source_urls": [
+            "https://link.springer.com/article/10.1186/s13287-022-03231-1#Fig3"
+          ]
+        },
+        {
+          "id": "rodent-mouse-abeta",
+          "action": "retain_for_this_notice",
+          "revision": "Use the pooled mouse amyloid-deposition result from the cited review in our synthesis.",
+          "source_urls": [
+            "https://link.springer.com/article/10.1186/s13287-022-03231-1#Fig4"
+          ]
+        },
+        {
+          "id": "rodent-direct",
+          "action": "review_direct",
+          "revision": "The cited rat study (10.1007/s11011-021-00890-6) was retracted on 2023-08-29 and should not be used as primary evidence in our review. If it is mentioned at all, it must be identified as retracted.",
+          "source_urls": [
+            "https://doi.org/10.1007/s11011-023-01282-8"
+          ]
+        },
+        {
+          "id": "rodent-context-unavailable",
+          "action": "insufficient_evidence",
+          "revision": "Use the pooled rat cognitive-function result from the cited review in our synthesis.",
+          "source_urls": [
+            "https://doi.org/10.1007/s11011-023-01282-8"
+          ]
+        },
+        {
+          "id": "rodent-before-notice",
+          "action": "no_notice_as_of",
+          "revision": "Use the pooled rat cognitive-function result from the cited review in our synthesis.",
+          "source_urls": []
+        },
+        {
+          "id": "infertility-liu-follicles",
+          "action": "review_indirect",
+          "revision": "The Figure 9 pooled dominant-follicle result in the cited systematic review includes Badawy et al. (10.1016/j.fertnstert.2008.06.013), which was retracted on 2020-09-08. An independent reanalysis found that removing it changed the direction and significance of this result, so the pooled finding should not be used without that qualification.",
+          "source_urls": [
+            "https://rcastoragev2.blob.core.windows.net/75629a6957bbcca995ecdc438330a1c4/xuch082068.ww1.pdf#page=391",
+            "https://doi.org/10.1016/j.fertnstert.2020.08.1409"
+          ]
+        },
+        {
+          "id": "infertility-qin-pregnancy",
+          "action": "review_indirect",
+          "revision": "The total pregnancy rate pooled in Figure 4 of this meta-analysis includes all six studies, among them Badawy 2009 (reference 20), which was retracted on 2020-09-08. Any citation of this pooled rate must note that the retracted Badawy study is included.",
+          "source_urls": [
+            "https://pmc.ncbi.nlm.nih.gov/articles/PMC7402796/",
+            "https://doi.org/10.1016/j.fertnstert.2020.08.1409"
+          ]
+        },
+        {
+          "id": "infertility-badawy-direct",
+          "action": "review_direct",
+          "revision": "The primary prospective trial (Badawy et al., 10.1016/j.fertnstert.2008.06.013) was retracted on 2020-09-08 and should not be relied on as primary evidence in this draft. If it is mentioned, it must be identified as retracted.",
+          "source_urls": [
+            "https://doi.org/10.1016/j.fertnstert.2020.08.1409"
+          ]
+        },
+        {
+          "id": "vascular-barrons-walking",
+          "action": "review_indirect",
+          "revision": "The treadmill walking-distance estimate in Figure 4 of this review pools four studies, two of which (10.7326/0003-4819-144-9-200605020-00009 and 10.1001/jama.2012.216237) were retracted in 2015. An independent reanalysis found that excluding both retracted trials reduces the pool from four studies to two, so the estimate should not be used without that qualification.",
+          "source_urls": [
+            "https://rcastoragev2.blob.core.windows.net/75629a6957bbcca995ecdc438330a1c4/xuch082068.ww1.pdf#page=393",
+            "https://doi.org/10.7326/M15-2625",
+            "https://doi.org/10.1001/jama.2015.10811"
+          ]
+        },
+        {
+          "id": "vascular-shahin-synthesis",
+          "action": "review_indirect",
+          "revision": "This review's synthesis of walking outcomes draws on two trials that were retracted in 2015 (10.7326/0003-4819-144-9-200605020-00009 and 10.1001/jama.2012.216237), according to an independent reanalysis at the synthesis level; the outcome-specific locator is still pending. The synthesis should be qualified accordingly and not used as unqualified evidence in our discussion.",
+          "source_urls": [
+            "https://rcastoragev2.blob.core.windows.net/75629a6957bbcca995ecdc438330a1c4/xuch082068.ww1.pdf#page=392",
+            "https://doi.org/10.7326/M15-2625",
+            "https://doi.org/10.1001/jama.2015.10811"
+          ]
+        },
+        {
+          "id": "cs-shen-indirect",
+          "action": "review_indirect",
+          "revision": "The cited overview attributes the claim that improved K-means can segment users using both behavioral and social data to a source article (10.1007/s44196-023-00321-7) that was retracted on 2024-03-27. It should not be used as independent evidence for this claim without that qualification.",
+          "source_urls": [
+            "https://wjaets.com/sites/default/files/fulltext_pdf/WJAETS-2025-0276.pdf#page=5",
+            "https://link.springer.com/article/10.1007/s44196-024-00476-x"
+          ]
+        },
+        {
+          "id": "cs-shen-unrelated-claim",
+          "action": "retain_for_this_notice",
+          "revision": "The cited overview describes separating candidate generation from ranking in production recommendation pipelines.",
+          "source_urls": [
+            "https://wjaets.com/sites/default/files/fulltext_pdf/WJAETS-2025-0276.pdf#page=5"
+          ]
+        },
+        {
+          "id": "cs-shen-notice-context",
+          "action": "retain_with_notice",
+          "revision": "Document that the cited recommendation paper was retracted as an example of a publication-status change.",
+          "source_urls": [
+            "https://link.springer.com/article/10.1007/s44196-024-00476-x"
+          ]
+        },
+        {
+          "id": "cs-transformer-direct",
+          "action": "review_direct",
+          "revision": "The cited tabular-transformer paper (10.1007/s44196-023-00307-5) was retracted on 2024-04-02 and should not be used as evidence for benchmark performance. If it is mentioned, it must be identified as retracted.",
+          "source_urls": [
+            "https://link.springer.com/article/10.1007/s44196-024-00493-w"
+          ]
+        },
+        {
+          "id": "lesne-current",
+          "action": "review_direct",
+          "revision": "The cited original study (10.1038/nature04533) was retracted on 2024-06-24 and should not be used as evidence for the assembly-specific result. If it is mentioned, it must be identified as retracted.",
+          "source_urls": [
+            "https://doi.org/10.1038/s41586-024-07691-8"
+          ]
+        },
+        {
+          "id": "lesne-historical-concern",
+          "action": "review_notice",
+          "revision": "As of 2023-01-01, the cited original study (10.1038/nature04533) carried an expression of concern dated 2022-07-14. The assembly-specific result should be cited only with that expression of concern noted.",
+          "source_urls": [
+            "https://www.nature.com/articles/nature04533"
+          ]
+        }
+      ],
+      "tools": [
+        "mcp__claim_pilot__audit_claims",
+        "StructuredOutput"
+      ],
+      "usage": {
+        "input_tokens": 4,
+        "cache_creation_input_tokens": 10824,
+        "cache_read_input_tokens": 3185,
+        "output_tokens": 8127,
+        "output_tokens_details": {
+          "thinking_tokens": 3832
+        },
+        "server_tool_use": {
+          "web_search_requests": 0,
+          "web_fetch_requests": 0
+        },
+        "service_tier": "standard",
+        "cache_creation": {
+          "ephemeral_1h_input_tokens": 10824,
+          "ephemeral_5m_input_tokens": 0
+        },
+        "inference_geo": "global",
+        "iterations": [],
+        "speed": "standard",
+        "fallback_credit": null
+      },
+      "model_usage": {
+        "claude-haiku-5-5": {
+          "inputTokens": 4,
+          "outputTokens": 8127,
+          "cacheReadInputTokens": 3185,
+          "cacheCreationInputTokens": 10824,
+          "webSearchRequests": 0,
+          "costUSD": 0.00626055,
+          "contextWindow": 1000000,
+          "maxOutputTokens": 128000,
+          "thinkingTokens": 3832,
+          "cacheCreationEphemeral5mInputTokens": 0,
+          "cacheCreationEphemeral1hInputTokens": 10824,
+          "canonicalModel": "claude-haiku-5-5",
+          "provider": "firstParty",
+          "costBasis": "list"
+        }
+      },
+      "cost_usd": 0.00626055,
+      "duration_ms": 28478,
+      "metrics": {
+        "cases": 17,
+        "returned": 17,
+        "exact_actions": 17,
+        "required_review_actions": 11,
+        "correct_review_actions": 11,
+        "false_alerts_on_controls": 0,
+        "indirect_detected": 6,
+        "indirect_total": 6,
+        "controls_preserved_verbatim": 6,
+        "controls_total": 6,
+        "grounded_review_revisions": 11
+      },
+      "pilot_split_metrics": {
+        "cases": 9,
+        "returned": 9,
+        "exact_actions": 9,
+        "required_review_actions": 7,
+        "correct_review_actions": 7,
+        "false_alerts_on_controls": 0,
+        "indirect_detected": 5,
+        "indirect_total": 5,
+        "controls_preserved_verbatim": 2,
+        "controls_total": 2,
+        "grounded_review_revisions": 7
+      }
+    }
+  },
+  "run_setup": {
+    "semantic_scholar_live_probe": "HTTP 429",
+    "claude_trials": 1,
+    "fixture_manuscript": "fixed public claim spans in a replayed upstream literature stage",
+    "ground_truth": "provisional case labels; manually assembled evidence pack"
+  }
+}

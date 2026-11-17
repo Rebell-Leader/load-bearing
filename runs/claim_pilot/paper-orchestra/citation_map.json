@@ -1,0 +1,112 @@
+{
+    "Zhou2023NeuralStemprogenitor": {
+        "citation_key": "Zhou2023NeuralStemprogenitor",
+        "title": "Neural stem/progenitor cell therapy for Alzheimer disease in preclinical rodent models: a systematic review and meta-analysis",
+        "authors": [
+            "Zijing Zhou"
+        ],
+        "venue": "Stem Cell Research & Therapy",
+        "year": 2023,
+        "abstract": "Preclinical systematic review with separate pooled analyses of rodent outcomes."
+    },
+    "Rezk2022EffectsRosemary": {
+        "citation_key": "Rezk2022EffectsRosemary",
+        "title": "Effects of Rosemary Oil (Rosmarinus officinalis) supplementation on the fate of the transplanted human olfactory bulb neural stem cells against ibotenic acid-induced neurotoxicity (Alzheimer model) in rat",
+        "authors": [
+            "Shaymaa Rezk"
+        ],
+        "venue": "Metabolic Brain Disease",
+        "year": 2022,
+        "abstract": "Primary preclinical rat study included in a later evidence synthesis."
+    },
+    "Liu2014LetrozoleVersus": {
+        "citation_key": "Liu2014LetrozoleVersus",
+        "title": "Letrozole versus clomiphene citrate for unexplained infertility: a systematic review and meta-analysis",
+        "authors": [
+            "A Liu"
+        ],
+        "venue": "Journal of Obstetrics and Gynaecology Research",
+        "year": 2014,
+        "abstract": "Systematic review pooling several outcomes from randomized trials."
+    },
+    "Qin2020ComparisonClomiphene": {
+        "citation_key": "Qin2020ComparisonClomiphene",
+        "title": "Comparison of clomiphene and letrozole for superovulation in patients with unexplained infertility undergoing intrauterine insemination: A systematic review and meta-analysis",
+        "authors": [
+            "F Qin"
+        ],
+        "venue": "Medicine",
+        "year": 2020,
+        "abstract": "Meta-analysis of six studies with separate pooled outcome estimates."
+    },
+    "Badawy2009ClomipheneCitrate": {
+        "citation_key": "Badawy2009ClomipheneCitrate",
+        "title": "Clomiphene citrate or aromatase inhibitors for superovulation in women with unexplained infertility undergoing intrauterine insemination: a prospective randomized trial",
+        "authors": [
+            "Ahmed Badawy"
+        ],
+        "venue": "Fertility and Sterility",
+        "year": 2009,
+        "abstract": "Prospective randomized comparison included in systematic reviews."
+    },
+    "Barrons2016RolesAce": {
+        "citation_key": "Barrons2016RolesAce",
+        "title": "The Roles of ACE Inhibitors in Lower Extremity Peripheral Artery Disease",
+        "authors": [
+            "R W Barrons"
+        ],
+        "venue": "American Journal of Therapeutics",
+        "year": 2016,
+        "abstract": "Systematic analysis of studies reporting walking outcomes in peripheral artery disease."
+    },
+    "Shahin2013MetaanalysisAngiotensin": {
+        "citation_key": "Shahin2013MetaanalysisAngiotensin",
+        "title": "Meta-analysis of angiotensin converting enzyme inhibitors effect on walking ability and ankle brachial pressure index in patients with intermittent claudication",
+        "authors": [
+            "Y Shahin"
+        ],
+        "venue": "Atherosclerosis",
+        "year": 2013,
+        "abstract": "Meta-analysis of walking and other outcomes from randomized trials."
+    },
+    "Sasikumar2025AidrivenTransformation": {
+        "citation_key": "Sasikumar2025AidrivenTransformation",
+        "title": "AI-driven transformation of E-commerce: Technical implementation and impact",
+        "authors": [
+            "Vineetha Sasikumar"
+        ],
+        "venue": "World Journal of Advanced Engineering Technology and Sciences",
+        "year": 2025,
+        "abstract": "Technical overview of AI in commerce, including recommendation methods and system architecture."
+    },
+    "Shen2023EcommerceUser": {
+        "citation_key": "Shen2023EcommerceUser",
+        "title": "E-commerce User Recommendation Algorithm Based on Social Relationship Characteristics and Improved K-Means Algorithm",
+        "authors": [
+            "Xia Shen"
+        ],
+        "venue": "International Journal of Computational Intelligence Systems",
+        "year": 2023,
+        "abstract": "Article describing a recommendation method using clustering and social relationship features."
+    },
+    "Nguyen2023ComputationalModel": {
+        "citation_key": "Nguyen2023ComputationalModel",
+        "title": "A Computational Model for Predicting Customer Behaviors Using Transformer Adapted with Tabular Features",
+        "authors": [
+            "Khang Nguyen"
+        ],
+        "venue": "International Journal of Computational Intelligence Systems",
+        "year": 2023,
+        "abstract": "Article describing a transformer model for predicting customer behavior from tabular features."
+    },
+    "Lesn2006SpecificAmyloid": {
+        "citation_key": "Lesn2006SpecificAmyloid",
+        "title": "A specific amyloid-\u03b2 protein assembly in the brain impairs memory",
+        "authors": [
+            "Sylvain Lesn\u00e9"
+        ],
+        "venue": "Nature",
+        "year": 2006,
+        "abstract": "Primary paper reporting an assembly-specific result in a preclinical model."
+    }
+}

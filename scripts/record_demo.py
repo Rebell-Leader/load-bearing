@@ -57,26 +57,25 @@ SCENES = [("s1", "s1_hook.html", "The problem"), ("s2", "s2_cli.html", "Command 
           ("s3", "s3_agent.html", "For agents"), ("s4", "s4_relate.html", "Inside Relate"),
           ("s5", "s5_browser.html", "In the browser"), ("s6", "s6_eval.html", "Measured, not assumed")]
 VOICE_OVER = {
-    "s1": "This Nature paper was retracted in 2024, after OpenAlex had counted 2,840 citations. In a 2026 study, "
+    "s1": "This Nature paper was retracted in 2024. Our OpenAlex snapshot counts 2,840 citations. In a 2026 study, "
           "none of nine AI research tools reliably caught retracted papers. Flagging a direct citation is easy. "
           "The hard part is what your sources relied on.",
-    "s2": "Load-Bearing follows citations three hops out into a Relate graph, and reads the sentence where each one "
-          "appears. This 2025 Alzheimer's paper has 72 references. 56 of them lead to papers marked retracted, "
-          "and 23 of those papers are reached only through method or result citations.",
+    "s2": "Load-Bearing follows citations three hops out in Relate and shows citation passages when available. "
+          "This 2025 Alzheimer's paper has 72 references. 56 lead to papers marked retracted. "
+          "The traversal finds 23 works on paths with downstream method or result citations.",
     "s3": "For agents, Load-Bearing is an MCP server, next to Relate's own. Here Claude audits a research "
           "assistant's draft. It finds two retracted papers, reads the evidence before acting, keeps one review "
           "for its general claim, queries the graph in Cypher, and rewrites the paragraph without inventing a "
           "single reference.",
-    "s4": "The core is one Cypher statement: paths from the manuscript to a retracted paper where every hop is a "
-          "method or result citation. Relate answers it in a few milliseconds. The evidence pack is a single "
+    "s4": "One Cypher statement finds paths where every hop after the draft's own reference is labelled method or "
+          "result. Relate answers it in a few milliseconds. The evidence pack is a single "
           "file you can hand to an editor, and the working graph is a directory store that Relate's MCP server "
           "follows live.",
-    "s5": "The same graph runs in the browser, on Relate's WebAssembly build. Pick a retracted paper, see every path "
-          "and the sentence behind each citation, and query it in Cypher. Nothing to install, and nothing leaves "
-          "the page.",
+    "s5": "The same Cypher runs in the browser, on Relate's WebAssembly build. Pick a flagged paper, inspect the paths "
+          "and available citation passages, and query the evidence in the tab.",
     "s6": "We measured it honestly. On SciCite, the intent model reaches 0.856 macro-F1. On our held-out "
           "sentences, the rules alone do as well: 69 percent of real reliance found, at 33 percent precision. "
-          "So every finding shows its sentence, and a person decides.",
+          "A person reviews the available evidence before acting.",
 }
 
 
@@ -433,7 +432,7 @@ async def stills(args) -> int:
     return 0
 
 
-def assemble(durations: dict[str, float]) -> Path:
+def assemble(durations: dict[str, float], audio: Path | None = None) -> Path:
     order = [sid for sid, _, _ in SCENES]
     inputs, filters = [], []
     for i, sid in enumerate(order):
@@ -443,20 +442,28 @@ def assemble(durations: dict[str, float]) -> Path:
         filters.append(f"[{i}:v]fade=t=in:st=0:d=0.2:c={BG},fade=t=out:st={d - out:.3f}:d={out}:c={BG}[v{i}]")
     filters.append("".join(f"[v{i}]" for i in range(len(order))) + f"concat=n={len(order)}:v=1:a=0[out]")
     final = BUILD / "load-bearing-demo.mp4"
+    audio_args = []
+    if audio and audio.exists():
+        inputs += ["-i", str(audio)]
+        audio_args = ["-map", f"{len(order)}:a:0", "-c:a", "aac", "-b:a", "192k", "-shortest"]
     subprocess.run(["ffmpeg", "-y", "-loglevel", "error", *inputs, "-filter_complex", ";".join(filters), "-map", "[out]",
-                    "-c:v", "libx264", "-preset", "slow", "-crf", "17", "-pix_fmt", "yuv420p", "-r", str(FPS),
+                    *audio_args, "-c:v", "libx264", "-preset", "slow", "-crf", "17", "-pix_fmt", "yuv420p", "-r", str(FPS),
                     "-movflags", "+faststart", str(final)], check=True)
     return final
 
 
 def _ts(t: float, srt: bool = True) -> str:
-    h, rem = divmod(t, 3600)
-    m, s = divmod(rem, 60)
-    return f"{int(h):02d}:{int(m):02d}:{s:06.3f}".replace(".", ",") if srt else f"{int(m)}:{s:04.1f}"
+    if srt:
+        seconds, milliseconds = divmod(round(t * 1000), 1000)
+        minutes, seconds = divmod(seconds, 60)
+        hours, minutes = divmod(minutes, 60)
+        return f"{hours:02d}:{minutes:02d}:{seconds:02d},{milliseconds:03d}"
+    minutes, tenths = divmod(round(t * 10), 600)
+    return f"{minutes}:{tenths / 10:04.1f}"
 
 
 def write_script(durations: dict[str, float], data: dict) -> None:
-    vo = VOICE_OVER
+    vo = {**VOICE_OVER, "s1": VOICE_OVER["s1"].replace("2,840", f"{data['lesne']['cited_by_count']:,}")}
     srt, md, t0, n = [], ["# Demo video timing", "",
                           "Silent video: `load-bearing-demo.mp4`. Record each voice-over line to fit its scene; "
                           "`load-bearing-demo.srt` has the same text split by sentence at its time codes.", "",
@@ -466,10 +473,10 @@ def write_script(durations: dict[str, float], data: dict) -> None:
         text = vo[sid]
         md.append(f"| {i} | {title} | {_ts(t0, False)}–{_ts(t0 + d, False)} | {d:.1f} s | {text} | {len(text.split())} |")
         sentences = re.split(r"(?<=[.!?])\s+", text)
-        start, end = t0 + 0.4, t0 + d - 0.3
+        start, span = t0 + 0.4, d - 0.7
         total = sum(len(s) for s in sentences)
         for s in sentences:
-            seg = (end - start) * len(s) / total
+            seg = span * len(s) / total
             srt += [str(n), f"{_ts(start)} --> {_ts(start + seg - 0.05)}", s, ""]
             start += seg
             n += 1
@@ -541,7 +548,7 @@ async def main_async(args) -> int:
     if missing:
         print(f"not assembling: missing {missing}")
         return 1
-    final = assemble(durations)
+    final = assemble(durations, Path(args.audio) if args.audio else None)
     write_script(durations, data)
     print(f"video: {final.relative_to(ROOT)} ({sum(durations.values()):.1f} s); script: demo/build/timing.md, .srt")
     return 0
@@ -551,6 +558,7 @@ def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--scenes", help="comma-separated scene numbers to (re)record, e.g. 2,4")
     ap.add_argument("--local-viewer", action="store_true", help="scene 5 from this checkout instead of GitHub Pages")
+    ap.add_argument("--audio", help="optional voice-over audio file (.wav/.mp3/.m4a) to mux into the final MP4")
     ap.add_argument("--jobs", type=int, default=3, help="scenes recorded in parallel")
     ap.add_argument("--data-only", action="store_true", help="write demo/build/data.js and stop")
     ap.add_argument("--stills", help="comma-separated times (s): save PNG stills of the timeline scenes instead")

@@ -17,8 +17,8 @@ from . import expand, http
 from .check import ORDER, notice_label, run_check
 
 HEADINGS = {
-    "direct": "DIRECT: you cite a retracted paper",
-    "load_bearing": "LOAD-BEARING: reached only through method or result citations",
+    "direct": "DIRECT: you cite a paper flagged for review",
+    "load_bearing": "LOAD-BEARING: every hop after your reference is a method or result citation",
     "unverified": "UNVERIFIED: reached through citations we could not read",
     "mention_only": "MENTION-ONLY: reached through a background mention (low concern)",
     "defused": "DEFUSED: a paper on the way already flags the problem",

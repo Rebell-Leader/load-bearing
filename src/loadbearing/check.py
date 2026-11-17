@@ -12,7 +12,7 @@ from pathlib import Path
 
 import relate
 
-from . import bib, crossref, expand, openalex, retractionwatch, store
+from . import bib, expand, openalex, retractionwatch, store
 from .openalex import norm_doi, short_id
 
 ORDER = ["direct", "load_bearing", "unverified", "mention_only", "defused"]
@@ -41,7 +41,8 @@ def summarize(rows: list[dict], ref_keys: dict[str, str] | None = None) -> dict:
             edges[(a["id"], b["id"])] = e
         g = by_bad.setdefault(r["bad_id"], {
             "id": r["bad_id"], "title": r["bad_title"], "year": r["bad_year"], "doi": r["bad_doi"],
-            "nature": r["nature"], "retraction_date": r["retraction_date"], "reasons": r["reasons"],
+            "nature": None if r.get("notice_source") == "openalex" else r["nature"],
+            "retraction_date": r["retraction_date"], "reasons": r["reasons"],
             "notice_doi": r.get("notice_doi"), "notice_source": r.get("notice_source"),
             "via": {}, "paths": [],
         })
@@ -73,7 +74,7 @@ def summarize(rows: list[dict], ref_keys: dict[str, str] | None = None) -> dict:
 
 def has_retraction_notice(g: dict) -> bool:
     """False when only OpenAlex marks the paper retracted, or the only notice found is not a retraction."""
-    return g.get("notice_source") != "openalex" and (g.get("nature") or "Retraction") == "Retraction"
+    return g.get("notice_source") in {"retraction_watch", "crossref"} and g.get("nature") == "Retraction"
 
 
 def notice_label(g: dict) -> str:
@@ -81,11 +82,13 @@ def notice_label(g: dict) -> str:
     date = g.get("retraction_date")
     if g.get("notice_source") == "openalex":
         return "marked retracted by OpenAlex, no notice found"
-    if not has_retraction_notice(g):
+    if has_retraction_notice(g):
+        return f"Retraction {date or '(date unknown)'}"
+    if g.get("nature") and g.get("notice_source") in {"retraction_watch", "crossref"}:
         kind = g["nature"].lower()
         return (f"marked retracted by OpenAlex, but the only notice found is {'an' if kind[0] in 'aeiou' else 'a'} "
                 f"{kind} ({date or 'date unknown'})")
-    return f"Retraction {date or '(date unknown)'}"
+    return "flagged in the graph, no retraction notice on record"
 
 
 def run_check(store_path: str, *, bib_path: str | None = None, refs: list[dict] | None = None,
@@ -137,20 +140,22 @@ def retraction_status(dois: list[str]) -> list[dict]:
     Retraction Watch (local CSV) is authoritative for notices; OpenAlex fills in titles and
     catches retractions Retraction Watch hasn't recorded.
     """
-    notices = retractionwatch.load()
     wanted = [d for d in (norm_doi(x) for x in dois) if d]
     works = {norm_doi(w.get("doi")): w for w in openalex.works_by_dois(wanted, select=openalex.SLIM_FIELDS)} if wanted else {}
     out = []
     for d in wanted:
-        n, w = notices.get(d), works.get(d)
-        if not n and w and w.get("is_retracted"):  # Retraction Watch lags; ask Crossref for the notice
-            n = crossref.notice(d)
-        if n and n["nature"] == "Retraction" or (w and w.get("is_retracted")):
+        w = works.get(d)
+        marked_retracted = bool(w and w.get("is_retracted"))
+        n, source = retractionwatch.resolve(d, marked_retracted)
+        confirmed = bool(n and n["nature"] == "Retraction")
+        if confirmed:
             status = "retracted"
         elif n and n["nature"] == "Expression of concern":
             status = "expression_of_concern"
         elif n and n["nature"] == "Correction":
             status = "corrected"
+        elif marked_retracted:
+            status = "marked_retracted"
         elif w:
             status = "no_notice_found"
         else:
@@ -158,6 +163,7 @@ def retraction_status(dois: list[str]) -> list[dict]:
         out.append({
             "doi": d, "status": status, "title": (w or {}).get("title"), "year": (w or {}).get("publication_year"),
             "openalex_id": short_id(w["id"]) if w else None,
-            "notice": {k: n[k] for k in ("nature", "date", "reasons", "notice_doi")} if n else None,
+            "openalex_marked_retracted": marked_retracted, "notice_on_record": confirmed,
+            "notice": {**{k: n[k] for k in ("nature", "date", "reasons", "notice_doi")}, "source": source} if n else None,
         })
     return out

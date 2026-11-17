@@ -32,14 +32,14 @@ Depth 2 takes seconds. Use `depth=3` for a final audit; it can take minutes on a
 
 **To audit a published paper**: `check_paper(doi=..., depth=2)`.
 
-**To see why**: `explain_exposure(manuscript_id=..., retracted=<retracted_id or DOI>)` lists every path
-with the citing sentences.
+**To see why**: `explain_exposure(manuscript_id=..., retracted=<retracted_id or DOI>)` shows up to 30 paths
+with the available citing sentences and the total path count.
 
 ## Acting on findings
 
 | Status | What it means | What to do |
 |---|---|---|
-| `direct` | You cite a retracted paper | Remove it, or cite it only to discuss the retraction |
+| `direct` | You cite a paper flagged for review | Check the notice and why the draft cites the paper before suggesting a change |
 | `load_bearing` | A reference relied on retracted work for a method or result | Read the quoted sentence. If your claim depends on that result, find independent support or say so |
 | `unverified` | A path exists, but a citation on it could not be read | Low priority unless the retracted paper is central to the topic |
 | `mention_only` | Reached only through background mentions | Usually ignore |

@@ -11,7 +11,9 @@ import urllib.error
 import urllib.request
 from pathlib import Path
 
-CACHE_DIR = Path(os.environ.get("LOADBEARING_CACHE", "data/raw/cache"))
+_ROOT = Path(__file__).resolve().parents[2]
+_DEFAULT_CACHE = Path("data/raw/cache") if Path("data/raw/cache").exists() else (_ROOT / "data/raw/cache")
+CACHE_DIR = Path(os.environ.get("LOADBEARING_CACHE", str(_DEFAULT_CACHE)))
 USER_AGENT = "load-bearing/0.1 (relate hackathon spike)"
 stats = {"network": 0, "cached": 0}
 

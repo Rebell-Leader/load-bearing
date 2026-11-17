@@ -11,7 +11,8 @@ import os
 import sys
 from pathlib import Path
 
-DEFAULT_MODEL = Path("models/intent-biomedbert-scicite")
+_ROOT = Path(__file__).resolve().parents[2]
+DEFAULT_MODEL = Path("models/intent-biomedbert-scicite") if Path("models/intent-biomedbert-scicite").exists() else (_ROOT / "models/intent-biomedbert-scicite")
 _loaded: "IntentModel | None | bool" = False
 
 

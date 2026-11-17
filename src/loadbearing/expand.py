@@ -13,7 +13,7 @@ import sys
 from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass, field
 
-from . import crossref, fulltext, intent, intent_model, openalex, retractionwatch, s2, store
+from . import fulltext, intent, intent_model, openalex, retractionwatch, s2, store
 from .openalex import norm_doi, short_id
 
 
@@ -59,11 +59,12 @@ def expand(refs: list[dict], root_id: str, root_title: str, root_work: dict | No
         ex.unresolved = [r for r in refs if not r.get("doi") or norm_doi(r["doi"]) not in by_doi]
     ex.refs_resolved = len(b_works)
     _log(f"hop 1: {len(b_works)} references resolved")
+    notices = retractionwatch.load()
     for w in b_works:
         rec = _slim(w)
         ex.papers[rec["id"]] = rec
         ex.edges.add((root_id, rec["id"]))
-        if w.get("is_retracted"):
+        if w.get("is_retracted") or notices.get(rec["doi"], {}).get("nature") == "Retraction":
             ex.retracted[rec["id"]] = w
 
     # Hop 2: which of the references' references are retracted? (server-side intersection)
@@ -115,21 +116,16 @@ def expand(refs: list[dict], root_id: str, root_title: str, root_work: dict | No
 
 
 def retraction_rows(ex: Expansion) -> list[dict]:
-    """Notice facts per retracted paper: Retraction Watch first, Crossref when RW has no record yet."""
-    notices = retractionwatch.load()
+    """Notice facts per paper flagged by OpenAlex or listed as retracted in Retraction Watch."""
     rows = []
     missing = 0
     for pid, w in ex.retracted.items():
-        doi = norm_doi(w.get("doi")) or ""
-        n = notices.get(doi)
-        source = "retraction_watch" if n else None
-        if not n and doi:
-            n = crossref.notice(doi)
-            source = "crossref" if n else None
+        doi = norm_doi(w.get("doi"))
+        n, source = retractionwatch.resolve(doi, bool(w.get("is_retracted")))
         missing += n is None
         rows.append({
             "id": pid,
-            "nature": n["nature"] if n else "Retraction",
+            "nature": n["nature"] if n else None,
             "date": n["date"] if n else None,
             "reasons": n["reasons"] if n else [],
             "notice_id": (f"RW{n['record_id']}" if n.get("record_id") else f"CR:{n['notice_doi']}") if n and (n.get("record_id") or n.get("notice_doi")) else None,
@@ -256,4 +252,5 @@ def build(conn, refs: list[dict], root_id: str, root_title: str, root_work: dict
     on_path = path_edges(conn, root_id, depth)
     _log(f"{len(on_path)} citations lie on a path to a retracted paper; reading their contexts")
     store.annotate_citations(conn, read_contexts(conn, ex, on_path, skip_root=root_work is None, s2_limit=s2_limit))
+    store.index_paper_vectors(conn)
     return ex

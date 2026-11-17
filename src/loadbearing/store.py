@@ -11,11 +11,14 @@ Model
                      data, excluded from every path
       year_conflict  the same for a retracted cited paper; kept (OpenAlex sometimes dates a retracted paper
                      by its notice) but a path through it is never 'load_bearing', only 'unverified'
-  (:Paper:Retracted)-[:RETRACTED_BY]->(:Notice {id, nature, date, reasons, notice_doi})
+    (:Paper:Retracted)-[:RETRACTED_BY]->(:Notice {id, nature, date, reasons, notice_doi})
+  (:Manuscript)-[:HAS_CLAIM]->(:Claim {id, text})-[:HAS_DISPOSITION]->(:Disposition {id, action, rationale, revision})
 """
 
 from __future__ import annotations
 
+import hashlib
+import math
 import re
 
 import relate
@@ -23,14 +26,24 @@ import relate
 SCHEMA = [
     "CREATE CONSTRAINT paper_id IF NOT EXISTS FOR (p:Paper) REQUIRE p.id IS UNIQUE",
     "CREATE CONSTRAINT notice_id IF NOT EXISTS FOR (n:Notice) REQUIRE n.id IS UNIQUE",
+    "CREATE CONSTRAINT claim_id IF NOT EXISTS FOR (c:Claim) REQUIRE c.id IS UNIQUE",
+    "CREATE CONSTRAINT disposition_id IF NOT EXISTS FOR (d:Disposition) REQUIRE d.id IS UNIQUE",
+    "CREATE INDEX manuscript_id IF NOT EXISTS FOR (m:Manuscript) ON (m.id)",
+    "CREATE INDEX paper_doi IF NOT EXISTS FOR (p:Paper) ON (p.doi)",
     "CREATE FULLTEXT INDEX paper_title IF NOT EXISTS FOR (p:Paper) ON EACH [p.title]",
 ]
+
+VECTOR_DIM = 32
+VECTOR_SCHEMA = (
+    f"CREATE VECTOR INDEX paper_vec IF NOT EXISTS FOR (p:Paper) ON (p.vec) "
+    f"OPTIONS {{indexConfig: {{`vector.dimensions`: {VECTOR_DIM}, `vector.similarity_function`: 'cosine'}}}}"
+)
 
 LOAD_BEARING_INTENTS = ["method", "result"]
 
 # Every path from the manuscript to a retracted paper, at most `depth` citations long,
-# with a status computed from the intents on the edges *after* the first hop.
-# (The first hop is the author's own citation; they decide what it means.)
+# with a status computed from the intents on the edges *after* the first hop
+# (unless the manuscript's own citation is critical, which defuses the path immediately).
 EXPOSURE_QUERY = """
 MATCH p = (m:Manuscript {id: $root})-[c0:CITES WHERE NOT coalesce(c0.anachronistic, false)]->(:Paper)
           -[c:CITES WHERE NOT coalesce(c.anachronistic, false)]->{0,%(extra)d}(bad:Retracted)
@@ -42,11 +55,13 @@ RETURN bad.id AS bad_id, bad.title AS bad_title, bad.year AS bad_year, bad.doi A
        length(p) AS hops,
        [n IN nodes(p) | {id: n.id, title: n.title, year: n.year, doi: n.doi}] AS chain,
        [r IN rels | {intent: coalesce(r.intent, 'unknown'), rule: r.rule, section: r.section,
-                     context: r.context, evidence: r.evidence, zombie: coalesce(r.zombie, false),
+                     context: r.context, evidence: r.evidence,
+                     zombie: coalesce(r.zombie AND endNode(r).nature = 'Retraction'
+                                      AND endNode(r).notice_source IN ['retraction_watch', 'crossref'], false),
                      year_conflict: coalesce(r.year_conflict, false)}] AS edges,
        CASE
+         WHEN any(r IN rels WHERE r.intent = 'critical') THEN 'defused'
          WHEN length(p) = 1 THEN 'direct'
-         WHEN any(i IN downstream WHERE i = 'critical') THEN 'defused'
          WHEN any(r IN tail(rels) WHERE coalesce(r.year_conflict, false)) THEN 'unverified'
          WHEN all(i IN downstream WHERE i IN $load_bearing) THEN 'load_bearing'
          WHEN any(i IN downstream WHERE i = 'background') THEN 'mention_only'
@@ -150,7 +165,8 @@ def annotate_citations(conn, edges: list[dict]) -> None:
         MATCH (a:Paper {id: r.src})-[c:CITES]->(b:Paper {id: r.dst})
         SET c.intent = r.intent, c.rule = r.rule, c.section = r.section, c.context = r.context,
             c.evidence = r.evidence, c.n_contexts = r.n_contexts, c.classifier = r.classifier,
-            c.zombie = (b.retraction_date IS NOT NULL AND a.pub_date IS NOT NULL AND a.pub_date > b.retraction_date)
+            c.zombie = coalesce(b.nature = 'Retraction' AND b.notice_source IN ['retraction_watch', 'crossref']
+                                AND a.pub_date > b.retraction_date, false)
         """,
         {"rows": edges},
     )
@@ -230,3 +246,119 @@ def stats(conn) -> dict:
         "OPTIONAL MATCH (r:Retracted) RETURN papers, cites, count(r) AS retracted"
     ).single()
     return dict(row)
+
+
+def search_papers(conn, query: str, limit: int = 10) -> list[dict]:
+    """Search papers by title using Relate's native FULLTEXT INDEX."""
+    if not query or not query.strip():
+        return []
+    rows = conn.execute(
+        """
+        MATCH (p:Paper)
+        SEARCH p IN (FULLTEXT INDEX paper_title FOR $q LIMIT $limit) SCORE AS score
+        RETURN p.id AS id, p.doi AS doi, p.title AS title, p.year AS year,
+               p:Retracted AS retracted, score
+        ORDER BY score DESC
+        """,
+        {"q": query.strip(), "limit": limit},
+    )
+    return [dict(r) for r in rows]
+
+
+def embed_text(text: str, dim: int = VECTOR_DIM) -> list[float]:
+    """Deterministic L2-normalized token + character trigram feature-hashing vector."""
+    vec = [0.0] * dim
+    tokens = [w for w in re.findall(r"[a-z0-9]+", (text or "").lower()) if len(w) > 2]
+    features = list(tokens)
+    for tok in tokens:
+        for i in range(max(0, len(tok) - 2)):
+            features.append(tok[i:i + 3])
+    for feat in features:
+        h = int.from_bytes(hashlib.blake2b(feat.encode("utf-8"), digest_size=4).digest(), "little")
+        idx = h % dim
+        sign = 1.0 if (h & (1 << 31)) else -1.0
+        vec[idx] += sign
+    norm = math.sqrt(sum(x * x for x in vec))
+    return [round(x / norm, 6) for x in vec] if norm > 0 else [1.0 / math.sqrt(dim)] * dim
+
+
+def index_paper_vectors(conn, dim: int = VECTOR_DIM) -> int:
+    """Populate semantic hash vectors on :Paper nodes and create Relate's VECTOR INDEX."""
+    papers = [dict(r) for r in conn.execute("MATCH (p:Paper) WHERE p.title IS NOT NULL RETURN p.id AS id, p.title AS title")]
+    if papers:
+        rows = [{"id": p["id"], "vec": embed_text(p["title"], dim)} for p in papers]
+        conn.execute("UNWIND $rows AS r MATCH (p:Paper {id: r.id}) SET p.vec = r.vec", {"rows": rows})
+    conn.execute(VECTOR_SCHEMA)
+    return len(papers)
+
+
+def vector_search_papers(conn, query_text: str, limit: int = 5) -> list[dict]:
+    """Semantic similarity search over :Paper nodes via Relate's VECTOR INDEX."""
+    vec = embed_text(query_text)
+    rows = conn.execute(
+        """
+        MATCH (p:Paper)
+        SEARCH p IN (VECTOR INDEX paper_vec FOR $v LIMIT $limit) SCORE AS score
+        RETURN p.id AS id, p.doi AS doi, p.title AS title, p.year AS year,
+               p:Retracted AS retracted, score
+        ORDER BY score DESC
+        """,
+        {"v": vec, "limit": limit},
+    )
+    return [dict(r) for r in rows]
+
+
+def record_dispositions(conn, manuscript_id: str, items: list[dict]) -> int:
+    """Persist claim-level audit decisions into the Relate graph.
+
+    items: [{claim_id, claim, action, rationale, revision, reference_dois}]
+    """
+    if not items:
+        return 0
+    rows = []
+    for i, item in enumerate(items, 1):
+        cid = item.get("claim_id") or item.get("id") or f"{manuscript_id}:claim:{i}"
+        rows.append({
+            "manuscript_id": manuscript_id,
+            "claim_id": f"{manuscript_id}:{cid}" if not str(cid).startswith(manuscript_id) else str(cid),
+            "disp_id": f"{manuscript_id}:disp:{cid}",
+            "claim": item.get("claim") or "",
+            "action": item.get("action") or "review",
+            "rationale": item.get("rationale") or "",
+            "revision": item.get("revision") or "",
+            "dois": [d.strip().lower().removeprefix("https://doi.org/") for d in (item.get("reference_dois") or []) if d],
+        })
+    conn.execute(
+        """
+        UNWIND $rows AS r
+        MERGE (m:Paper:Manuscript {id: r.manuscript_id})
+        MERGE (c:Claim {id: r.claim_id})
+        SET c.text = r.claim, c.manuscript_id = r.manuscript_id
+        MERGE (m)-[:HAS_CLAIM]->(c)
+        MERGE (d:Disposition {id: r.disp_id})
+        SET d.action = r.action, d.rationale = r.rationale, d.revision = r.revision
+        MERGE (c)-[:HAS_DISPOSITION]->(d)
+        WITH c, r
+        UNWIND r.dois AS doi
+        MATCH (p:Paper {doi: doi})
+        MERGE (c)-[:CITES_WORK]->(p)
+        """,
+        {"rows": rows},
+    )
+    return len(rows)
+
+
+def get_dispositions(conn, manuscript_id: str) -> list[dict]:
+    """Return recorded claim dispositions for a manuscript from the Relate graph."""
+    rows = conn.execute(
+        """
+        MATCH (m:Manuscript {id: $root})-[:HAS_CLAIM]->(c:Claim)-[:HAS_DISPOSITION]->(d:Disposition)
+        RETURN c.id AS claim_id, c.text AS claim, d.action AS action,
+               d.rationale AS rationale, d.revision AS revision,
+               [(c)-[:CITES_WORK]->(p:Paper) | coalesce(p.doi, p.id)] AS references
+        ORDER BY c.id
+        """,
+        {"root": manuscript_id},
+    )
+    return [dict(r) for r in rows]
+

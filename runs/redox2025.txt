@@ -2,12 +2,12 @@ Load-Bearing check: Absence of astrocytic ceruloplasmin reverses the senescence 
   offline: read from data/demo.rl, no network
   56 of your references reach 349 papers marked retracted within 3 citation hops
   32 of them have no retraction notice on record (an OpenAlex flag only, or only a correction or expression of concern)
-  evidence: read the citing sentence for 606 of 1288 citations on those paths (47%); 62 were made after the retraction
+  evidence: read the citing sentence for 606 of 1288 citations on those paths (47%); 60 were made after the retraction
   store data/demo.rl: 926 papers, 1,305 citations, 349 marked retracted
   ignored an impossible citation: Amyloid-β protein dimers isolated directly f… (2008) → Amyloid Oligomers Exacerbate Tau Pathology i… (2012), cited paper is newer
   1 citation(s) to retracted papers have conflicting dates; those paths are reported as unverified
 
-LOAD-BEARING: reached only through method or result citations (23)
+LOAD-BEARING: every hop after your reference is a method or result citation (23)
   ! A specific amyloid-β protein assembly in the brain impairs memory (2006): Retraction 2024-06-24, via 25 of your references
       notice: Concerns/Issues about Image; Duplication of/in Image; Investigation by Journal/Publisher
       ├─ background → Soluble Aβ oligomer production and toxicity (2011)

@@ -22,8 +22,8 @@ collapsed: retracted science, traced through citation paths in Relate.
 
 ### Inspiration
 
-Lesné et al. 2006, the *Nature* paper on the Aβ*56 assembly in Alzheimer's disease, was retracted in 2024
-after OpenAlex had counted 2,840 citations. In a 2026 study, none of nine AI research tools reliably caught
+Lesné et al. 2006, the *Nature* paper on the Aβ*56 assembly in Alzheimer's disease, was retracted in 2024.
+OpenAlex recorded 2,840 citations in our November 2026 snapshot. In a 2026 study, none of nine AI research tools reliably caught
 retracted papers. Reference managers flag a retracted paper you cite directly. The harder problem is
 second-order: a paper you rely on got its key result from a retracted study. That is a property of a
 path through the citation graph, and only some edges on the path count.
@@ -33,12 +33,12 @@ path through the citation graph, and only some edges on the path count.
 Load-Bearing checks a bibliography or a published paper:
 
 1. **Builds the graph.** It follows citations up to three hops out into a Relate graph.
-2. **Reads the citations.** For every citation on a path to a retracted paper, it reads the citing
-   sentence from open-access full text and classifies it. Method and result citations mean reliance;
-   background mentions don't; critical citations already flag the problem.
+2. **Reads available citation passages.** It classifies evidence from open-access full text or
+   Semantic Scholar. Method and result citations suggest reliance. The report identifies missing
+   passages, background mentions, and critical citations.
 3. **Reports by retracted paper.** One statement in Relate finds every path from the manuscript to a
    retracted paper and computes its status: direct, load-bearing, unverified, mention-only or defused.
-   Each finding comes with the notice (date, reasons) and the quoted sentences.
+   Findings include available notices and citation passages.
 
 What connects to what: `(:Manuscript)-[:CITES]->(:Paper)-[:CITES {intent, sentence, evidence}]->…->(:Paper:Retracted)-[:RETRACTED_BY]->(:Notice)`,
 plus `:Review` labels and data-quality flags on citations.
@@ -55,8 +55,8 @@ It works in three places:
   diagrams and a query console.
 
 On a real 2025 Alzheimer's paper, 56 of its 72 references reach a paper marked retracted within three
-hops, and 23 of those papers are reached through method or result citations only (21 of them with a
-retraction notice on record). Two findings stand out:
+hops. In 30 candidate paths to 23 works, every hop after the manuscript's own reference is labelled
+method or result. 21 of those works have a retraction notice on record. Two findings stand out:
 
 - A 2023 meta-analysis pooled a study that was retracted months later for image manipulation.
 - Two papers in the graph were retracted with the reason "Cites Retracted Work".
@@ -69,16 +69,20 @@ retraction notice on record). Two findings stand out:
   - a directory store that `relate serve --mcp stdio --read-only=live` follows while Load-Bearing writes;
   - the WebAssembly build in the browser.
 
-  The core query is a quantified path pattern with inline relationship predicates. On the demo graph,
-  Relate classifies all 741 paths in 30 ms.
+  The core query is a quantified path pattern with inline relationship predicates. Relate classifies
+  739 exposure paths in the portable snapshot and 741 in the browser pack, which includes the grant draft.
 - **Data:** OpenAlex (references; a server-side `is_retracted:true,cited_by:` filter means a
   three-hop check costs at most two requests per 100 papers scanned, about 120 for the demo paper), the Retraction Watch database via Crossref, Crossref notice links, Europe
   PMC full text (JATS), and Semantic Scholar as a fallback.
-- **Citation intent:** BiomedBERT fine-tuned on SciCite (0.856 macro-F1) for method citations, plus the
-  cited work's type (review or primary research) and precision guards. It was evaluated on labelled
-  in-domain sentences with a separate held-out set.
-- **Agents:** an MCP server built on the MCP Python SDK, an agent skill, and a Claude Agent SDK demo
-  agent limited to the two MCP servers.
+- **Citation intent and claim-level evaluation:** BiomedBERT fine-tuned on SciCite (0.856 macro-F1) for method citations, plus the
+  cited work's type (review or primary research) and precision guards. On the 2025 Alzheimer's paper it narrows 739 untyped paths
+  down to 30 load-bearing paths, and we evaluated it on labelled in-domain sentences with a separate held-out set ([`EVAL.md`](EVAL.md)).
+  We also ran a 17-case claim-level pilot across six review families, paired with Google's PaperOrchestra literature stage and four
+  live Claude sessions ([`CLAIM_PILOT.md`](CLAIM_PILOT.md)): the claim-scoped Relate graph got all 17 review actions right (6/6
+  indirect retractions caught, 0/6 false alarms on neighboring claims), compared with 6/17 for direct DOI lookup and 12/17 for
+  untyped paths.
+- **Agents:** an MCP server built on the MCP Python SDK, an agent skill, and a Claude Agent SDK demo agent limited to the two MCP
+  servers.
 
 ### Challenges we ran into
 
@@ -94,8 +98,8 @@ retraction notice on record). Two findings stand out:
 
 ### Accomplishments that we're proud of
 
-- **One Cypher statement serves every surface.** The CLI, the MCP server, Relate's MCP server and the
-  browser run the same statement on the same graph, and their numbers match.
+- **One Cypher statement serves every surface.** The CLI, both MCP servers, and the browser can run
+  the same traversal against their respective copies of the evidence graph.
 - **An agent with judgment.** It reads the evidence instead of trusting labels, and it doesn't invent
   citations.
 - **A measured, reproducible evaluation** with its weaknesses stated.
@@ -104,8 +108,8 @@ retraction notice on record). Two findings stand out:
 
 - Graph paths are the right unit for research integrity: exposure is a property of a path, not of a
   paper.
-- An embedded database changes the privacy story. Peer reviewers can check confidential manuscripts
-  without any server.
+- An embedded database makes the shipped evidence pack inspectable offline. Live enrichment sends
+  lookup identifiers to scholarly APIs. The recorded Claude workflow uses a hosted model.
 
 ### What's next
 
@@ -125,6 +129,6 @@ europe-pmc · semantic-scholar · pytorch · transformers · biomedbert
 - [x] Public GitHub repo with a README on how to set up and use it: README follows the template
 - [x] GitHub topic `relate` (required) and `relate-neo4j-hackathon` (recommended)
 - [x] Persistent Relate store judges can inspect: `data/demo.rl` (single file) and `data/evidence/` (directory)
-- [x] Working code with Relate running: the offline check, 13 tests, MCP smoke test, viewer
+- [x] Working code with Relate running: the offline check, automated tests, MCP smoke test, viewer
 - [ ] Demo video, 1–2 minutes: script in [DEMO.md](DEMO.md)
 - [ ] Submit on Devpost by **Dec 11, 6:00 PM PST**

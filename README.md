@@ -9,12 +9,12 @@ each citation appears, and separates papers that *used* a retracted result or me
 through MCP.
 
 On a real 2025 Alzheimer's paper, 56 of its 72 references reach a paper marked retracted within three
-citation hops. 23 of those papers are reached through method or result citations only (30 paths),
-including Lesné 2006 (Aβ*56, retracted in 2024). 21 of the 23 have a retraction notice on record; the
-report labels the other two.
+citation hops. On 30 candidate paths to 23 works, every hop after the manuscript's own citation is
+labelled method or result. 21 of those works have a retraction notice on record, including Lesné 2006
+(Aβ*56, retracted in 2024). The report labels the other two.
 
 **Demo video:** _link added at submission_ · **Agent run:** [`runs/agent_demo.md`](runs/agent_demo.md) ·
-**Browser viewer:** [live on GitHub Pages](https://rebell-leader.github.io/load-bearing/viewer/) · **Evaluation:** [`docs/EVAL.md`](docs/EVAL.md)
+**Browser viewer:** [live on GitHub Pages](https://rebell-leader.github.io/load-bearing/viewer/) · **Evaluation:** [`docs/EVAL.md`](docs/EVAL.md) · **Claim pilot:** [`docs/CLAIM_PILOT.md`](docs/CLAIM_PILOT.md)
 
 ## Try it in two minutes
 
@@ -31,7 +31,7 @@ That prints the full report for the demo paper from the shipped Relate store
 
 ```bash
 python3 -m http.server 8765        # open http://localhost:8765/viewer/ : the same graph, in the browser
-uv run pytest -q                   # 13 offline tests, including Relate path queries
+uv run pytest -q                   # offline tests, including Relate path queries
 ```
 
 With the [Relate CLI](https://relatedb.ai/docs/get-started/install/) installed, you can query the store
@@ -102,8 +102,9 @@ MATCH p = (m:Manuscript {id: $root})-[c0:CITES WHERE NOT coalesce(c0.anachronist
 RETURN bad.title AS retracted, [x IN nodes(p) | x.title] AS chain, length(p) AS hops
 ```
 
-On the demo graph, the load-bearing query takes 1.5 ms. The full exposure query, which classifies all
-741 paths, takes 30 ms through `relate serve` and about 100 ms in the browser.
+The portable snapshot returns 739 exposure paths. The browser pack also adds the grant draft to a
+copy of that snapshot and returns 741 for the same published paper. Both return 30 candidate paths
+to 23 flagged works when filtered by citation intent.
 
 **The same statements run in three places:**
 
@@ -119,8 +120,9 @@ On the demo graph, the load-bearing query takes 1.5 ms. The full exposure query,
 - quantified path patterns with inline relationship predicates
 - list predicates (`all`, `any`) over path relationships
 - pattern comprehensions
-- `date` values
-- uniqueness constraints and a full-text index
+- `date` values and temporal notice cutoffs (`as_of`)
+- uniqueness constraints, range indexes, a full-text index (`SEARCH ... IN (FULLTEXT INDEX ...)`), and a vector index (`SEARCH ... IN (VECTOR INDEX ...)`)
+- saving an agent's claim-by-claim review decisions (`(:Manuscript)-[:HAS_CLAIM]->(:Claim)-[:HAS_DISPOSITION]->(:Disposition)`) back into the graph
 - single-file and directory stores, and `relate clone` to convert between them
 - read-only opens from Python
 - `relate serve --mcp stdio --read-only=live` following a writer
@@ -155,10 +157,10 @@ the graph:
 
 | Tool | What it does |
 |---|---|
-| `retraction_status` | Is this DOI retracted, corrected, or under an expression of concern? Instant; builds no graph |
-| `check_references` | Exposure report for a bibliography (BibTeX or DOIs), mapped back to your `.bib` keys |
+| `retraction_status` | Check DOI notices and distinguish an unconfirmed OpenAlex flag. Builds no graph |
+| `check_references` | Exposure report for a bibliography (BibTeX or DOIs), mapped back to your `.bib` keys; can also save claim-level review decisions to the graph |
 | `check_paper` | The same for a published paper, reading its own full text for the first hop |
-| `explain_exposure` | Every path from a manuscript to one retracted paper, with the citing sentences |
+| `explain_exposure` | Up to 30 paths from a manuscript to one flagged paper (by OpenAlex ID, DOI, or title search), with available citing sentences |
 | `graph_schema` | Labels, counts, data-quality flags and example Cypher |
 | `query_graph` | Read-only Cypher. The store opens with `read_only=True`, so Relate refuses writes |
 
@@ -201,17 +203,21 @@ Intent v1 ([`intent.py`](src/loadbearing/intent.py)) checks, in order:
 
 | Measured | Result |
 |---|---|
-| BiomedBERT on SciCite test | 0.856 macro-F1 (rules: 0.603) |
-| v1 on held-out in-domain sentences | finds 69% of real reliance at 33% precision (rules v0: 8% / 17%) |
+| Path filtering on the 2025 Alzheimer's paper | 739 untyped paths (349 works) → 30 load-bearing paths (23 works): **96% fewer paths to review** |
+| BiomedBERT on SciCite test (`n = 1,861`) | **0.856 macro-F1** (rules v0: 0.603) |
+| v1 on held-out in-domain sentences (`n = 60`) | finds **69% of real reliance** at 33% precision (rules v0: 8% / 17%) |
+| Claim-level pilot (`17` cases across `6` reviews, [`docs/CLAIM_PILOT.md`](docs/CLAIM_PILOT.md)) | **17/17 correct review actions**, **6/6 indirect retractions caught**, **0/6 false alarms on unaffected claims** (direct DOI check: 6/17; untyped paths: 12/17 with 5/6 false alarms) |
 
 So every finding shows its sentence, and a person decides. Method, negative results and caveats are in
-[docs/EVAL.md](docs/EVAL.md). The labels are Claude's, made blind; an `expert_label` column is ready
-for expert correction.
+[docs/EVAL.md](docs/EVAL.md), and the claim-level benchmark with PaperOrchestra is in
+[docs/CLAIM_PILOT.md](docs/CLAIM_PILOT.md). The sentence-level labels are Claude's, made blind; an
+`expert_label` column is ready for expert correction.
 
 ```bash
 uv run python scripts/eval_scicite.py
 uv sync --group train && HF_HUB_OFFLINE=1 uv run --group train python scripts/train_intent.py
 HF_HUB_OFFLINE=1 uv run --group train python scripts/eval_indomain.py --set heldout --model models/intent-biomedbert-scicite
+uv run python scripts/run_claim_comparison.py --output /tmp/loadbearing-graph-pilot
 ```
 
 ## Where the data lives
@@ -246,7 +252,8 @@ Paths are evidence for a person to review, not verdicts about any paper or autho
   "clean".
 - OpenAlex marks some papers retracted that have no retraction notice in Retraction Watch or Crossref
   (32 of 349 in the demo store: 28 with no notice at all, 4 with only a correction or expression of
-  concern). The report labels each one and never calls it a retraction; agents get `notice_on_record: false`.
+  concern). The report labels each one. Agents receive `notice_on_record: false`; direct DOI checks
+  use `marked_retracted` for a flag without a notice and return any correction or concern distinctly.
 - Upstream citation metadata can be wrong. Date-impossible citations are filtered; other errors can remain.
 
 ## Data sources
@@ -265,12 +272,12 @@ Citing sentences shown in reports are short quotations, each traceable to its so
 ## Project layout
 
 ```
-src/loadbearing/   cli.py · mcp_server.py · check.py · expand.py · store.py (all Cypher) · intent.py · fulltext.py
-                   openalex.py · crossref.py · retractionwatch.py · s2.py · bib.py · intent_model.py · evaluate.py
-scripts/           agent_demo.py · mcp_smoke.py · export_viewer.py · train_intent.py · eval_*.py · probe_dialect.py
+src/loadbearing/   cli.py · mcp_server.py · check.py · expand.py · store.py (all Cypher) · claim_audit.py
+                   intent.py · fulltext.py · openalex.py · crossref.py · retractionwatch.py · s2.py · bib.py · intent_model.py · evaluate.py
+scripts/           agent_demo.py · run_claim_comparison.py · mcp_smoke.py · export_viewer.py · record_demo.py · train_intent.py · eval_*.py · probe_dialect.py
 skills/            load-bearing/SKILL.md (linked into .claude/skills/)
 viewer/            index.html · evidence.json
-docs/              EVAL.md · DEMO.md · SPIKE.md (build notes)
+docs/              EVAL.md · CLAIM_PILOT.md · DEMO.md · SUBMISSION.md · SPIKE.md
 ```
 
 ## License

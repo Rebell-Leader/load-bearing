@@ -2,15 +2,15 @@
   "format_version": 5,
   "next_node_id": 1247,
   "next_rel_id": 1626,
-  "checkpoint_lsn": 11,
-  "commit_ts": 11,
+  "checkpoint_lsn": 17,
+  "commit_ts": 20,
   "node_parts": [
     {
-      "path": "nodes/0-262144-0ba123e40ccbe04550f64dea2641b8a8.parquet",
+      "path": "nodes/0-262144-254d3b7ba917b3a543d4d909e1162079.parquet",
       "id_lo": 0,
       "id_hi": 262144,
       "rows": 1247,
-      "bytes": 137813
+      "bytes": 246963
     }
   ],
   "rel_parts": [
@@ -22,14 +22,34 @@
       "bytes": 129157
     }
   ],
-  "bytes_per_node": 110.51563753007217,
+  "bytes_per_node": 155.1559743384122,
   "bytes_per_rel": 79.43234932349324,
   "codec": "parquet",
   "indexes": [
     {
+      "name": "claim_id",
+      "label": "Claim",
+      "property": "id#RANGE#claim_id"
+    },
+    {
+      "name": "disposition_id",
+      "label": "Disposition",
+      "property": "id#RANGE#disposition_id"
+    },
+    {
+      "name": "manuscript_id",
+      "label": "Manuscript",
+      "property": "id"
+    },
+    {
       "name": "notice_id",
       "label": "Notice",
       "property": "id#RANGE#notice_id"
+    },
+    {
+      "name": "paper_doi",
+      "label": "Paper",
+      "property": "doi"
     },
     {
       "name": "paper_id",
@@ -40,9 +60,34 @@
       "name": "paper_title",
       "label": "Paper",
       "property": "title#FULLTEXT#paper_title"
+    },
+    {
+      "name": "paper_vec",
+      "label": "Paper",
+      "property": "vec#VECTOR#paper_vec"
     }
   ],
   "constraints": [
+    {
+      "name": "claim_id",
+      "relationship": false,
+      "label": "Claim",
+      "properties": [
+        "id"
+      ],
+      "kind": "unique",
+      "property_type": null
+    },
+    {
+      "name": "disposition_id",
+      "relationship": false,
+      "label": "Disposition",
+      "properties": [
+        "id"
+      ],
+      "kind": "unique",
+      "property_type": null
+    },
     {
       "name": "notice_id",
       "relationship": false,
@@ -80,6 +125,39 @@
       ]
     },
     "index_details": {
+      "claim_id": {
+        "kind": "Range",
+        "relationship": false,
+        "labels": [
+          "Claim"
+        ],
+        "properties": [
+          "id"
+        ],
+        "with_properties": []
+      },
+      "disposition_id": {
+        "kind": "Range",
+        "relationship": false,
+        "labels": [
+          "Disposition"
+        ],
+        "properties": [
+          "id"
+        ],
+        "with_properties": []
+      },
+      "manuscript_id": {
+        "kind": "Range",
+        "relationship": false,
+        "labels": [
+          "Manuscript"
+        ],
+        "properties": [
+          "id"
+        ],
+        "with_properties": []
+      },
       "notice_id": {
         "kind": "Range",
         "relationship": false,
@@ -88,6 +166,17 @@
         ],
         "properties": [
           "id"
+        ],
+        "with_properties": []
+      },
+      "paper_doi": {
+        "kind": "Range",
+        "relationship": false,
+        "labels": [
+          "Paper"
+        ],
+        "properties": [
+          "doi"
         ],
         "with_properties": []
       },
@@ -112,10 +201,25 @@
           "title"
         ],
         "with_properties": []
+      },
+      "paper_vec": {
+        "kind": "Vector",
+        "relationship": false,
+        "labels": [
+          "Paper"
+        ],
+        "properties": [
+          "vec"
+        ],
+        "with_properties": []
       }
     },
     "index_options": {
+      "claim_id": {},
+      "disposition_id": {},
+      "manuscript_id": {},
       "notice_id": {},
+      "paper_doi": {},
       "paper_id": {},
       "paper_title": {
         "indexConfig": {
@@ -128,6 +232,37 @@
             "fulltext.eventually_consistent": {
               "t": "bool",
               "v": false
+            }
+          }
+        }
+      },
+      "paper_vec": {
+        "indexConfig": {
+          "t": "map",
+          "v": {
+            "vector.default_search_expansion_factor": {
+              "t": "float",
+              "v": 3.0
+            },
+            "vector.dimensions": {
+              "t": "int",
+              "v": 32
+            },
+            "vector.hnsw.ef_construction": {
+              "t": "int",
+              "v": 100
+            },
+            "vector.hnsw.m": {
+              "t": "int",
+              "v": 16
+            },
+            "vector.quantization.type": {
+              "t": "string",
+              "v": "BINARY"
+            },
+            "vector.similarity_function": {
+              "t": "string",
+              "v": "COSINE"
             }
           }
         }

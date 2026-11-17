@@ -145,7 +145,7 @@ footer { margin-top: 18px; color: var(--muted); font-size: 13px; }
 
   <footer>
     Paths are evidence for a person to review, not verdicts about any paper or author. Citation intent (v1) finds
-    69% of real reliance at 33% precision on held-out sentences, so every finding shows its sentence
+    69% of real reliance at 33% precision on held-out sentences. Review the available source passages before acting
     (<a href="../docs/EVAL.md">evaluation</a>). Notices: Retraction Watch via Crossref, Crossref notice links, OpenAlex.
     Source: the Load-Bearing repository, <code>viewer/</code>.
   </footer>
@@ -157,7 +157,7 @@ import init, { RelateDb } from "https://cdn.jsdelivr.net/npm/@relate/relate-wasm
 const ORDER = ["direct", "load_bearing", "unverified", "mention_only", "defused"];
 const NAMES = { direct: "Direct", load_bearing: "Load-bearing", unverified: "Unverified", mention_only: "Mention-only", defused: "Defused" };
 const HELP = {
-  direct: "You cite a retracted paper.",
+  direct: "You cite a paper flagged for review. Check the notice.",
   load_bearing: "Every citation after yours on the path is a method or result citation.",
   unverified: "A citation on the path couldn't be read, or its dates conflict.",
   mention_only: "The path passes through a background mention.",
@@ -197,6 +197,9 @@ function run(statement, params) {
 function loadPack(p) {
   run("CREATE CONSTRAINT paper_id IF NOT EXISTS FOR (p:Paper) REQUIRE p.id IS UNIQUE");
   run("CREATE CONSTRAINT notice_id IF NOT EXISTS FOR (n:Notice) REQUIRE n.id IS UNIQUE");
+  run("CREATE INDEX manuscript_id IF NOT EXISTS FOR (m:Manuscript) ON (m.id)");
+  run("CREATE INDEX paper_doi IF NOT EXISTS FOR (p:Paper) ON (p.doi)");
+  run("CREATE FULLTEXT INDEX paper_title IF NOT EXISTS FOR (p:Paper) ON EACH [p.title]");
   const groups = new Map();
   for (const n of p.nodes) {
     const key = n.labels.join(":");
@@ -222,11 +225,14 @@ function exposure(root, depth) {
 }
 
 // A paper is only called retracted when a notice says so (check.notice_label in the CLI).
-const hasNotice = (g) => g.notice_source !== "openalex" && (g.nature || "Retraction") === "Retraction";
 function noticeLabel(g) {
   if (g.notice_source === "openalex") return "Marked retracted by OpenAlex, no notice found";
-  if (!hasNotice(g)) return `Marked retracted by OpenAlex; only notice found: ${g.nature.toLowerCase()} ${g.date || "(date unknown)"}`;
-  return `Retraction ${g.date || "(date unknown)"}`;
+  if (["retraction_watch", "crossref"].includes(g.notice_source) && g.nature) {
+    if (g.nature === "Retraction") return `Retraction ${g.date || "(date unknown)"}`;
+    const article = /^[aeiou]/i.test(g.nature) ? "an" : "a";
+    return `Marked retracted by OpenAlex. The only notice found is ${article} ${g.nature.toLowerCase()} (${g.date || "date unknown"})`;
+  }
+  return "Flagged in the graph, no retraction notice on record";
 }
 
 function summarize(rows) {
@@ -377,11 +383,12 @@ function presets(depth) {
   const extra = String(Math.max(depth - 1, 0));
   return [
     ["Load-bearing paths (the pitch query)", pack.queries.load_bearing_only.trim()],
-    ["Most-reached retracted papers", `MATCH (m:Manuscript {id: $root})-[:CITES]->(b:Paper)
+    ["Most-reached papers marked retracted", `MATCH (m:Manuscript {id: $root})-[:CITES]->(b:Paper)
       -[c:CITES WHERE NOT coalesce(c.anachronistic, false)]->{0,${extra}}(bad:Retracted)
-RETURN bad.title AS retracted, toString(bad.retraction_date) AS retracted_on, count(DISTINCT b) AS via_your_refs
+RETURN bad.title AS flagged_work, bad.nature AS notice_kind, bad.notice_source AS source, count(DISTINCT b) AS via_your_refs
 ORDER BY via_your_refs DESC LIMIT 15`],
     ["Cited after the retraction", `MATCH (a:Paper)-[c:CITES {zombie: true}]->(r:Retracted)
+WHERE r.nature = 'Retraction' AND r.notice_source IN ['retraction_watch', 'crossref']
 RETURN a.title AS citing, toString(a.pub_date) AS published, r.title AS retracted, toString(r.retraction_date) AS retracted_on
 ORDER BY published DESC LIMIT 25`],
     ["Retracted for citing retracted work", `MATCH (r:Retracted)
@@ -390,6 +397,10 @@ RETURN r.title AS title, toString(r.retraction_date) AS retracted_on, r.reasons 
     ["Impossible citations (bad upstream data)", `MATCH (a:Paper)-[c:CITES]->(b:Paper)
 WHERE c.anachronistic OR c.year_conflict
 RETURN a.title AS citing, a.year AS citing_year, b.title AS cited, b.year AS cited_year, c.anachronistic AS excluded`],
+    ["Full-text search over paper titles", `MATCH (p:Paper)
+SEARCH p IN (FULLTEXT INDEX paper_title FOR 'amyloid memory' LIMIT 10) SCORE AS score
+RETURN p.title AS title, p.year AS year, p:Retracted AS marked_retracted, round(score * 100) / 100 AS score
+ORDER BY score DESC`],
     ["What the graph holds", `MATCH (n) UNWIND labels(n) AS label
 RETURN label, count(*) AS nodes ORDER BY nodes DESC`],
   ];

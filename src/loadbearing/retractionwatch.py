@@ -11,7 +11,10 @@ from datetime import datetime
 from functools import lru_cache
 from pathlib import Path
 
-DEFAULT_CSV = Path("data/raw/retraction_watch.csv")
+from . import crossref
+
+_ROOT = Path(__file__).resolve().parents[2]
+DEFAULT_CSV = Path("data/raw/retraction_watch.csv") if Path("data/raw/retraction_watch.csv").exists() else (_ROOT / "data/raw/retraction_watch.csv")
 
 
 def _iso(us_date: str) -> str | None:
@@ -57,3 +60,13 @@ def load(path: Path = DEFAULT_CSV) -> dict[str, dict]:
             if prev is None or rank.get(nature, 0) > rank.get(prev["nature"], 0):
                 notices[doi] = notice
     return notices
+
+
+def resolve(doi: str | None, marked_retracted: bool) -> tuple[dict | None, str | None]:
+    """Look for a notice and identify its source. Check Crossref when the flag lacks a retraction notice."""
+    recorded = load().get(doi) if doi else None
+    if doi and marked_retracted and (not recorded or recorded["nature"] != "Retraction"):
+        fallback = crossref.notice(doi)
+        if fallback and (not recorded or fallback["nature"] == "Retraction"):
+            return fallback, "crossref"
+    return recorded, "retraction_watch" if recorded else None
