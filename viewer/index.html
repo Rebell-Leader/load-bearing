@@ -219,9 +219,12 @@ function loadPack(p) {
 }
 
 // ---------- the same statements as the CLI / MCP server (store.py, embedded in evidence.json) ----------
+function exposureStatement(depth) {
+  return pack.queries.exposure.replace("%(extra)d", String(Math.max(depth - 1, 0)));
+}
+
 function exposure(root, depth) {
-  const q = pack.queries.exposure.replace("%(extra)d", String(Math.max(depth - 1, 0)));
-  return run(q, { root, load_bearing: pack.queries.load_bearing_intents });
+  return run(exposureStatement(depth), { root, load_bearing: pack.queries.load_bearing_intents });
 }
 
 // A paper is only called retracted when a notice says so (check.notice_label in the CLI).
@@ -382,7 +385,12 @@ function renderDetail(g) {
 function presets(depth) {
   const extra = String(Math.max(depth - 1, 0));
   return [
-    ["Load-bearing paths (the pitch query)", pack.queries.load_bearing_only.trim()],
+    ["Load-bearing paths at the selected depth", `CALL {
+${exposureStatement(depth).trim()}
+}
+WITH * WHERE status = 'load_bearing'
+RETURN bad_title AS flagged_work, [n IN chain | n.title] AS chain, hops
+ORDER BY hops, flagged_work`],
     ["Most-reached papers marked retracted", `MATCH (m:Manuscript {id: $root})-[:CITES]->(b:Paper)
       -[c:CITES WHERE NOT coalesce(c.anachronistic, false)]->{0,${extra}}(bad:Retracted)
 RETURN bad.title AS flagged_work, bad.nature AS notice_kind, bad.notice_source AS source, count(DISTINCT b) AS via_your_refs
@@ -415,7 +423,9 @@ function cell(v) {
 function runConsole() {
   const out = document.getElementById("out"), info = document.getElementById("qinfo");
   try {
-    const env = run(document.getElementById("cypher").value, { root: current_ms() });
+    const env = run(document.getElementById("cypher").value, {
+      root: current_ms(), load_bearing: pack.queries.load_bearing_intents,
+    });
     const rows = env.rows.slice(0, 200);
     info.textContent = `${env.rows.length} row${env.rows.length === 1 ? "" : "s"} in ${env._ms.toFixed(1)} ms, in this tab`;
     out.replaceChildren(h("table", {}, h("thead", {}, h("tr", {}, env.columns.map((c) => h("th", {}, c)))),

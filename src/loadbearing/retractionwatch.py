@@ -37,8 +37,15 @@ def _doi(value: str) -> str | None:
 
 @lru_cache(maxsize=1)
 def load(path: Path = DEFAULT_CSV) -> dict[str, dict]:
-    """Map original-paper DOI -> notice. A retraction outranks an expression of concern."""
-    rank = {"Retraction": 3, "Expression of concern": 2, "Correction": 1, "Reinstatement": 0}
+    """Map original-paper DOI to its current notice, including dated reinstatements."""
+    rank = {"Retraction": 3, "Reinstatement": 3, "Expression of concern": 2, "Correction": 1}
+
+    def priority(notice: dict) -> tuple[int, str, bool]:
+        kind = notice["nature"]
+        # A reinstatement must be demonstrably later than the retraction.
+        undated_retraction = "9999-12-31" if kind == "Retraction" else ""
+        return rank.get(kind, 0), notice["date"] or undated_retraction, kind == "Retraction"
+
     notices: dict[str, dict] = {}
     if not path.exists():
         return notices
@@ -57,7 +64,7 @@ def load(path: Path = DEFAULT_CSV) -> dict[str, dict]:
                 "journal": (row.get("Journal") or "").strip(),
             }
             prev = notices.get(doi)
-            if prev is None or rank.get(nature, 0) > rank.get(prev["nature"], 0):
+            if prev is None or priority(notice) > priority(prev):
                 notices[doi] = notice
     return notices
 
@@ -67,6 +74,10 @@ def resolve(doi: str | None, marked_retracted: bool) -> tuple[dict | None, str |
     recorded = load().get(doi) if doi else None
     if doi and marked_retracted and (not recorded or recorded["nature"] != "Retraction"):
         fallback = crossref.notice(doi)
-        if fallback and (not recorded or fallback["nature"] == "Retraction"):
+        reinstated = recorded and recorded["nature"] == "Reinstatement"
+        newer_retraction = (fallback and fallback["nature"] == "Retraction"
+                            and (not reinstated or bool(fallback["date"] and recorded["date"]
+                                                       and fallback["date"] > recorded["date"])))
+        if fallback and (not recorded or newer_retraction):
             return fallback, "crossref"
     return recorded, "retraction_watch" if recorded else None

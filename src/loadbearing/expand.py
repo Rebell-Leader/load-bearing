@@ -64,7 +64,7 @@ def expand(refs: list[dict], root_id: str, root_title: str, root_work: dict | No
         rec = _slim(w)
         ex.papers[rec["id"]] = rec
         ex.edges.add((root_id, rec["id"]))
-        if w.get("is_retracted") or notices.get(rec["doi"], {}).get("nature") == "Retraction":
+        if w.get("is_retracted") or notices.get(rec["doi"], {}).get("nature") in {"Retraction", "Reinstatement"}:
             ex.retracted[rec["id"]] = w
 
     # Hop 2: which of the references' references are retracted? (server-side intersection)
@@ -241,16 +241,22 @@ def cited_types(ids: list[str]) -> dict[str, str]:
 def build(conn, refs: list[dict], root_id: str, root_title: str, root_work: dict | None, depth: int,
           s2_limit: int = 40) -> Expansion:
     ex = expand(refs, root_id, root_title, root_work, depth)
-    store.upsert_papers(conn, list(ex.papers.values()))
-    store.mark_manuscript(conn, root_id)
-    store.mark_retracted(conn, retraction_rows(ex))
-    store.upsert_citations(conn, [{"src": s, "dst": d} for s, d in ex.edges])
-    dates = store.flag_citation_dates(conn)
-    if dates["anachronistic"] or dates["year_conflict"]:
-        _log(f"dates: {dates['anachronistic']} impossible citations excluded, "
-             f"{dates['year_conflict']} date conflicts with retracted papers kept as unverified")
-    on_path = path_edges(conn, root_id, depth)
-    _log(f"{len(on_path)} citations lie on a path to a retracted paper; reading their contexts")
-    store.annotate_citations(conn, read_contexts(conn, ex, on_path, skip_root=root_work is None, s2_limit=s2_limit))
+    notices = retraction_rows(ex)
+    edges = [{"src": src, "dst": dst} for src, dst in ex.edges]
+    with store.atomic(conn):
+        store.upsert_papers(conn, list(ex.papers.values()))
+        store.mark_manuscript(conn, root_id)
+        store.mark_retracted(conn, notices)
+        if root_work is None:
+            store.replace_draft_citations(conn, root_id, [edge for edge in edges if edge["src"] == root_id])
+            edges = [edge for edge in edges if edge["src"] != root_id]
+        store.upsert_citations(conn, edges)
+        dates = store.flag_citation_dates(conn)
+        if dates["anachronistic"] or dates["year_conflict"]:
+            _log(f"dates: {dates['anachronistic']} impossible citations excluded, "
+                 f"{dates['year_conflict']} date conflicts with retracted papers kept as unverified")
+        on_path = path_edges(conn, root_id, depth)
+        _log(f"{len(on_path)} citations lie on a path to a retracted paper; reading their contexts")
+        store.annotate_citations(conn, read_contexts(conn, ex, on_path, skip_root=root_work is None, s2_limit=s2_limit))
     store.index_paper_vectors(conn)
     return ex

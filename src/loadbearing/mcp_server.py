@@ -18,6 +18,7 @@ from __future__ import annotations
 
 import json
 import os
+import re
 import textwrap
 import threading
 
@@ -191,7 +192,8 @@ def explain_exposure(manuscript_id: str, retracted: str) -> str:
         manuscript_id: from a check result ('M:<label>' or an OpenAlex id like 'W4408770418').
         retracted: the retracted paper's OpenAlex id (retracted_id in findings), DOI, or title query.
     """
-    key = retracted if retracted.upper().startswith("W") else norm_doi(retracted)
+    query = retracted.strip()
+    key = query.upper() if re.fullmatch(r"w\d+", query, re.I) else norm_doi(query)
     conn = _ro()
     try:
         all_rows = store.exposure(conn, manuscript_id, 3)
@@ -205,6 +207,10 @@ def explain_exposure(manuscript_id: str, retracted: str) -> str:
         conn.close()
     if not rows:
         return json.dumps({"error": f"no path from {manuscript_id} to {retracted} in the store; run a check first"})
+    papers = {r["bad_id"]: {"id": r["bad_id"], "title": r["bad_title"], "doi": r["bad_doi"]} for r in rows}
+    if len(papers) > 1:
+        return json.dumps({"error": "More than one paper matches. Retry with an exact DOI or OpenAlex ID.",
+                           "candidates": list(papers.values())}, ensure_ascii=False)
     first = rows[0]
     return json.dumps({
         "retracted": {"id": first["bad_id"], "title": first["bad_title"], "doi": first["bad_doi"],

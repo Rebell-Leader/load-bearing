@@ -17,7 +17,9 @@ Model
 
 from __future__ import annotations
 
+from contextlib import contextmanager
 import hashlib
+import json
 import math
 import re
 
@@ -49,9 +51,19 @@ MATCH p = (m:Manuscript {id: $root})-[c0:CITES WHERE NOT coalesce(c0.anachronist
           -[c:CITES WHERE NOT coalesce(c.anachronistic, false)]->{0,%(extra)d}(bad:Retracted)
 WITH p, bad, relationships(p) AS rels
 WITH p, bad, rels, [r IN tail(rels) | coalesce(r.intent, 'unknown')] AS downstream
+WITH p, bad, rels, downstream,
+     [(bad)-[:RETRACTED_BY]->(n:Notice)
+      WHERE n.id = bad.active_notice_id OR
+            (bad.active_notice_id IS NULL AND n.nature = bad.nature AND n.source = bad.notice_source
+             AND (n.date = bad.retraction_date OR (n.date IS NULL AND bad.retraction_date IS NULL)))
+      | n] AS notices
+WITH p, bad, rels, downstream, CASE WHEN size(notices) = 1 THEN notices[0] ELSE null END AS notice
 RETURN bad.id AS bad_id, bad.title AS bad_title, bad.year AS bad_year, bad.doi AS bad_doi,
-       toString(bad.retraction_date) AS retraction_date, bad.nature AS nature, bad.reasons AS reasons,
-       bad.notice_source AS notice_source, [(bad)-[:RETRACTED_BY]->(n:Notice) | n.notice_doi][0] AS notice_doi,
+       toString(CASE WHEN notice IS NULL THEN bad.retraction_date ELSE notice.date END) AS retraction_date,
+       CASE WHEN notice IS NULL THEN bad.nature ELSE notice.nature END AS nature,
+       CASE WHEN notice IS NULL THEN bad.reasons ELSE notice.reasons END AS reasons,
+       CASE WHEN notice IS NULL THEN bad.notice_source ELSE notice.source END AS notice_source,
+       notice.notice_doi AS notice_doi,
        length(p) AS hops,
        [n IN nodes(p) | {id: n.id, title: n.title, year: n.year, doi: n.doi}] AS chain,
        [r IN rels | {intent: coalesce(r.intent, 'unknown'), rule: r.rule, section: r.section,
@@ -97,6 +109,23 @@ def open_store(path: str) -> relate.Connection:
     return conn
 
 
+@contextmanager
+def atomic(conn):
+    """Commit related graph changes together, joining a caller-owned transaction if needed."""
+    if not conn.autocommit:
+        yield
+        return
+    conn.autocommit = False
+    try:
+        yield
+        conn.commit()
+    except BaseException:
+        conn.rollback()
+        raise
+    finally:
+        conn.autocommit = True
+
+
 def upsert_papers(conn, papers: list[dict]) -> None:
     """papers: [{id, doi, title, year, pub_date}] — missing keys are left untouched."""
     if not papers:
@@ -122,23 +151,42 @@ def mark_retracted(conn, rows: list[dict]) -> None:
     """rows: [{id, nature, date, reasons, notice_id, notice_doi}]"""
     if not rows:
         return
-    conn.execute(
-        """
-        UNWIND $rows AS r
-        MATCH (p:Paper {id: r.id})
-        SET p:Retracted,
-            p.nature = r.nature,
-            p.reasons = r.reasons,
-            p.notice_source = r.source,
-            p.retraction_date = CASE WHEN r.date IS NULL THEN null ELSE date(r.date) END
-        WITH p, r WHERE r.notice_id IS NOT NULL
-        MERGE (n:Notice {id: r.notice_id})
-        SET n.nature = r.nature, n.reasons = r.reasons, n.notice_doi = r.notice_doi, n.source = r.source,
-            n.date = CASE WHEN r.date IS NULL THEN null ELSE date(r.date) END
-        MERGE (p)-[:RETRACTED_BY]->(n)
-        """,
-        {"rows": rows},
-    )
+    with atomic(conn):
+        conn.execute(
+            """
+            UNWIND $rows AS r
+            MATCH (p:Paper {id: r.id})
+            WITH p, r WHERE coalesce(r.source, '') <> 'openalex'
+                            OR NOT coalesce(p.notice_source IN ['retraction_watch', 'crossref'], false)
+            SET p.nature = r.nature,
+                p.reasons = r.reasons,
+                p.notice_source = r.source,
+                p.active_notice_id = r.notice_id,
+                p.retraction_date = CASE WHEN r.date IS NULL THEN null ELSE date(r.date) END
+            WITH p, r WHERE r.notice_id IS NOT NULL
+            MERGE (n:Notice {id: r.notice_id})
+            SET n.nature = r.nature, n.reasons = r.reasons, n.notice_doi = r.notice_doi, n.source = r.source,
+                n.date = CASE WHEN r.date IS NULL THEN null ELSE date(r.date) END
+            MERGE (p)-[:RETRACTED_BY]->(n)
+            """,
+            {"rows": rows},
+        )
+        conn.execute(
+            """
+            UNWIND $rows AS r MATCH (p:Paper {id: r.id})
+            WHERE p.nature IS NULL OR p.nature <> 'Reinstatement'
+            SET p:Retracted
+            """,
+            {"rows": rows},
+        )
+        conn.execute(
+            """
+            UNWIND $rows AS r MATCH (p:Paper {id: r.id})
+            WHERE p.nature = 'Reinstatement'
+            REMOVE p:Retracted
+            """,
+            {"rows": rows},
+        )
 
 
 def upsert_citations(conn, edges: list[dict]) -> None:
@@ -153,6 +201,13 @@ def upsert_citations(conn, edges: list[dict]) -> None:
         """,
         {"rows": edges},
     )
+
+
+def replace_draft_citations(conn, draft: str, edges: list[dict]) -> None:
+    """Replace the draft's own references while preserving the shared literature graph."""
+    with atomic(conn):
+        conn.execute("MATCH (:Manuscript {id: $id})-[c:CITES]->() DELETE c", {"id": draft})
+        upsert_citations(conn, edges)
 
 
 def annotate_citations(conn, edges: list[dict]) -> None:
@@ -317,34 +372,65 @@ def record_dispositions(conn, manuscript_id: str, items: list[dict]) -> int:
         return 0
     rows = []
     for i, item in enumerate(items, 1):
-        cid = item.get("claim_id") or item.get("id") or f"{manuscript_id}:claim:{i}"
+        cid = str(item.get("claim_id") or item.get("id") or f"claim:{i}").removeprefix(f"{manuscript_id}:")
+        display_id = f"{manuscript_id}:{cid}"
+        key = json.dumps([manuscript_id, cid], separators=(",", ":"))
         rows.append({
             "manuscript_id": manuscript_id,
-            "claim_id": f"{manuscript_id}:{cid}" if not str(cid).startswith(manuscript_id) else str(cid),
-            "disp_id": f"{manuscript_id}:disp:{cid}",
+            "claim_id": f"claim:{key}",
+            "display_id": display_id,
+            "disp_id": f"disposition:{key}",
+            "legacy_dispositions": [f"{manuscript_id}:disp:{value}" for value in (cid, display_id)],
             "claim": item.get("claim") or "",
             "action": item.get("action") or "review",
             "rationale": item.get("rationale") or "",
             "revision": item.get("revision") or "",
             "dois": [d.strip().lower().removeprefix("https://doi.org/") for d in (item.get("reference_dois") or []) if d],
         })
-    conn.execute(
-        """
-        UNWIND $rows AS r
-        MERGE (m:Paper:Manuscript {id: r.manuscript_id})
-        MERGE (c:Claim {id: r.claim_id})
-        SET c.text = r.claim, c.manuscript_id = r.manuscript_id
-        MERGE (m)-[:HAS_CLAIM]->(c)
-        MERGE (d:Disposition {id: r.disp_id})
-        SET d.action = r.action, d.rationale = r.rationale, d.revision = r.revision
-        MERGE (c)-[:HAS_DISPOSITION]->(d)
-        WITH c, r
-        UNWIND r.dois AS doi
-        MATCH (p:Paper {doi: doi})
-        MERGE (c)-[:CITES_WORK]->(p)
-        """,
-        {"rows": rows},
-    )
+    # When upgrading a previously saved claim, unlink that manuscript's legacy node.
+    # Another manuscript may still reference it if the old keys collided.
+    rows = list({row["claim_id"]: row for row in rows}.values())
+    with atomic(conn):
+        conn.execute(
+            """
+            UNWIND $rows AS r
+            MATCH (:Manuscript {id: r.manuscript_id})-[link:HAS_CLAIM]->(:Claim)-[:HAS_DISPOSITION]->(d:Disposition)
+            WHERE d.id IN r.legacy_dispositions
+            DELETE link
+            """,
+            {"rows": rows},
+        )
+        conn.execute(
+            """
+            UNWIND $rows AS r
+            MERGE (m:Paper:Manuscript {id: r.manuscript_id})
+            MERGE (c:Claim {id: r.claim_id})
+            SET c.text = r.claim, c.manuscript_id = r.manuscript_id, c.display_id = r.display_id
+            MERGE (m)-[:HAS_CLAIM]->(c)
+            MERGE (d:Disposition {id: r.disp_id})
+            SET d.action = r.action, d.rationale = r.rationale, d.revision = r.revision
+            MERGE (c)-[:HAS_DISPOSITION]->(d)
+            """,
+            {"rows": rows},
+        )
+        conn.execute(
+            """
+            UNWIND $rows AS r
+            MATCH (:Claim {id: r.claim_id})-[link:CITES_WORK]->()
+            DELETE link
+            """,
+            {"rows": rows},
+        )
+        conn.execute(
+            """
+            UNWIND $rows AS r
+            MATCH (c:Claim {id: r.claim_id})
+            UNWIND r.dois AS doi
+            MATCH (p:Paper {doi: doi})
+            MERGE (c)-[:CITES_WORK]->(p)
+            """,
+            {"rows": rows},
+        )
     return len(rows)
 
 
@@ -353,7 +439,7 @@ def get_dispositions(conn, manuscript_id: str) -> list[dict]:
     rows = conn.execute(
         """
         MATCH (m:Manuscript {id: $root})-[:HAS_CLAIM]->(c:Claim)-[:HAS_DISPOSITION]->(d:Disposition)
-        RETURN c.id AS claim_id, c.text AS claim, d.action AS action,
+        RETURN coalesce(c.display_id, c.id) AS claim_id, c.text AS claim, d.action AS action,
                d.rationale AS rationale, d.revision AS revision,
                [(c)-[:CITES_WORK]->(p:Paper) | coalesce(p.doi, p.id)] AS references
         ORDER BY c.id

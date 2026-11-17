@@ -1,7 +1,9 @@
 """Offline tests: citation-context extraction, intent rules, and the Relate exposure query."""
 
+import json
 import xml.etree.ElementTree as ET
 
+import pytest
 import relate
 
 from loadbearing import bib, expand, fulltext, intent, store
@@ -342,5 +344,108 @@ def test_fulltext_vector_search_and_dispositions():
     assert len(disps) == 1
     assert disps[0]["action"] == "drop_citation"
     assert disps[0]["references"] == ["10.1038/nature04533"]
+    store.record_dispositions(conn, "M:draft-more", [
+        {"claim_id": "M:draft-more:c1", "claim": "Different manuscript", "reference_dois": ["10.1000/iron"]},
+    ])
+    store.record_dispositions(conn, "M:draft", [
+        {"claim_id": disps[0]["claim_id"], "claim": "Revised", "reference_dois": ["10.1000/iron"]},
+        {"claim_id": "M:draft-more:c1", "claim": "Different claim scope"},
+    ])
+    revised = store.get_dispositions(conn, "M:draft")
+    assert {row["claim"]: row["references"] for row in revised} == {
+        "Revised": ["10.1000/iron"], "Different claim scope": [],
+    }
+    assert store.get_dispositions(conn, "M:draft-more")[0]["claim"] == "Different manuscript"
+    store.record_dispositions(conn, "M:draft", [{"claim_id": "c1", "claim": "Citation deleted"}])
+    assert next(row for row in store.get_dispositions(conn, "M:draft") if row["claim"] == "Citation deleted")["references"] == []
+    conn.close()
+
+
+def test_rechecking_draft_replaces_references_atomically(monkeypatch):
+    conn = store.open_store(":memory:")
+    root = "M:draft"
+
+    def expansion(refs, *args):
+        papers = {key: {"id": key, "title": key} for key in (root, "W1", "W2")}
+        return expand.Expansion(root, "Draft", papers=papers, edges={(root, refs[0]["id"])})
+
+    monkeypatch.setattr(expand, "expand", expansion)
+    monkeypatch.setattr(expand, "read_contexts", lambda *a, **k: [])
+    for work in ("W1", "W2"):
+        expand.build(conn, [{"id": work}], root, "Draft", None, 1)
+    query = "MATCH (:Manuscript {id: $id})-[:CITES]->(p) RETURN p.id AS id"
+    assert [row["id"] for row in conn.execute(query, {"id": root})] == ["W2"]
+
+    def failed_context(*args, **kwargs):
+        raise RuntimeError("read failed")
+
+    monkeypatch.setattr(expand, "read_contexts", failed_context)
+    with pytest.raises(RuntimeError, match="read failed"):
+        expand.build(conn, [{"id": "W1"}], root, "Draft", None, 1)
+    assert [row["id"] for row in conn.execute(query, {"id": root})] == ["W2"]
+    conn.close()
+
+
+def test_notice_fields_and_url_follow_the_same_record(tmp_path, monkeypatch):
+    from loadbearing import mcp_server
+
+    database = tmp_path / "test.rl"
+    conn = store.open_store(str(database))
+    store.upsert_papers(conn, [
+        {"id": "M", "title": "Manuscript"},
+        {"id": "W1", "title": "Model findings one", "doi": "10.1234/first"},
+        {"id": "W2", "title": "Model findings two", "doi": "10.1234/second"},
+    ])
+    store.mark_manuscript(conn, "M")
+    for work, kind, date, identifier in [
+        ("W1", "Correction", "2022-01-01", "correction"),
+        ("W1", "Retraction", "2024-03-01", "retraction"),
+        ("W2", "Retraction", "2024-04-01", "other-retraction"),
+    ]:
+        store.mark_retracted(conn, [{"id": work, "nature": kind, "date": date, "reasons": [],
+                                     "source": "crossref", "notice_id": identifier, "notice_doi": f"10.1234/{identifier}"}])
+    store.upsert_citations(conn, [{"src": "M", "dst": target} for target in ("W1", "W2")])
+    hit = store.exposure(conn, "M", 1)[0]
+    assert (hit["nature"], hit["retraction_date"], hit["notice_doi"]) == (
+        "Retraction", "2024-03-01", "10.1234/retraction",
+    )
+    conn.execute("MATCH (p:Paper {id: 'W1'}) REMOVE p.active_notice_id")
+    assert store.exposure(conn, "M", 1)[0]["notice_doi"] == "10.1234/retraction"
+    conn.close()
+    monkeypatch.setattr(mcp_server, "STORE", str(database))
+    candidates = json.loads(mcp_server.explain_exposure("M", "model findings"))
+    assert {candidate["id"] for candidate in candidates["candidates"]} == {"W1", "W2"}
+    exact = json.loads(mcp_server.explain_exposure("M", "https://doi.org/10.1234/second"))
+    assert exact["retracted"]["id"] == "W2"
+    assert [path["hops"][-1]["to_doi"] for path in exact["paths"]] == ["10.1234/second"]
+
+
+def test_reinstatement_supersedes_retraction_and_stale_metadata(tmp_path, monkeypatch):
+    from loadbearing import retractionwatch
+
+    source = tmp_path / "notices.csv"
+    source.write_text(
+        "Record ID,OriginalPaperDOI,RetractionNature,RetractionDate,RetractionDOI\n"
+        "1,10.1234/first,Retraction,3/1/2024,10.1234/withdrawal\n"
+        "2,10.1234/first,Reinstatement,4/1/2024,10.1234/restored\n"
+    )
+    data = retractionwatch.load(source)
+    assert data["10.1234/first"]["nature"] == "Reinstatement"
+    monkeypatch.setattr(retractionwatch, "load", lambda: data)
+    monkeypatch.setattr(retractionwatch.crossref, "notice", lambda _: {
+        "nature": "Retraction", "date": "2024-03-01",
+    })
+    notice, authority = retractionwatch.resolve("10.1234/first", marked_retracted=True)
+    assert (notice["nature"], authority) == ("Reinstatement", "retraction_watch")
+
+    conn = store.open_store(":memory:")
+    store.upsert_papers(conn, [{"id": "W1", "title": "Reinstated paper"}])
+    for kind, date, source in [("Retraction", "2024-03-01", "retraction_watch"),
+                               ("Reinstatement", "2024-04-01", "retraction_watch"),
+                               (None, None, "openalex")]:
+        store.mark_retracted(conn, [{"id": "W1", "nature": kind, "date": date, "source": source,
+                                     "notice_id": kind, "notice_doi": None, "reasons": []}])
+    row = conn.execute("MATCH (p:Paper {id:'W1'}) RETURN p.nature AS kind, p:Retracted AS active").single()
+    assert dict(row) == {"kind": "Reinstatement", "active": False}
     conn.close()
 

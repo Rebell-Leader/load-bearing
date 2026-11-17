@@ -154,6 +154,8 @@ def retraction_status(dois: list[str]) -> list[dict]:
             status = "expression_of_concern"
         elif n and n["nature"] == "Correction":
             status = "corrected"
+        elif n and n["nature"] == "Reinstatement":
+            status = "reinstated"
         elif marked_retracted:
             status = "marked_retracted"
         elif w:
