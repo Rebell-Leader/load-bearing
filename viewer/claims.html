@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Audit two draft claims against a dated Relate evidence pack.">
+<title>Claim audit · Load-Bearing</title>
+<link rel="stylesheet" href="claims.css">
+<script src="claim-demo.js" defer></script>
+<script src="claims.js" defer></script>
+</head>
+<body>
+<header class="site-header">
+  <a class="brand" href="claims.html">Load-Bearing</a>
+  <nav aria-label="Project links">
+    <a href="index.html">Citation explorer</a>
+    <a href="https://github.com/Rebell-Leader/load-bearing">Repository</a>
+  </nav>
+</header>
+<main>
+  <section class="intro" id="intro" aria-labelledby="headline">
+    <p class="eyebrow">MANUSCRIPT EVIDENCE AUDIT</p>
+    <h1 id="headline">Same citation.<br>Different evidence.</h1>
+    <p class="intro-text">Find which sentence in a draft depends on a retracted study and what a reviewer should recheck.</p>
+  </section>
+  <section class="audit" id="audit" aria-labelledby="case-title" hidden>
+    <div class="audit-toolbar">
+      <label>Example
+        <select id="example">
+          <option value="rodents">Rodent meta-analysis</option>
+          <option value="recommender">Recommender overview</option>
+        </select>
+      </label>
+      <fieldset aria-label="Audit method">
+        <legend>Audit method</legend>
+        <button type="button" id="direct" aria-pressed="false">Direct DOI</button>
+        <button type="button" id="claim" aria-pressed="true">Claim paths</button>
+      </fieldset>
+      <label id="date-field">Notice cutoff
+        <select id="cutoff"></select>
+      </label>
+    </div>
+    <div class="source">
+      <div>
+        <p class="eyebrow" id="case-title"></p>
+        <a id="shared-source" class="source-title" target="_blank" rel="noopener"></a>
+      </div>
+      <span class="doi" id="shared-doi"></span>
+    </div>
+    <p id="direct-result" role="status" hidden></p>
+    <div class="claims" id="cards" aria-live="polite"></div>
+    <p class="scope" id="scope">Coverage is limited to the dated evidence in this pack. Open a figure or notice to verify a finding.</p>
+  </section>
+  <p id="boot-error" role="alert" hidden>The claim report is missing. Rebuild it with <code>python scripts/export_claim_demo.py</code>.</p>
+  <section class="reproduce" id="reproduce" aria-labelledby="reproduce-title" hidden>
+    <div>
+      <h2 id="reproduce-title">Run the audit in Relate</h2>
+      <p>The browser displays results exported from the checked-in claim store. The command runs the audit against that same file, offline after installation.</p>
+      <div class="command"><code id="command">uv run loadbearing audit</code><button id="copy" type="button">Copy</button></div>
+      <a href="../data/claims.rl" download>Download the Relate store</a>
+      <span class="pack-id" id="snapshot-id"></span>
+    </div>
+    <div class="comparison">
+      <h2>Curated comparison</h2>
+      <table>
+        <thead><tr><th scope="col">Method</th><th scope="col">Indirect cases</th><th scope="col">False alerts</th></tr></thead>
+        <tbody id="metrics"></tbody>
+      </table>
+      <p><a href="https://github.com/Rebell-Leader/load-bearing/blob/main/docs/CLAIM_PILOT.md">17 claims across six case families</a></p>
+    </div>
+  </section>
+</main>
+</body>
+</html>

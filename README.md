@@ -1,62 +1,57 @@
 # Load-Bearing
 
-**Not every citation matters. Load-Bearing finds the ones carrying the weight, and tells you when one has collapsed.**
+**Find which draft claims depend on retracted research, even when the cited paper has no retraction notice.**
 
-Load-Bearing checks a bibliography, or any published paper, for reliance on retracted science. It
-follows citations up to three hops out in a [Relate](https://relatedb.ai) graph, reads the sentence where
-each citation appears, and separates papers that *used* a retracted result or method from papers that only
-*mentioned* it. Researchers use it from the command line or in the browser; AI research agents use it
-through MCP.
+Load-Bearing is a pre-submission evidence audit for systematic-review teams and their drafting agents. It follows a claim to the cited outcome, the study included in that outcome, and the dated publication notice. Reviewers get the figure or section to recheck. Agents get the same evidence through MCP.
 
-On a real 2025 Alzheimer's paper, 56 of its 72 references reach a paper marked retracted within three
-citation hops. On 30 candidate paths to 23 works, every hop after the manuscript's own citation is
-labelled method or result. 21 of those works have a retraction notice on record, including Lesné 2006
-(Aβ*56, retracted in 2024). The report labels the other two.
+[Open the two-claim demo](https://rebell-leader.github.io/load-bearing/viewer/claims.html) · [Claim pilot](docs/CLAIM_PILOT.md) · [New-source evaluation](docs/CLAIM_PILOT.md#evaluation-on-new-reviews) · [Demo video instructions](docs/DEMO.md)
 
-**Demo video:** _link added at submission_ · **Agent run:** [`runs/agent_demo.md`](runs/agent_demo.md) ·
-**Browser viewer:** [live on GitHub Pages](https://rebell-leader.github.io/load-bearing/viewer/) · **Evaluation:** [`docs/EVAL.md`](docs/EVAL.md) · **Claim pilot:** [`docs/CLAIM_PILOT.md`](docs/CLAIM_PILOT.md)
+## Try the claim audit
 
-## Try it in two minutes
+Two draft sentences cite the same meta-analysis. The rat cognitive-function result included study 44, which was later retracted. The mouse result used different studies. The audit points to Figures 3b and 3a and recommends reassessing the rat estimate. [Published review](https://link.springer.com/article/10.1186/s13287-022-03231-1#Fig3) · [Publisher notice](https://doi.org/10.1007/s11011-023-01282-8)
 
-No network, no API keys. Needs Python 3.12+ and [uv](https://docs.astral.sh/uv/).
+Open `viewer/claims.html` directly from the checkout, or run the audit in [Relate](https://relatedb.ai). Git and dependency installation need network access. The claim audit runs offline after installation, with no API keys. Requires Python 3.12+ and [uv](https://docs.astral.sh/uv/).
 
 ```bash
 git clone https://github.com/Rebell-Leader/load-bearing.git && cd load-bearing
-uv sync
-uv run loadbearing check --doi 10.1016/j.redox.2025.103611 --store data/demo.rl --offline
+uv sync --locked
+uv run --offline --no-sync loadbearing audit
 ```
-
-That prints the full report for the demo paper from the shipped Relate store
-([sample output](runs/redox2025.txt)). Then:
 
 ```bash
-python3 -m http.server 8765        # open http://localhost:8765/viewer/ : the same graph, in the browser
-uv run pytest -q                   # offline tests, including Relate path queries
+uv run --offline --no-sync loadbearing audit --mode direct
+uv run --offline --no-sync loadbearing audit --as-of 2023-08-01
+uv run --offline --no-sync loadbearing audit --example recommender
+uv run --offline --no-sync pytest -q
 ```
 
-With the [Relate CLI](https://relatedb.ai/docs/get-started/install/) installed, you can query the store
-directly:
+The command reads the checked-in [claim store](data/claims.rl). The browser shows an interactive report exported from that same file. Use the separate [citation explorer](https://rebell-leader.github.io/load-bearing/viewer/) to run Cypher in WebAssembly on the broader literature graph.
+
+### Audit a new review
+
+Start with an inclusion table whose outcome-to-study links have been checked by a reviewer. Preview the rows before adding them to a local Relate store. The example includes five reviews outside the original pilot.
 
 ```bash
-relate --database data/demo.rl --read-only \
-  "MATCH (m:Manuscript)-[:CITES]->(b:Paper)-[:CITES]->{0,2}(bad:Retracted)
-   RETURN bad.title AS retracted, count(DISTINCT b) AS via_references ORDER BY via_references DESC LIMIT 5"
+audit_dir="$(mktemp -d)"
+uv run --offline --no-sync loadbearing import-outcomes data/claim_eval/outcomes.csv \
+  --notices data/claim_eval/notices.csv --as-of 2026-11-16 --store "$audit_dir/claims.rl"
 ```
+
+Open the links in the preview and check the study DOI and figure or section. Rerun with `--confirm` to save the reviewed evidence, then audit the example claims.
+
+```bash
+uv run --offline --no-sync loadbearing import-outcomes data/claim_eval/outcomes.csv \
+  --notices data/claim_eval/notices.csv --as-of 2026-11-16 --store "$audit_dir/claims.rl" --confirm
+uv run --offline --no-sync loadbearing audit data/claim_eval/claims.json --store "$audit_dir/claims.rl"
+```
+
+The source table schema, claim input, and measured coverage are in [the new-review evaluation](docs/CLAIM_PILOT.md#evaluation-on-new-reviews).
 
 ## Use case
 
-Retracted papers keep getting cited, and AI research tools repeat them. A 2026 JMIR study tested nine
-generative AI tools, including ChatGPT, Claude, Gemini and Perplexity; none consistently identified or
-excluded retracted articles. Reference managers flag a retracted paper you cite *directly*. Nothing common
-answers the second-order question: **does a paper I rely on get its key result from a retracted study?**
+Retracted papers keep getting cited. A bibliography check can identify a notice on a direct reference. A systematic reviewer also needs to know which results in that reference used a retracted study. [VITALITY](https://pmc.ncbi.nlm.nih.gov/articles/PMC12015725/) documented this dependency in 847 systematic reviews.
 
-Who it's for:
-
-- **Peer reviewers and editors.** Bibliographies stay on their machine; nothing needs a server.
-- **Systematic-review teams.** One demo finding is a meta-analysis that pooled a study later retracted
-  for image manipulation.
-- **Research-integrity officers.**
-- **AI research agents.** An MCP server and a "check before you cite" skill.
+A claim audit uses reviewed outcome links. For a larger bibliography, `loadbearing check` follows citation paths up to three hops, reads available passages, and ranks possible reliance for a human reviewer.
 
 The relationships that matter:
 
@@ -78,6 +73,14 @@ graph LR
 | `:Review` | Citing a review isn't relying on primary evidence. |
 
 ## How it uses Relate
+
+The claim store is a **single `.rl` file** so a reviewer can pass around and inspect the exact evidence used for an audit. Embedded Relate queries traverse the cited work to its outcome, the outcome's relationship to the study, and the study's publication notices. Dates are evaluated against the cutoff in the claim request.
+
+```text
+(:ClaimWork)-[:REPORTS]->(:Outcome)-[:STUDY_USE {role}]->(:ClaimWork)-[:HAS_NOTICE]->(:PublicationNotice)
+```
+
+The broader citation check has its own graph and explorer.
 
 - **Modes: a single file, a directory, and in-memory in the browser.** Each one is used for a reason.
   - **Single file, `data/demo.rl`, is the evidence pack.** One file you can hand to an editor, open
@@ -135,9 +138,12 @@ Prerequisites: Python 3.12+ and uv. For the Relate MCP server and the agent demo
 
 ```bash
 uv sync                                                              # core: relate-db + MCP SDK
+uv run loadbearing check --doi 10.1016/j.redox.2025.103611 --store data/demo.rl --offline
 uv run loadbearing check examples/redox2025.bib                      # live check of a .bib (adds to data/evidence)
 uv run loadbearing check --doi 10.1016/j.redox.2025.103611 --json    # a published paper, JSON for agents
 ```
+
+The bibliography command exits with status `1` when it reports direct or load-bearing findings and `2` when it cannot look up an offline manuscript.
 
 A live check calls free scholarly APIs (OpenAlex, Europe PMC, Semantic Scholar, Crossref) and caches
 every response in `data/raw/cache/`. Without a key, OpenAlex gives each IP a small shared daily budget,
@@ -152,14 +158,14 @@ curl -L -o data/raw/retraction_watch.csv https://gitlab.com/crossref/retraction-
 ### For agents: MCP server and skill
 
 Opening this repository in Claude Code picks up [`.mcp.json`](.mcp.json) and the
-[`load-bearing` skill](skills/load-bearing/SKILL.md). The Load-Bearing MCP server exposes six tools over
-the graph:
+[`load-bearing` skill](skills/load-bearing/SKILL.md). The Load-Bearing MCP server exposes seven tools:
 
 | Tool | What it does |
 |---|---|
 | `retraction_status` | Check DOI notices and distinguish an unconfirmed OpenAlex flag. Builds no graph |
 | `check_references` | Exposure report for a bibliography (BibTeX or DOIs), mapped back to your `.bib` keys; can also save claim-level review decisions to the graph |
 | `check_paper` | The same for a published paper, reading its own full text for the first hop |
+| `audit_claims` | Read-only claim audit from `data/claims.rl`. Set `LOADBEARING_CLAIM_STORE` to point it at a reviewed import. |
 | `explain_exposure` | Up to 30 paths from a manuscript to one flagged paper (by OpenAlex ID, DOI, or title search), with available citing sentences |
 | `graph_schema` | Labels, counts, data-quality flags and example Cypher |
 | `query_graph` | Read-only Cypher. The store opens with `read_only=True`, so Relate refuses writes |
@@ -168,7 +174,7 @@ the graph:
 For other hosts, use the same blocks with absolute paths. Verify both servers side by side:
 
 ```bash
-uv run python scripts/mcp_smoke.py    # 12 checks on a temporary clone; needs network and the Relate CLI
+uv run python scripts/mcp_smoke.py    # checks on a temporary clone; needs network and the Relate CLI
 ```
 
 ### Agent demo
@@ -224,6 +230,8 @@ uv run python scripts/run_claim_comparison.py --output /tmp/loadbearing-graph-pi
 
 | Path | What |
 |---|---|
+| `data/claims.rl` | Single-file claim audit snapshot for both featured cases and the curated comparison |
+| `data/claim_eval/` | Reviewed inclusion tables, draft inputs, and source-backed labels for five additional reviews |
 | `data/demo.rl` | Evidence pack for the demo paper: a single-file Relate store, 926 papers, 1,305 citations, 349 marked retracted (317 with a retraction notice) |
 | `data/evidence/` | Working graph: a directory store. CLI and MCP checks add to it; Relate's MCP server follows it |
 | `viewer/evidence.json` | The pack exported for the browser (the demo paper plus the agent demo's grant draft) |
@@ -244,6 +252,8 @@ uv run python scripts/run_claim_comparison.py --output /tmp/loadbearing-graph-pi
 Paths are evidence for a person to review, not verdicts about any paper or author.
 
 ## Limitations
+
+- Claim results are scoped to the evidence and dates in the store. Confirmed outcome IDs cover paraphrases. Ambiguous or missing outcome matches produce an abstention.
 
 - Citation intent v1 is a lead generator: 33% precision on held-out sentences.
 - About half of the citations on paths can't be read, because there's no open full text. They show as

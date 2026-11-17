@@ -1,134 +1,57 @@
 # Devpost submission draft
 
-Paste each block into the matching Devpost field. Items in `[[ ]]` need your input.
-
 ## Project name
 
 Load-Bearing
 
-## Elevator pitch (under 200 characters)
+## Elevator pitch
 
-Not every citation matters. Load-Bearing finds the ones carrying the weight, and tells you when one has
-collapsed: retracted science, traced through citation paths in Relate.
+Find which claims in a draft depend on a retracted study, even when the cited review has no notice. Load-Bearing traces each affected outcome to the study and notice in Relate.
 
 ## Links
 
-- Repository: https://github.com/Rebell-Leader/load-bearing (topics `relate`, `relate-neo4j-hackathon`)
-- Demo video: `[[YouTube link]]`
-- Browser viewer: https://rebell-leader.github.io/load-bearing/viewer/ (GitHub Pages), or run it locally
-  with `python3 -m http.server 8765`
+- [Public repository](https://github.com/Rebell-Leader/load-bearing) with topics `relate` and `relate-neo4j-hackathon`
+- [Interactive claim audit](https://rebell-leader.github.io/load-bearing/viewer/claims.html)
+- [Citation explorer](https://rebell-leader.github.io/load-bearing/viewer/)
+- Demo video URL to attach after hosting. The 1:46 captioned cut is built at `demo/build/load-bearing-claim-first.mp4`.
 
 ## About the project
 
 ### Inspiration
 
-Lesné et al. 2006, the *Nature* paper on the Aβ*56 assembly in Alzheimer's disease, was retracted in 2024.
-OpenAlex recorded 2,840 citations in our November 2026 snapshot. In a 2026 study, none of nine AI research tools reliably caught
-retracted papers. Reference managers flag a retracted paper you cite directly. The harder problem is
-second-order: a paper you rely on got its key result from a retracted study. That is a property of a
-path through the citation graph, and only some edges on the path count.
+The bibliography of a draft can pass a direct retraction check even when a published review behind one of its sentences used a study that was later retracted. The VITALITY study found 847 systematic reviews that quantitatively incorporated retracted trials. A reviewer needs to know which estimate to reassess and where to find the inclusion evidence. [VITALITY study](https://pmc.ncbi.nlm.nih.gov/articles/PMC12015725/)
 
 ### What it does
 
-Load-Bearing checks a bibliography or a published paper:
+Two draft sentences cite one published meta-analysis. Figure 3b pooled the results of eight rat studies and included reference 44, which was later retracted. Figure 3a pools mouse studies and uses a different set of references. The direct DOI check finds no notice on the shared review. Load-Bearing shows the exact figure and publisher notice behind each decision. It recommends reassessing the rat estimate and shows why the mouse claim is outside the scope of that notice. [Review, Figures 3a and 3b](https://link.springer.com/article/10.1186/s13287-022-03231-1#Fig3) · [Publisher notice](https://doi.org/10.1007/s11011-023-01282-8)
 
-1. **Builds the graph.** It follows citations up to three hops out into a Relate graph.
-2. **Reads available citation passages.** It classifies evidence from open-access full text or
-   Semantic Scholar. Method and result citations suggest reliance. The report identifies missing
-   passages, background mentions, and critical citations.
-3. **Reports by retracted paper.** One statement in Relate finds every path from the manuscript to a
-   retracted paper and computes its status: direct, load-bearing, unverified, mention-only or defused.
-   Findings include available notices and citation passages.
-
-What connects to what: `(:Manuscript)-[:CITES]->(:Paper)-[:CITES {intent, sentence, evidence}]->…->(:Paper:Retracted)-[:RETRACTED_BY]->(:Notice)`,
-plus `:Review` labels and data-quality flags on citations.
-
-It works in three places:
-
-- **Command line:** `loadbearing check refs.bib`, or `--doi`. Offline against a shipped store, or live.
-- **For agents:** an MCP server with six tools ("check before you cite"), next to Relate's own MCP server
-  on the same graph, plus an agent skill. In the recorded demo, Claude audits a research assistant's
-  grant paragraph. It finds two retracted references, reads the evidence before acting, queries the
-  graph in Cypher, spots an impossible upstream citation, and rewrites the paragraph without inventing a
-  single reference.
-- **In the browser:** a static page that runs Relate's WebAssembly build and the same Cypher, with path
-  diagrams and a query console.
-
-On a real 2025 Alzheimer's paper, 56 of its 72 references reach a paper marked retracted within three
-hops. In 30 candidate paths to 23 works, every hop after the manuscript's own reference is labelled
-method or result. 21 of those works have a retraction notice on record. Two findings stand out:
-
-- A 2023 meta-analysis pooled a study that was retracted months later for image manipulation.
-- Two papers in the graph were retracted with the reason "Cites Retracted Work".
+Open [the interactive audit](https://rebell-leader.github.io/load-bearing/viewer/claims.html) and toggle between direct DOI and claim paths. Change the cutoff to see the report before the notice. The second case checks two claims that cite the same recommender-systems overview. [Case and sources](CLAIM_PILOT.md)
 
 ### How we built it
 
-- **Relate, used deliberately in four modes:**
-  - embedded from Python (`relate-db`);
-  - a single-file `.rl` evidence pack;
-  - a directory store that `relate serve --mcp stdio --read-only=live` follows while Load-Bearing writes;
-  - the WebAssembly build in the browser.
+- **Embedded Relate and a single-file claim store.** The graph connects a cited review to a reported outcome, its included or excluded study, and the study's dated publication notice. Cypher retrieves the path, including the recorded figure or section. The file at `data/claims.rl` is inspectable. The browser displays results exported from the same file.
+- **Offline audit and review workflow.** `uv run loadbearing audit` runs the featured example. The CSV importer previews study DOIs, evidence locators, and notice links before a reviewer confirms the write. An unmapped or ambiguous claim produces an abstention.
+- **Agent integration.** The `audit_claims` MCP tool returns the disposition and links. In the recorded PaperOrchestra and Claude pilot, the agent qualified the rat sentence, gave the source links, and kept the mouse sentence verbatim. The PaperOrchestra metadata search was replayed from public fixtures after hitting rate limits.
+- **Citation discovery.** The separate bibliography audit uses a Relate directory store with a live read-only MCP follower. The portable exposure graph and WebAssembly explorer support deeper investigation of candidate paths.
 
-  The core query is a quantified path pattern with inline relationship predicates. Relate classifies
-  739 exposure paths in the portable snapshot and 741 in the browser pack, which includes the grant draft.
-- **Data:** OpenAlex (references; a server-side `is_retracted:true,cited_by:` filter means a
-  three-hop check costs at most two requests per 100 papers scanned, about 120 for the demo paper), the Retraction Watch database via Crossref, Crossref notice links, Europe
-  PMC full text (JATS), and Semantic Scholar as a fallback.
-- **Citation intent and claim-level evaluation:** BiomedBERT fine-tuned on SciCite (0.856 macro-F1) for method citations, plus the
-  cited work's type (review or primary research) and precision guards. On the 2025 Alzheimer's paper it narrows 739 untyped paths
-  down to 30 load-bearing paths, and we evaluated it on labelled in-domain sentences with a separate held-out set ([`EVAL.md`](EVAL.md)).
-  We also ran a 17-case claim-level pilot across six review families, paired with Google's PaperOrchestra literature stage and four
-  live Claude sessions ([`CLAIM_PILOT.md`](CLAIM_PILOT.md)): the claim-scoped Relate graph got all 17 review actions right (6/6
-  indirect retractions caught, 0/6 false alarms on neighboring claims), compared with 6/17 for direct DOI lookup and 12/17 for
-  untyped paths.
-- **Agents:** an MCP server built on the MCP Python SDK, an agent skill, and a Claude Agent SDK demo agent limited to the two MCP
-  servers.
+### What the comparison showed
 
-### Challenges we ran into
+| Method | Exact actions on 17 curated claims | Indirect cases found | False alerts on six controls |
+| --- | ---: | ---: | ---: |
+| Direct DOI notices | 6 | 0 | 1 |
+| Untyped two-hop paths | 12 | 6 | 5 |
+| Claim-scoped Relate paths | 17 | 6 | 0 |
 
-- **A served `.rl` file locks out writers.** While `relate serve --read-only` holds a `.rl` store, a
-  writer gets `storage locked`. Our first MCP setup would have broken every agent check. Relate's answer,
-  a directory store with a `--read-only=live` follower, became a design feature.
-- **Being honest about citation intent.** On the tuning sample, our classifier looked like 0.86 precision.
-  On a held-out sample it was 0.33. We kept the held-out number, show every sentence, and document a
-  negative result (NLI claim alignment had no signal).
-- **Messy metadata.** Reference DOIs hide in different XML tags, OpenAlex prefixes retracted titles, and
-  some citation links are impossible. The agent found one (a 2008 paper "citing" a 2012 one), and that
-  catch became a filter.
+The pilot uses curated outcome links. A second comparison imported 11 reviewed links across five previously unseen reviews, covering 29 draft inputs and controlled variants. The audit detected 10 of 15 affected variants and raised zero false alerts. The five affected paraphrases with no confirmed outcome ID produced abstentions. [Reproduction and limits](CLAIM_PILOT.md#evaluation-on-new-reviews)
 
-### Accomplishments that we're proud of
+### Significant AI use and source material
 
-- **One Cypher statement serves every surface.** The CLI, both MCP servers, and the browser can run
-  the same traversal against their respective copies of the evidence graph.
-- **An agent with judgment.** It reads the evidence instead of trusting labels, and it doesn't invent
-  citations.
-- **A measured, reproducible evaluation** with its weaknesses stated.
+Codex and Gemini assisted with design, code, tests, and submission material. The saved transcript includes Claude Haiku 5.5 for the claim pilot and Claude Opus 5.5 for the literature graph demo. The offline audit uses stored evidence and deterministic queries. The broader citation triage optionally uses a SciCite-trained BiomedBERT model. Google PaperOrchestra is a separately attributed open-source dependency of the optional replay. Scholarly metadata and publication notices are attributed in the README and evidence files. [Code license](../LICENSE) · [Data sources](../README.md#data-sources)
 
-### What we learned
+## Submission checklist
 
-- Graph paths are the right unit for research integrity: exposure is a property of a path, not of a
-  paper.
-- An embedded database makes the shipped evidence pack inspectable offline. Live enrichment sends
-  lookup identifiers to scholarly APIs. The recorded Claude workflow uses a hosted model.
-
-### What's next
-
-- Expert labels from biomedical NLP researchers, to train intent on our own definition.
-- Abstract-level claim matching.
-- Path scores instead of hard labels.
-- A larger evidence pack (OpenAlex key) shared through `relate push` to Neo4j.
-
-## Built with
-
-relate · relatedb · cypher · webassembly · python · mcp · claude · claude-agent-sdk · openalex · crossref ·
-europe-pmc · semantic-scholar · pytorch · transformers · biomedbert
-
-## Submission checklist (from the hackathon page)
-
-- [x] Project description: the use case, and what connects to what (above)
-- [x] Public GitHub repo with a README on how to set up and use it: README follows the template
-- [x] GitHub topic `relate` (required) and `relate-neo4j-hackathon` (recommended)
-- [x] Persistent Relate store judges can inspect: `data/demo.rl` (single file) and `data/evidence/` (directory)
-- [x] Working code with Relate running: the offline check, automated tests, MCP smoke test, viewer
-- [ ] Demo video, 1–2 minutes: script in [DEMO.md](DEMO.md)
-- [ ] Submit on Devpost by **Dec 11, 6:00 PM PST**
+- [x] Public repository with setup instructions and topic `relate`
+- [x] Inspectable single-file Relate store and an offline judge command
+- [x] Claim report, curated comparison, and new-source evaluation
+- [x] Local captioned video under two minutes
+- [ ] Attach a login-free link to the video and submit by Dec 11 at 6:00 p.m. PST

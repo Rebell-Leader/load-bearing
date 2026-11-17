@@ -445,7 +445,7 @@ def assemble(durations: dict[str, float], audio: Path | None = None) -> Path:
     audio_args = []
     if audio and audio.exists():
         inputs += ["-i", str(audio)]
-        audio_args = ["-map", f"{len(order)}:a:0", "-c:a", "aac", "-b:a", "192k", "-shortest"]
+        audio_args = ["-map", f"{len(order)}:a:0", "-af", "apad", "-c:a", "aac", "-b:a", "192k", "-shortest"]
     subprocess.run(["ffmpeg", "-y", "-loglevel", "error", *inputs, "-filter_complex", ";".join(filters), "-map", "[out]",
                     *audio_args, "-c:v", "libx264", "-preset", "slow", "-crf", "17", "-pix_fmt", "yuv420p", "-r", str(FPS),
                     "-movflags", "+faststart", str(final)], check=True)
